@@ -1,5 +1,5 @@
 //
-//  SearchBar.swift.swift
+//  SearchBar.swift
 //  Carely
 //
 //  Created by Lala Suleymanova on 07.10.26.
@@ -32,8 +32,5 @@ struct SearchBar: View {
 }
 
 #Preview {
-    SearchBar(
-        text: .constant(""),
-        placeholder: "Search doctors, specialties..."
-    )
+    SearchBar(text: .constant(""),placeholder: "Search doctors, specialties...")
 }
