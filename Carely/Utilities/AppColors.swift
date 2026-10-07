@@ -11,6 +11,7 @@ import UIKit
 enum AppColors {
     static let primary = Color(hex: "0F9D8A")
     static let primaryDark = Color(hex: "087A6C")
+    static let onPrimary = Color.white
 
     static let background = Color(
         light: Color(hex: "F7F9F9"),

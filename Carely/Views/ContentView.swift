@@ -9,16 +9,18 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Text("Good morning")
-                .font(AppTypography.body)
-            
-            Text("Lala")
+        VStack(spacing: 20) {
+            Text("Carely")
                 .font(AppTypography.largeTitle)
+                .foregroundStyle(AppColors.primaryText)
             
-            Text("Upcoming Appointment")
-                .font(AppTypography.headline)
+            PrimaryButton(title: "Book Appointment") {
+                print("Button tapped")
+            }
         }
+        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(AppColors.background)
     }
 }
 
