@@ -14,6 +14,27 @@ final class SearchViewModel {
     var searchResults: [Doctor] = []
     var hasSearched = false
 
+    var selectedSpecialty = "All"
+    var selectedRating = "Any"
+    var minimumPrice = 0.0
+    var onlyAvailable = false
+    
+    let specialties = [
+            "All",
+            "Cardiology",
+            "Neurology",
+            "Dermatology",
+            "Dentistry",
+            "Pediatrics"
+    ]
+
+    let ratings = [
+        "Any",
+        "4.0+",
+        "4.5+",
+        "4.8+"
+    ]
+    
     func search() {
         let query = searchText
             .trimmingCharacters(in: .whitespacesAndNewlines)

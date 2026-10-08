@@ -9,15 +9,52 @@ import SwiftUI
 
 struct SearchView: View {
     @State private var viewModel = SearchViewModel()
+    @State private var showFilters = false
     
     // MARK: - Search
     private var searchSection: some View {
-        SearchBar(text: $viewModel.searchText,placeholder: "Search doctors...")
-        .onSubmit {
-            viewModel.search()
+        HStack(spacing: 12) {
+            SearchBar(
+                text: $viewModel.searchText,
+                placeholder: "Search doctors..."
+            )
+            .onSubmit {
+                viewModel.search()
+            }
+
+            Button {
+                showFilters = true
+            } label: {
+                Image(systemName: "slider.horizontal.3")
+                    .font(
+                        .system(
+                            size: 18,
+                            weight: .medium
+                        )
+                    )
+                    .foregroundStyle(
+                        AppColors.primary
+                    )
+                    .frame(width: 52, height: 52)
+                    .background(AppColors.surface)
+                    .clipShape(
+                        RoundedRectangle(
+                            cornerRadius: 16
+                        )
+                    )
+                    .overlay {
+                        RoundedRectangle(
+                            cornerRadius: 16
+                        )
+                        .stroke(
+                            AppColors.divider,
+                            lineWidth: 1
+                        )
+                    }
+            }
         }
     }
-
+    
     // MARK: - Results
     private var resultsSection: some View {
         VStack(alignment: .leading,spacing: 12) {
@@ -101,6 +138,10 @@ struct SearchView: View {
             }
             .background(AppColors.background)
             .navigationTitle("Search Doctors")
+            .sheet(isPresented: $showFilters) {
+                FilterSheetView(viewModel: viewModel)
+                    .presentationDetents([.large])
+            }
         }
     }
 }
