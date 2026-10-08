@@ -40,7 +40,7 @@ struct TopDoctorCard: View {
             }
         }
         .padding(12)
-        .frame(width: 220)
+        .frame(width: 180)
         .background(AppColors.surface)
         .clipShape(
             RoundedRectangle(cornerRadius: 20)
@@ -59,7 +59,7 @@ struct TopDoctorCard: View {
             .scaledToFit()
             .foregroundStyle(AppColors.primary.opacity(0.7))
             .frame(maxWidth: .infinity)
-            .frame(height: 200)
+            .frame(height: 135)
             .background(AppColors.background)
             .clipShape(
                 RoundedRectangle(cornerRadius: 16)

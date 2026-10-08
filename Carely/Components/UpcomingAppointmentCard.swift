@@ -12,67 +12,116 @@ struct UpcomingAppointmentCard: View {
     let specialty: String
     let date: String
     let time: String
+    let appointmentType: String
     let action: () -> Void
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text("Upcoming Appointment")
-                    .font(AppTypography.caption)
-                    .foregroundStyle(AppColors.onPrimary.opacity(0.8))
+    // MARK: - Doctor Section
+    private var doctorSection: some View {
+        HStack(spacing: 12) {
+            doctorImage
 
-                Spacer()
-
-                Image(systemName: "calendar")
+            VStack(alignment: .leading, spacing: 5) {
+                Text(doctorName)
+                    .font(AppTypography.bodyMedium)
                     .foregroundStyle(AppColors.onPrimary)
-            }
+                    .lineLimit(1)
 
-            HStack(spacing: 12) {
-                Image(systemName: "person.crop.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundStyle(AppColors.onPrimary.opacity(0.8))
-                    .frame(width: 52, height: 52)
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(doctorName)
-                        .font(AppTypography.bodyMedium)
-                        .foregroundStyle(AppColors.onPrimary)
-
-                    Text(specialty)
-                        .font(AppTypography.caption)
-                        .foregroundStyle(AppColors.onPrimary.opacity(0.8))
-                }
-
-                Spacer()
-            }
-
-            HStack(spacing: 16) {
-                Label(date, systemImage: "calendar")
-                Label(time, systemImage: "clock")
-            }
-            .font(AppTypography.caption)
-            .foregroundStyle(AppColors.onPrimary)
-
-            Button {
-                action()
-            } label: {
-                Text("View Appointment")
-                    .font(AppTypography.button)
-                    .foregroundStyle(AppColors.primary)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 44)
-                    .background(AppColors.onPrimary)
-                    .clipShape(
-                        RoundedRectangle(cornerRadius: 12)
+                Text(specialty)
+                    .font(AppTypography.caption)
+                    .foregroundStyle(
+                        AppColors.onPrimary.opacity(0.8)
                     )
             }
+
+            Spacer()
+
+            Text(appointmentType)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(AppColors.primary)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(
+                    AppColors.onPrimary.opacity(0.9)
+                )
+                .clipShape(Capsule())
         }
-        .padding(20)
-        .background(AppColors.primary)
-        .clipShape(
-            RoundedRectangle(cornerRadius: 20)
-        )
+    }
+
+    // MARK: - Appointment Info Section
+    private var appointmentInfoSection: some View {
+        HStack(spacing: 12) {
+            dateView
+
+            Spacer()
+
+            Rectangle()
+                .fill(
+                    AppColors.onPrimary.opacity(0.35)
+                )
+                .frame(width: 1, height: 28)
+
+            Spacer()
+
+            timeView
+
+            Image(systemName: "chevron.right")
+                .font(
+                    .system(size: 13, weight: .semibold)
+                )
+                .foregroundStyle(AppColors.onPrimary)
+        }
+    }
+
+    // MARK: - Date
+    private var dateView: some View {
+        Label(date, systemImage: "calendar")
+            .font(AppTypography.caption)
+            .foregroundStyle(AppColors.onPrimary)
+            .lineLimit(1)
+    }
+
+    // MARK: - Time
+    private var timeView: some View {
+        Label(time, systemImage: "clock")
+            .font(AppTypography.caption)
+            .foregroundStyle(AppColors.onPrimary)
+    }
+
+    // MARK: - Doctor Image
+    private var doctorImage: some View {
+        Image(systemName: "person.fill")
+            .font(.system(size: 24))
+            .foregroundStyle(AppColors.primary)
+            .frame(width: 56, height: 56)
+            .background(
+                AppColors.onPrimary.opacity(0.9)
+            )
+            .clipShape(Circle())
+    }
+    
+    var body: some View {
+        Button {
+            action()
+        } label: {
+            VStack(alignment: .leading, spacing: 18) {
+                doctorSection
+
+                Rectangle()
+                    .fill(
+                        AppColors.onPrimary.opacity(0.25)
+                    )
+                    .frame(height: 1)
+
+                appointmentInfoSection
+            }
+            .padding(20)
+            .frame(maxWidth: .infinity)
+            .background(AppColors.primary)
+            .clipShape(
+                RoundedRectangle(cornerRadius: 22)
+            )
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -80,8 +129,9 @@ struct UpcomingAppointmentCard: View {
     UpcomingAppointmentCard(
         doctorName: "Dr. Sarah Mitchell",
         specialty: "Cardiologist",
-        date: "Today",
-        time: "14:30"
+        date: "Thu, Sep 25, 2026",
+        time: "10:00 AM",
+        appointmentType: "In-Person"
     ) {
         print("Appointment tapped")
     }
