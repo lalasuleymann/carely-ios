@@ -8,32 +8,30 @@
 import SwiftUI
 
 struct SearchView: View {
-    @State private var searchText = ""
-    @State private var searchResults: [Doctor] = []
-    @State private var hasSearched = false
+    @State private var viewModel = SearchViewModel()
     
     // MARK: - Search
     private var searchSection: some View {
-        SearchBar(text: $searchText,placeholder: "Search doctors...")
+        SearchBar(text: $viewModel.searchText,placeholder: "Search doctors...")
         .onSubmit {
-            search()
+            viewModel.search()
         }
     }
 
     // MARK: - Results
     private var resultsSection: some View {
         VStack(alignment: .leading,spacing: 12) {
-            if !searchResults.isEmpty {
+            if !viewModel.searchResults.isEmpty {
                 Text("Search Results")
                     .font(AppTypography.headline)
                     .foregroundStyle(
                         AppColors.primaryText
                     )
 
-                ForEach(searchResults) { doctor in
+                ForEach(viewModel.searchResults) { doctor in
                     DoctorCard(doctor: doctor)
                 }
-            } else if hasSearched {
+            } else if viewModel.hasSearched {
                 noResultsView
             } else {
                 emptySearchView
@@ -92,24 +90,6 @@ struct SearchView: View {
         .padding(.top, 50)
     }
 
-    // MARK: - Search Logic
-    private func search() {
-        let query = searchText
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        guard !query.isEmpty else {
-            searchResults = []
-            hasSearched = false
-            return
-        }
-        hasSearched = true
-        
-        searchResults = MockDoctorData.doctors.filter { doctor in
-            doctor.name.localizedCaseInsensitiveContains(query) ||
-            doctor.specialty.localizedCaseInsensitiveContains(query)
-        }
-    }
-    
     var body: some View {
         NavigationStack {
             ScrollView {
