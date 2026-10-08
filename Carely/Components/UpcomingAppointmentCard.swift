@@ -85,6 +85,4 @@ struct UpcomingAppointmentCard: View {
     ) {
         print("Appointment tapped")
     }
-    .padding()
-    .background(AppColors.background)
 }

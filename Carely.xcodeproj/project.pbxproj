@@ -10,22 +10,9 @@
 		D34A00AF30737D06008AC20D /* Carely.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Carely.app; path = "/Users/lalasuleyman/Desktop/Carely/build/Debug-iphoneos/Carely.app"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		D34A01013077791E008AC20D /* Exceptions for "Carely" folder in "Carely" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Components/Untitled.swift,
-			);
-			target = D34A00AE30737D06008AC20D /* Carely */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D34A00D630737D62008AC20D /* Carely */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				D34A01013077791E008AC20D /* Exceptions for "Carely" folder in "Carely" target */,
-			);
 			path = Carely;
 			sourceTree = "<group>";
 		};
