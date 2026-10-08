@@ -47,7 +47,7 @@ struct HomeView: View {
         .padding(.bottom, 28)
         .background(AppColors.primary)
     }
-
+g
     // MARK: - Notification Button
     private var notificationButton: some View {
         ZStack(alignment: .topTrailing) {

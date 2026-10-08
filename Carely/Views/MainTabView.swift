@@ -15,7 +15,7 @@ struct MainTabView: View {
                     Label("Home", systemImage: "house.fill")
                 }
 
-            Text("Search")
+            SearchView()
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
