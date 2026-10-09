@@ -5,33 +5,13 @@
 //  Created by Lala Suleymanova on 09.10.26.
 //
 
-
 import SwiftUI
 
 struct DoctorDetailView: View {
     let doctor: Doctor
 
-    @State private var selectedDate = Calendar.current.startOfDay(for: .now)
-    @State private var selectedTime: String? = nil
-
-    private let timeSlots = [
-        "10:00 am",
-        "10:30 am",
-        "11:00 am",
-        "11:30 am",
-        "12:00 pm",
-        "12:30 pm"
-    ]
-
-    private var availableDates: [Date] {
-        (0..<5).compactMap { offset in
-            Calendar.current.date(
-                byAdding: .day,
-                value: offset,
-                to: Calendar.current.startOfDay(for: .now)
-            )
-        }
-    }
+    @State private var viewModel = DoctorDetailViewModel()
+    @State private var showDatePicker = false
 
     var body: some View {
         ScrollView {
@@ -43,7 +23,10 @@ struct DoctorDetailView: View {
 
                 scheduleSection
                     .padding(20)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(
+                        maxWidth: .infinity,
+                        alignment: .leading
+                    )
                     .background(AppColors.surface)
                     .clipShape(
                         UnevenRoundedRectangle(
@@ -59,24 +42,38 @@ struct DoctorDetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Button("Share", systemImage: "square.and.arrow.up") {
+                    Button(
+                        "Share",
+                        systemImage: "square.and.arrow.up"
+                    ) {
                         // Share functionality will be added later.
                     }
 
-                    Button("Add to Favorites", systemImage: "heart") {
+                    Button(
+                        "Add to Favorites",
+                        systemImage: "heart"
+                    ) {
                         // Favorites functionality will be added later.
                     }
                 } label: {
                     Image(systemName: "ellipsis")
-                        .font(.system(size: 20, weight: .semibold))
+                        .font(
+                            .system(size: 20, weight: .semibold)
+                        )
                         .foregroundStyle(AppColors.primaryText)
                 }
             }
+        }
+        .sheet(isPresented: $showDatePicker) {
+            calendarSheet
+                .presentationDetents([.medium, .large])
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
             bookingButton
         }
     }
+
+    // MARK: - Doctor Profile
 
     private var profileSection: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -93,13 +90,20 @@ struct DoctorDetailView: View {
                         .clipShape(Capsule())
 
                     Text(doctor.name)
-                        .font(.system(size: 27, weight: .bold))
+                        .font(
+                            .system(size: 27, weight: .bold)
+                        )
                         .foregroundStyle(AppColors.primaryText)
-                        .fixedSize(horizontal: false, vertical: true)
+                        .fixedSize(
+                            horizontal: false,
+                            vertical: true
+                        )
                         .lineLimit(2)
 
                     Text("$\(Int(doctor.consultationFee))")
-                        .font(.system(size: 22, weight: .bold))
+                        .font(
+                            .system(size: 22, weight: .bold)
+                        )
                         .foregroundStyle(AppColors.primary)
                 }
 
@@ -112,7 +116,10 @@ struct DoctorDetailView: View {
                         AppColors.primary.opacity(0.75)
                     )
                     .frame(width: 140, height: 190)
-                    .frame(maxHeight: .infinity, alignment: .bottom)
+                    .frame(
+                        maxHeight: .infinity,
+                        alignment: .bottom
+                    )
             }
             .frame(height: 220, alignment: .bottom)
 
@@ -133,7 +140,10 @@ struct DoctorDetailView: View {
                 )
 
                 statistic(
-                    value: String(format: "%.1f", doctor.rating),
+                    value: String(
+                        format: "%.1f",
+                        doctor.rating
+                    ),
                     title: "Rating"
                 )
             }
@@ -141,7 +151,9 @@ struct DoctorDetailView: View {
             .background(
                 AppColors.primary.opacity(0.10)
             )
-            .clipShape(RoundedRectangle(cornerRadius: 22))
+            .clipShape(
+                RoundedRectangle(cornerRadius: 22)
+            )
         }
     }
 
@@ -151,7 +163,9 @@ struct DoctorDetailView: View {
     ) -> some View {
         VStack(spacing: 8) {
             Text(value)
-                .font(.system(size: 23, weight: .bold))
+                .font(
+                    .system(size: 23, weight: .bold)
+                )
                 .foregroundStyle(AppColors.primaryText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
@@ -163,6 +177,8 @@ struct DoctorDetailView: View {
         .frame(maxWidth: .infinity)
     }
 
+    // MARK: - Schedule
+
     private var scheduleSection: some View {
         VStack(alignment: .leading, spacing: 24) {
             VStack(alignment: .leading, spacing: 8) {
@@ -173,12 +189,37 @@ struct DoctorDetailView: View {
 
                     Spacer()
 
-                    Image(systemName: "calendar")
-                        .foregroundStyle(AppColors.primary)
+                    Button {
+                        viewModel.openCalendar()
+                        showDatePicker = true
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "calendar")
+                                .foregroundStyle(AppColors.primary)
 
-                    Text(selectedDate.formatted(.dateTime.month(.abbreviated).day()))
-                        .font(AppTypography.bodyMedium)
-                        .foregroundStyle(AppColors.primaryText)
+                            Text(
+                                viewModel.selectedDate.formatted(
+                                    .dateTime
+                                        .month(.abbreviated)
+                                        .day()
+                                )
+                            )
+                            .font(AppTypography.bodyMedium)
+                            .foregroundStyle(AppColors.primaryText)
+
+                            Image(systemName: "chevron.down")
+                                .font(
+                                    .system(
+                                        size: 12,
+                                        weight: .semibold
+                                    )
+                                )
+                                .foregroundStyle(
+                                    AppColors.secondaryText
+                                )
+                        }
+                    }
+                    .buttonStyle(.plain)
                 }
 
                 Text("Easily plan your appointment at a time")
@@ -192,7 +233,10 @@ struct DoctorDetailView: View {
                     .foregroundStyle(AppColors.primaryText)
 
                 HStack(spacing: 10) {
-                    ForEach(availableDates, id: \.self) { date in
+                    ForEach(
+                        viewModel.availableDates,
+                        id: \.self
+                    ) { date in
                         dateButton(for: date)
                     }
                 }
@@ -204,14 +248,16 @@ struct DoctorDetailView: View {
                     .foregroundStyle(AppColors.primaryText)
 
                 LazyVGrid(
-                    columns: [
-                        GridItem(.flexible()),
-                        GridItem(.flexible()),
-                        GridItem(.flexible())
-                    ],
+                    columns: Array(
+                        repeating: GridItem(.flexible()),
+                        count: 3
+                    ),
                     spacing: 12
                 ) {
-                    ForEach(timeSlots, id: \.self) { time in
+                    ForEach(
+                        viewModel.timeSlots,
+                        id: \.self
+                    ) { time in
                         timeButton(for: time)
                     }
                 }
@@ -219,22 +265,226 @@ struct DoctorDetailView: View {
         }
     }
 
-    private func dateButton(for date: Date) -> some View {
+    // MARK: - Calendar Sheet
+
+    private var calendarSheet: some View {
+        NavigationStack {
+            VStack(spacing: 20) {
+                if viewModel.showingMonthYearPicker {
+                    monthYearPicker
+                } else {
+                    calendarGrid
+                }
+
+                Spacer(minLength: 0)
+            }
+            .padding(20)
+            .navigationTitle(
+                viewModel.showingMonthYearPicker
+                    ? "Select Month & Year"
+                    : "Select Date"
+            )
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(
+                    placement: .cancellationAction
+                ) {
+                    Button("Cancel") {
+                        showDatePicker = false
+                    }
+                }
+
+                ToolbarItem(
+                    placement: .confirmationAction
+                ) {
+                    if viewModel.showingMonthYearPicker {
+                        Button("Back") {
+                            viewModel.showingMonthYearPicker = false
+                        }
+                    } else {
+                        Button("Done") {
+                            viewModel.confirmDraftDate()
+                            showDatePicker = false
+                        }
+                        .fontWeight(.semibold)
+                    }
+                }
+            }
+        }
+    }
+
+    private var calendarGrid: some View {
+        VStack(spacing: 20) {
+            Button {
+                viewModel.showingMonthYearPicker = true
+            } label: {
+                HStack(spacing: 6) {
+                    Text(
+                        "\(viewModel.months[viewModel.displayedMonth - 1]) \(viewModel.displayedYear.formatted(.number.locale(Locale(identifier: "en_US_POSIX"))))"
+                    )
+                    .font(
+                        .system(size: 17, weight: .semibold)
+                    )
+
+                    Image(systemName: "chevron.down")
+                        .font(
+                            .system(size: 12, weight: .semibold)
+                        )
+                }
+                .foregroundStyle(AppColors.primary)
+                .frame(
+                    maxWidth: .infinity,
+                    alignment: .leading
+                )
+            }
+            .buttonStyle(.plain)
+
+            HStack(spacing: 0) {
+                ForEach(
+                    viewModel.weekdays,
+                    id: \.self
+                ) { weekday in
+                    Text(weekday)
+                        .font(
+                            .system(size: 12, weight: .medium)
+                        )
+                        .foregroundStyle(AppColors.secondaryText)
+                        .frame(maxWidth: .infinity)
+                }
+            }
+
+            LazyVGrid(
+                columns: Array(
+                    repeating: GridItem(.flexible(), spacing: 0),
+                    count: 7
+                ),
+                spacing: 8
+            ) {
+                ForEach(
+                    viewModel.daysInMonth.indices,
+                    id: \.self
+                ) { index in
+                    if let date = viewModel.daysInMonth[index] {
+                        calendarDayButton(date)
+                    } else {
+                        Color.clear
+                            .frame(height: 40)
+                    }
+                }
+            }
+        }
+    }
+
+    private var monthYearPicker: some View {
+        HStack(spacing: 0) {
+            Picker(
+                "Month",
+                selection: Binding(
+                    get: { viewModel.displayedMonth },
+                    set: {
+                        viewModel.changeDisplayedMonth($0)
+                    }
+                )
+            ) {
+                ForEach(
+                    1...12,
+                    id: \.self
+                ) { month in
+                    Text(viewModel.months[month - 1])
+                        .tag(month)
+                }
+            }
+            .pickerStyle(.wheel)
+            .frame(maxWidth: .infinity)
+
+            Picker(
+                "Year",
+                selection: Binding(
+                    get: { viewModel.displayedYear },
+                    set: {
+                        viewModel.changeDisplayedYear($0)
+                    }
+                )
+            ) {
+                ForEach(
+                    viewModel.availableYears,
+                    id: \.self
+                ) { year in
+                    Text(String(year))
+                        .tag(year)
+                }
+            }
+            .pickerStyle(.wheel)
+            .frame(maxWidth: .infinity)
+        }
+        .frame(height: 220)
+    }
+
+    private func calendarDayButton(
+        _ date: Date
+    ) -> some View {
+        let isSelected = viewModel.isSelectedCalendarDay(date)
+        let isPastDate = viewModel.isPastDate(date)
+
+        return Button {
+            viewModel.selectCalendarDay(date)
+        } label: {
+            Text(
+                "\(Calendar.current.component(.day, from: date))"
+            )
+            .font(
+                .system(
+                    size: 15,
+                    weight: isSelected ? .bold : .regular
+                )
+            )
+            .foregroundStyle(
+                isSelected
+                    ? AppColors.onPrimary
+                    : isPastDate
+                        ? AppColors.secondaryText.opacity(0.4)
+                        : AppColors.primaryText
+            )
+            .frame(maxWidth: .infinity)
+            .frame(height: 40)
+            .background {
+                if isSelected {
+                    Circle()
+                        .fill(AppColors.primary)
+                        .frame(width: 38, height: 38)
+                }
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .disabled(isPastDate)
+    }
+
+    // MARK: - Date and Time Buttons
+
+    private func dateButton(
+        for date: Date
+    ) -> some View {
         let isSelected = Calendar.current.isDate(
             date,
-            inSameDayAs: selectedDate
+            inSameDayAs: viewModel.selectedDate
         )
 
         return Button {
-            selectedDate = date
-            selectedTime = nil
+            viewModel.selectDate(date)
         } label: {
             VStack(spacing: 10) {
-                Text(date.formatted(.dateTime.weekday(.abbreviated)))
-                    .font(AppTypography.caption)
+                Text(
+                    date.formatted(
+                        .dateTime.weekday(.abbreviated)
+                    )
+                )
+                .font(AppTypography.caption)
 
                 Text(date.formatted(.dateTime.day()))
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(
+                        .system(size: 18, weight: .semibold)
+                    )
             }
             .foregroundStyle(
                 isSelected
@@ -248,16 +498,20 @@ struct DoctorDetailView: View {
                     ? AppColors.primary.opacity(0.12)
                     : AppColors.background
             )
-            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .clipShape(
+                RoundedRectangle(cornerRadius: 20)
+            )
         }
         .buttonStyle(.plain)
     }
 
-    private func timeButton(for time: String) -> some View {
-        let isSelected = selectedTime == time
+    private func timeButton(
+        for time: String
+    ) -> some View {
+        let isSelected = viewModel.selectedTime == time
 
         return Button {
-            selectedTime = time
+            viewModel.selectTime(time)
         } label: {
             Text(time)
                 .font(AppTypography.caption)
@@ -280,16 +534,21 @@ struct DoctorDetailView: View {
         .buttonStyle(.plain)
     }
 
+    // MARK: - Booking Button
+
     private var bookingButton: some View {
         VStack(spacing: 0) {
             PrimaryButton(
                 title: "Book Appointment",
-                isDisabled: !doctor.isAvailable || selectedTime == nil
+                isDisabled: !doctor.isAvailable ||
+                    viewModel.selectedTime == nil
             ) {
-                guard let selectedTime else { return }
+                guard let selectedTime = viewModel.selectedTime else {
+                    return
+                }
 
                 print("Doctor: \(doctor.name)")
-                print("Date: \(selectedDate.formatted(date: .long, time: .omitted))")
+                print("Date: \(viewModel.selectedDate.formatted(date: .long,time: .omitted))")
                 print("Time: \(selectedTime)")
             }
         }
@@ -307,3 +566,4 @@ struct DoctorDetailView: View {
         )
     }
 }
+
