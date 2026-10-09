@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Doctor: Identifiable, Codable {
+struct Doctor: Identifiable, Codable, Hashable {
     let id: Int
     let name: String
     let specialty: String

@@ -69,7 +69,10 @@ struct SearchView: View {
         case .loaded:
             VStack(alignment: .leading, spacing: 12) {
                 ForEach(viewModel.searchResults) { doctor in
-                    DoctorCard(doctor: doctor)
+                    NavigationLink(value: doctor) {
+                        DoctorCard(doctor: doctor)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
         case .empty:
@@ -101,21 +104,19 @@ struct SearchView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading,spacing: 20) {
-                    searchSection
-                    resultsSection
-                }
-                .padding(16)
+        ScrollView {
+            VStack(alignment: .leading,spacing: 20) {
+                searchSection
+                resultsSection
             }
-            .background(AppColors.background)
-            .navigationTitle("Search")
-            .navigationBarTitleDisplayMode(.inline)
-            .sheet(isPresented: $showFilters) {
-                FilterSheetView(viewModel: viewModel)
-                    .presentationDetents([.large])
-            }
+            .padding(16)
+        }
+        .background(AppColors.background)
+        .navigationTitle("Search")
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showFilters) {
+            FilterSheetView(viewModel: viewModel)
+                .presentationDetents([.large])
         }
     }
 }

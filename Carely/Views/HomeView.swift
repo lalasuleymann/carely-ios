@@ -132,7 +132,10 @@ struct HomeView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(viewModel.doctors) { doctor in
-                        TopDoctorCard(doctor: doctor)
+                        NavigationLink(value: doctor) {
+                            TopDoctorCard(doctor: doctor)
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
             }
