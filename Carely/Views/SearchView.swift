@@ -56,23 +56,41 @@ struct SearchView: View {
     }
     
     // MARK: - Results
+    @ViewBuilder
     private var resultsSection: some View {
-        VStack(alignment: .leading,spacing: 12) {
-            if !viewModel.searchResults.isEmpty {
-                Text("Search Results")
-                    .font(AppTypography.headline)
-                    .foregroundStyle(
-                        AppColors.primaryText
-                    )
-
+        switch viewModel.state {
+        case .idle:
+            emptySearchView
+        case .loading:
+            ProgressView("Loading doctors...")
+                .tint(AppColors.primary)
+                .frame(maxWidth: .infinity)
+                .padding(.top, 50)
+        case .loaded:
+            VStack(alignment: .leading, spacing: 12) {
                 ForEach(viewModel.searchResults) { doctor in
                     DoctorCard(doctor: doctor)
                 }
-            } else if viewModel.hasSearched {
-                noResultsView
-            } else {
-                emptySearchView
             }
+        case .empty:
+            noResultsView
+        case .error(let message):
+            VStack(spacing: 8) {
+                Image(systemName: "exclamationmark.circle")
+                    .font(.system(size: 32))
+                    .foregroundStyle(AppColors.error)
+                
+                Text("Something went wrong")
+                    .font(AppTypography.bodyMedium)
+                    .foregroundStyle(AppColors.primaryText)
+                
+                Text(message)
+                    .font(AppTypography.caption)
+                    .foregroundStyle(AppColors.secondaryText)
+                    .multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.top, 50)
         }
     }
 
@@ -137,7 +155,8 @@ struct SearchView: View {
                 .padding(16)
             }
             .background(AppColors.background)
-            .navigationTitle("Search Doctors")
+            .navigationTitle("Search")
+            .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $showFilters) {
                 FilterSheetView(viewModel: viewModel)
                     .presentationDetents([.large])

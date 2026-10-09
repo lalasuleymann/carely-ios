@@ -5,6 +5,7 @@
 //  Created by Lala Suleymanova on 08.10.26.
 //
 
+
 import Foundation
 import Observation
 
@@ -12,8 +13,8 @@ import Observation
 final class SearchViewModel {
     var searchText = ""
     var searchResults: [Doctor] = []
-    var hasSearched = false
-
+    var state: SearchViewState = .idle
+    
     var selectedSpecialty = "All"
     var selectedRating = "Any"
     var minimumPrice = 0.0
@@ -27,7 +28,7 @@ final class SearchViewModel {
         "Dentistry",
         "Pediatrics"
     ]
-
+    
     let ratings = [
         "Any",
         "4.0+",
@@ -38,36 +39,41 @@ final class SearchViewModel {
     func search() {
         updateSearchResults()
     }
-
+    
     func applyFilters() {
         updateSearchResults()
     }
-
+    
     private func updateSearchResults() {
         let query = searchText
             .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        let hasActiveFilters = selectedSpecialty != "All" || selectedRating != "Any" || minimumPrice > 0 || onlyAvailable
-
+        
+        let hasActiveFilters =
+        selectedSpecialty != "All" ||
+        selectedRating != "Any" ||
+        minimumPrice > 0 ||
+        onlyAvailable
+        
         guard !query.isEmpty || hasActiveFilters else {
             searchResults = []
-            hasSearched = false
+            state = .idle
             return
         }
-
-        hasSearched = true
-        applyFilters(to: MockDoctorData.doctors)
+        
+        searchResults = filterDoctors(
+            MockDoctorData.doctors,
+            query: query
+        )
+        
+        state = searchResults.isEmpty ? .empty : .loaded
     }
     
-    private func applyFilters(to doctors: [Doctor]) {
-        let query = searchText
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        searchResults = doctors.filter { doctor in
+    private func filterDoctors(_ doctors: [Doctor], query: String) -> [Doctor] {
+        doctors.filter { doctor in
             let matchesSearch = query.isEmpty || doctor.name.localizedCaseInsensitiveContains(query) || doctor.specialty.localizedCaseInsensitiveContains(query)
             
             let matchesSpecialty: Bool
-
+            
             switch selectedSpecialty {
             case "All":
                 matchesSpecialty = true
@@ -94,7 +100,7 @@ final class SearchViewModel {
             return matchesSearch && matchesSpecialty && matchesRating && matchesPrice && matchesAvailability
         }
     }
-
+    
     private var ratingValue: Double {
         switch selectedRating {
         case "4.0+":
