@@ -15,7 +15,7 @@ struct DoctorDetailView: View {
     
     // MARK: - Doctor Profile
     private var profileSection: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .center, spacing: 8) {
                 VStack(alignment: .leading, spacing: 12) {
                     Text(doctor.specialty)
@@ -60,7 +60,7 @@ struct DoctorDetailView: View {
                         alignment: .bottom
                     )
             }
-            .frame(height: 220, alignment: .bottom)
+            .frame(height: 190, alignment: .bottom)
             
             HStack(spacing: 0) {
                 statistic(
@@ -422,8 +422,8 @@ struct DoctorDetailView: View {
             VStack(spacing: 0) {
                 profileSection
                     .padding(.horizontal, 20)
-                    .padding(.top, 16)
-                    .padding(.bottom, 24)
+                    .padding(.top, 8)
+                    .padding(.bottom, 12)
                 
                 scheduleSection
                     .padding(20)
