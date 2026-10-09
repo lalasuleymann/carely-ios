@@ -20,12 +20,12 @@ final class SearchViewModel {
     var onlyAvailable = false
     
     let specialties = [
-            "All",
-            "Cardiology",
-            "Neurology",
-            "Dermatology",
-            "Dentistry",
-            "Pediatrics"
+        "All",
+        "Cardiology",
+        "Neurology",
+        "Dermatology",
+        "Dentistry",
+        "Pediatrics"
     ]
 
     let ratings = [
@@ -36,20 +36,75 @@ final class SearchViewModel {
     ]
     
     func search() {
+        updateSearchResults()
+    }
+
+    func applyFilters() {
+        updateSearchResults()
+    }
+
+    private func updateSearchResults() {
         let query = searchText
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
-        guard !query.isEmpty else {
+        let hasActiveFilters = selectedSpecialty != "All" || selectedRating != "Any" || minimumPrice > 0 || onlyAvailable
+
+        guard !query.isEmpty || hasActiveFilters else {
             searchResults = []
             hasSearched = false
             return
         }
 
         hasSearched = true
+        applyFilters(to: MockDoctorData.doctors)
+    }
+    
+    private func applyFilters(to doctors: [Doctor]) {
+        let query = searchText
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        searchResults = doctors.filter { doctor in
+            let matchesSearch = query.isEmpty || doctor.name.localizedCaseInsensitiveContains(query) || doctor.specialty.localizedCaseInsensitiveContains(query)
+            
+            let matchesSpecialty: Bool
 
-        searchResults = MockDoctorData.doctors.filter { doctor in
-            doctor.name.localizedCaseInsensitiveContains(query) ||
-            doctor.specialty.localizedCaseInsensitiveContains(query)
+            switch selectedSpecialty {
+            case "All":
+                matchesSpecialty = true
+            case "Cardiology":
+                matchesSpecialty = doctor.specialty == "Cardiologist"
+            case "Neurology":
+                matchesSpecialty = doctor.specialty == "Neurologist"
+            case "Dermatology":
+                matchesSpecialty = doctor.specialty == "Dermatologist"
+            case "Dentistry":
+                matchesSpecialty = doctor.specialty == "Dentist"
+            case "Pediatrics":
+                matchesSpecialty = doctor.specialty == "Pediatrician"
+            default:
+                matchesSpecialty = false
+            }
+            
+            let matchesRating = selectedRating == "Any" || doctor.rating >= ratingValue
+            
+            let matchesPrice = doctor.consultationFee >= minimumPrice
+            
+            let matchesAvailability = !onlyAvailable || doctor.isAvailable
+            
+            return matchesSearch && matchesSpecialty && matchesRating && matchesPrice && matchesAvailability
+        }
+    }
+
+    private var ratingValue: Double {
+        switch selectedRating {
+        case "4.0+":
+            return 4.0
+        case "4.5+":
+            return 4.5
+        case "4.8+":
+            return 4.8
+        default:
+            return 0
         }
     }
 }

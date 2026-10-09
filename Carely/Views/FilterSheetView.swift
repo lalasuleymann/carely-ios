@@ -90,7 +90,7 @@ struct FilterSheetView: View {
     }
 
     private func applyFilters() {
-        print("Filters applied")
+        viewModel.applyFilters()
         dismiss()
     }
     
