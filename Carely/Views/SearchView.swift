@@ -75,22 +75,10 @@ struct SearchView: View {
         case .empty:
             noResultsView
         case .error(let message):
-            VStack(spacing: 8) {
-                Image(systemName: "exclamationmark.circle")
-                    .font(.system(size: 32))
-                    .foregroundStyle(AppColors.error)
-                
-                Text("Something went wrong")
-                    .font(AppTypography.bodyMedium)
-                    .foregroundStyle(AppColors.primaryText)
-                
-                Text(message)
-                    .font(AppTypography.caption)
-                    .foregroundStyle(AppColors.secondaryText)
-                    .multilineTextAlignment(.center)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.top, 50)
+            ErrorStateView(
+                title: "Something went wrong",
+                message: message
+            )
         }
     }
 
@@ -105,28 +93,11 @@ struct SearchView: View {
 
     // MARK: - No Results
     private var noResultsView: some View {
-        VStack(spacing: 8) {
-            Image(systemName:"person.crop.circle.badge.xmark")
-            .font(.system(size: 32))
-            .foregroundStyle(
-                AppColors.secondaryText
-            )
-
-            Text("No doctors found")
-                .font(AppTypography.bodyMedium)
-                .foregroundStyle(
-                    AppColors.primaryText
-                )
-
-            Text("Try searching with another name or specialty.")
-            .font(AppTypography.caption)
-            .foregroundStyle(
-                AppColors.secondaryText
-            )
-            .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.top, 50)
+        EmptyStateView(
+            icon: "person.crop.circle.badge.xmark",
+            title: "No doctors found",
+            message: "Try searching with another name or specialty."
+        )
     }
 
     var body: some View {
