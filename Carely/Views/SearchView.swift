@@ -96,27 +96,11 @@ struct SearchView: View {
 
     // MARK: - Empty Search
     private var emptySearchView: some View {
-        VStack(spacing: 8) {
-            Image(systemName: "magnifyingglass")
-                .font(.system(size: 32))
-                .foregroundStyle(
-                    AppColors.primary
-                )
-
-            Text("Search for a doctor")
-                .font(AppTypography.bodyMedium)
-                .foregroundStyle(
-                    AppColors.primaryText
-                )
-
-            Text("Search by doctor name or specialty")
-            .font(AppTypography.caption)
-            .foregroundStyle(
-                AppColors.secondaryText
-            )
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.top, 50)
+        EmptyStateView(
+            icon: "magnifyingglass",
+            title: "Search for a doctor",
+            message: "Search by doctor name or specialty"
+        )
     }
 
     // MARK: - No Results
