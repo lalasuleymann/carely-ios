@@ -7,11 +7,50 @@
 
 import Foundation
 import Observation
+import SwiftUI
 
 @Observable
 final class AppointmentViewModel {
-    
     private(set) var appointments: [Appointment] = []
+
+    func statusTitle(for appointment: Appointment) -> String {
+        switch appointment.status {
+        case .upcoming:
+            return "Upcoming"
+        case .completed:
+            return "Completed"
+        case .cancelled:
+            return "Cancelled"
+        }
+    }
+
+    func statusColor(for appointment: Appointment) -> Color {
+        switch appointment.status {
+        case .upcoming:
+            return AppColors.primary
+        case .completed:
+            return AppColors.success
+        case .cancelled:
+            return AppColors.error
+        }
+    }
+
+    func formattedDate(for appointment: Appointment) -> String {
+        appointment.date.formatted(
+            .dateTime
+                .month(.abbreviated)
+                .day()
+                .year()
+        )
+    }
+
+    func formattedFee(for appointment: Appointment) -> String {
+        "$\(Int(appointment.consultationFee))"
+    }
+
+    func canCancel(_ appointment: Appointment) -> Bool {
+        appointment.status == .upcoming
+    }
 
     func bookAppointment(doctor: Doctor,date: Date,time: String) {
         let appointment = Appointment(
@@ -22,6 +61,7 @@ final class AppointmentViewModel {
             time: time,
             consultationFee: doctor.consultationFee
         )
+
         appointments.append(appointment)
     }
 
