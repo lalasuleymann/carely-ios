@@ -10,6 +10,10 @@ import SwiftUI
 struct DoctorDetailView: View {
     let doctor: Doctor
     
+    @Environment(AppointmentViewModel.self)
+    private var appointmentViewModel
+
+    @State private var showBookingConfirmation = false
     @State private var viewModel = DoctorDetailViewModel()
     @State private var showDatePicker = false
     
@@ -405,16 +409,31 @@ struct DoctorDetailView: View {
                     return
                 }
                 
-                print("Doctor: \(doctor.name)")
-                print("Date: \(viewModel.selectedDate.formatted(date: .long,time: .omitted))")
-                print("Time: \(selectedTime)")
+                appointmentViewModel.bookAppointment(
+                    doctor: doctor,
+                    date: viewModel.selectedDate,
+                    time: selectedTime
+                )
+                
+                showBookingConfirmation = true
             }
         }
         .padding(.horizontal, 20)
         .padding(.top, 12)
         .padding(.bottom, 8)
         .background(AppColors.surface)
+        .alert(
+            "Appointment Booked",
+            isPresented: $showBookingConfirmation
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(
+                "\(doctor.name) üçün \(viewModel.selectedDate.formatted(date: .long, time: .omitted)), saat \(viewModel.selectedTime ?? "") rezervasiya edildi."
+            )
+        }
     }
+
     
     
     var body: some View {
@@ -484,5 +503,5 @@ struct DoctorDetailView: View {
             doctor: MockDoctorData.doctors[0]
         )
     }
+    .environment(AppointmentViewModel())
 }
-

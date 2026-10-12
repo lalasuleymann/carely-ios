@@ -69,7 +69,9 @@ struct SearchView: View {
         case .loaded:
             VStack(alignment: .leading, spacing: 12) {
                 ForEach(viewModel.searchResults) { doctor in
-                    NavigationLink(value: doctor) {
+                    NavigationLink {
+                        DoctorDetailView(doctor: doctor)
+                    } label: {
                         DoctorCard(doctor: doctor)
                     }
                     .buttonStyle(.plain)

@@ -38,13 +38,11 @@ struct MainTabView: View {
                     }
             }
             .tint(AppColors.primary)
-            .navigationDestination(for: Doctor.self) { doctor in
-                DoctorDetailView(doctor: doctor)
-            }
         }
     }
 }
 
 #Preview {
     MainTabView()
+        .environment(AppointmentViewModel())
 }

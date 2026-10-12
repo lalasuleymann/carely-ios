@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct CarelyApp: App {
+    @State private var appointmentViewModel = AppointmentViewModel()
+
     var body: some Scene {
         WindowGroup {
             MainTabView()
+                .environment(appointmentViewModel)
         }
     }
 }
