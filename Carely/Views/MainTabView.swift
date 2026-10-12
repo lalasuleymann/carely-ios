@@ -10,35 +10,39 @@ import SwiftUI
 
 struct MainTabView: View {
     var body: some View {
-        NavigationStack {
-            TabView {
+        TabView {
+            NavigationStack {
                 HomeView()
-                    .tabItem {
-                        Label("Home", systemImage: "house.fill")
-                    }
-
-                SearchView()
-                    .tabItem {
-                        Label("Search", systemImage: "magnifyingglass")
-                    }
-
-                Text("Appointments")
-                    .tabItem {
-                        Label("Appointments", systemImage: "calendar")
-                    }
-
-                Text("Favorites")
-                    .tabItem {
-                        Label("Favorites", systemImage: "heart")
-                    }
-
-                Text("Profile")
-                    .tabItem {
-                        Label("Profile", systemImage: "person")
-                    }
+            }.tabItem {
+                Label("Home", systemImage: "house.fill")
             }
-            .tint(AppColors.primary)
+            NavigationStack {
+                SearchView()
+                
+            } .tabItem {
+                Label("Search", systemImage: "magnifyingglass")
+            }
+            NavigationStack {
+                AppointmentsView()
+            }
+            .tabItem {
+                Label("Appointments", systemImage: "calendar")
+            }
+            NavigationStack {
+                Text("Favorites")
+            }
+            .tabItem {
+                Label("Favorites", systemImage: "heart")
+            }
+            NavigationStack {
+                Text("Profile")
+            }
+            .tabItem {
+                Label("Profile", systemImage: "person")
+            }
         }
+        .tint(AppColors.primary)
+        
     }
 }
 
