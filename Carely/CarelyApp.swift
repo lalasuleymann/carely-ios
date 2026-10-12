@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct CarelyApp: App {
@@ -15,6 +16,7 @@ struct CarelyApp: App {
         WindowGroup {
             MainTabView()
                 .environment(appointmentViewModel)
+                .modelContainer(for: Appointment.self)
         }
     }
 }

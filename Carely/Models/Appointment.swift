@@ -5,17 +5,29 @@
 //  Created by Lala Suleymanova on 09.10.26.
 //
 
-import Foundation
 
-struct Appointment: Identifiable, Codable {
-    let id: UUID
-    let doctorID: Int
-    let doctorName: String
-    let specialty: String
-    let date: Date
-    let time: String
-    let consultationFee: Double
-    var status: AppointmentStatus
+import Foundation
+import SwiftData
+
+@Model
+final class Appointment {
+    var id: UUID
+    var doctorID: Int
+    var doctorName: String
+    var specialty: String
+    var date: Date
+    var time: String
+    var consultationFee: Double
+    var statusRawValue: String
+
+    var status: AppointmentStatus {
+        get {
+            AppointmentStatus(rawValue: statusRawValue) ?? .upcoming
+        }
+        set {
+            statusRawValue = newValue.rawValue
+        }
+    }
 
     init(
         id: UUID = UUID(),
@@ -34,7 +46,7 @@ struct Appointment: Identifiable, Codable {
         self.date = date
         self.time = time
         self.consultationFee = consultationFee
-        self.status = status
+        self.statusRawValue = status.rawValue
     }
 }
 

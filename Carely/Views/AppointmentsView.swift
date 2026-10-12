@@ -5,21 +5,18 @@
 //  Created by Lala Suleymanova on 12.10.26.
 //
 
+
 import SwiftUI
+import SwiftData
 
 struct AppointmentsView: View {
 
     @Environment(AppointmentViewModel.self)
     private var viewModel
-    @State private var selectedStatus: AppointmentStatus = .upcoming
-
-    // MARK: - Filtered Appointments
-    private var filteredAppointments: [Appointment] {
-        viewModel.appointments.filter {
-            $0.status == selectedStatus
-        }
-    }
-
+    
+    @Environment(\.modelContext)
+    private var modelContext
+    
     // MARK: - Status Filter
     private var statusFilter: some View {
         HStack(spacing: 4) {
@@ -33,10 +30,9 @@ struct AppointmentsView: View {
     }
 
     private func statusButton(_ status: AppointmentStatus) -> some View {
-        let isSelected = selectedStatus == status
-
+        let isSelected = viewModel.selectedStatus == status
         return Button {
-            selectedStatus = status
+            viewModel.selectStatus(status)
         } label: {
             Text(statusTitle(for: status))
                 .font(AppTypography.bodyMedium)
@@ -77,20 +73,16 @@ struct AppointmentsView: View {
     // MARK: - Appointments List
     private var appointmentsList: some View {
         LazyVStack(spacing: 16) {
-            if filteredAppointments.isEmpty {
-                emptyState
-            } else {
-                ForEach(filteredAppointments) { appointment in
-                    AppointmentCard(
-                        appointment: appointment,
-                        viewModel: viewModel,
-                        onCancel: {
-                            viewModel.cancelAppointment(
-                                id: appointment.id
-                            )
-                        }
-                    )
-                }
+            ForEach(viewModel.filteredAppointments) { appointment in
+                AppointmentCard(
+                    appointment: appointment,
+                    viewModel: viewModel,
+                    onCancel: {
+                        viewModel.cancelAppointment(
+                            id: appointment.id
+                        )
+                    }
+                )
             }
         }
     }
@@ -116,7 +108,7 @@ struct AppointmentsView: View {
     }
 
     private var emptyTitle: String {
-        switch selectedStatus {
+        switch viewModel.selectedStatus {
         case .upcoming:
             return "No Upcoming Appointments"
         case .completed:
@@ -127,7 +119,7 @@ struct AppointmentsView: View {
     }
 
     private var emptyMessage: String {
-        switch selectedStatus {
+        switch viewModel.selectedStatus {
         case .upcoming:
             return "Your upcoming appointments will appear here."
         case .completed:
@@ -137,17 +129,43 @@ struct AppointmentsView: View {
         }
     }
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
+    // MARK: - Content State
+    @ViewBuilder
+    private var content: some View {
+        switch viewModel.state {
+        case .idle:
+            EmptyView()
 
+        case .loading:
+            ProgressView("Loading appointments...")
+                .tint(AppColors.primary)
+                .frame(maxWidth: .infinity)
+                .padding(.top, 50)
+
+        case .loaded:
+            appointmentsList
+
+        case .empty:
+            emptyState
+
+        case .error(let message):
+            ErrorStateView(
+                title: "Something went wrong",
+                message: message
+            )
+        }
+    }
+
+    // MARK: - Body
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
             statusFilter
 
             ScrollView {
-                appointmentsList
+                content
+                    .padding(.top, 8)
             }
         }
-        .navigationTitle("Appointments")
-        .navigationBarTitleDisplayMode(.inline)
         .padding(.horizontal, 20)
         .frame(
             maxWidth: .infinity,
@@ -155,6 +173,12 @@ struct AppointmentsView: View {
             alignment: .top
         )
         .background(AppColors.background)
+        .navigationTitle("Appointments")
+        .navigationBarTitleDisplayMode(.inline)
+        .task {
+            viewModel.configure(context: modelContext);
+            viewModel.loadAppointments()
+        }
     }
 }
 

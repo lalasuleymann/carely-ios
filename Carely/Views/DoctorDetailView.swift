@@ -6,12 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct DoctorDetailView: View {
     let doctor: Doctor
     
     @Environment(AppointmentViewModel.self)
     private var appointmentViewModel
+    
+    @Environment(\.modelContext)
+    private var modelContext
 
     @State private var showBookingConfirmation = false
     @State private var viewModel = DoctorDetailViewModel()
@@ -434,8 +438,6 @@ struct DoctorDetailView: View {
         }
     }
 
-    
-    
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
@@ -462,6 +464,9 @@ struct DoctorDetailView: View {
         .background(AppColors.background)
         .navigationTitle("Doctor Details")
         .navigationBarTitleDisplayMode(.inline)
+        .task {
+            appointmentViewModel.configure(context: modelContext)
+        }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
