@@ -114,8 +114,55 @@ final class DoctorDetailViewModel {
         selectDate(draftDate)
     }
 
+    func isPastTime(_ time: String, on date: Date) -> Bool {
+        guard Calendar.current.isDateInToday(date),
+              let slotDate = dateForTime(time, on: date)
+        else {
+            return false
+        }
+
+        return slotDate <= .now
+    }
+
+    func canBook(date: Date, time: String) -> Bool {
+        guard !isPastDate(date),
+              !isPastTime(time, on: date)
+        else {
+            return false
+        }
+
+        return true
+    }
+
     func selectTime(_ time: String) {
+        guard canBook(date: selectedDate, time: time) else {
+            selectedTime = nil
+            return
+        }
+
         selectedTime = time
+    }
+
+    private func dateForTime(_ time: String, on date: Date) -> Date? {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "h:mm a"
+
+        guard let parsedTime = formatter.date(from: time) else {
+            return nil
+        }
+
+        let components = Calendar.current.dateComponents(
+            [.hour, .minute],
+            from: parsedTime
+        )
+
+        return Calendar.current.date(
+            bySettingHour: components.hour ?? 0,
+            minute: components.minute ?? 0,
+            second: 0,
+            of: date
+        )
     }
 
     func selectCalendarDay(_ date: Date) {

@@ -356,7 +356,9 @@ struct DoctorDetailView: View {
             date,
             inSameDayAs: viewModel.selectedDate
         )
-        
+
+        let isPastDate = viewModel.isPastDate(date)
+
         return Button {
             viewModel.selectDate(date)
         } label: {
@@ -367,24 +369,40 @@ struct DoctorDetailView: View {
                     )
                 )
                 .font(AppTypography.caption)
-                
+
                 Text(date.formatted(.dateTime.day()))
                     .font(.system(size: 18, weight: .semibold))
             }
-            .foregroundStyle(isSelected ? AppColors.primaryText : AppColors.secondaryText)
+            .foregroundStyle(
+                isPastDate
+                    ? AppColors.secondaryText.opacity(0.4)
+                    : isSelected
+                        ? AppColors.primaryText
+                        : AppColors.secondaryText
+            )
             .frame(maxWidth: .infinity)
             .frame(height: 90)
-            .background(isSelected ? AppColors.primary.opacity(0.12) : AppColors.background)
+            .background(
+                isSelected
+                    ? AppColors.primary.opacity(0.12)
+                    : AppColors.background
+            )
             .clipShape(
                 RoundedRectangle(cornerRadius: 20)
             )
         }
         .buttonStyle(.plain)
+        .disabled(isPastDate)
     }
-    
+
     private func timeButton(for time: String) -> some View {
         let isSelected = viewModel.selectedTime == time
-        
+
+        let isPastTime = viewModel.isPastTime(
+            time,
+            on: viewModel.selectedDate
+        )
+
         return Button {
             viewModel.selectTime(time)
         } label: {
@@ -392,13 +410,24 @@ struct DoctorDetailView: View {
                 .font(AppTypography.caption)
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
-                .foregroundStyle(isSelected ? AppColors.primaryText : AppColors.secondaryText)
+                .foregroundStyle(
+                    isPastTime
+                        ? AppColors.secondaryText.opacity(0.4)
+                        : isSelected
+                            ? AppColors.primaryText
+                            : AppColors.secondaryText
+                )
                 .frame(maxWidth: .infinity)
                 .frame(height: 48)
-                .background(isSelected ? AppColors.primary.opacity(0.12) : AppColors.background)
+                .background(
+                    isSelected
+                        ? AppColors.primary.opacity(0.12)
+                        : AppColors.background
+                )
                 .clipShape(Capsule())
         }
         .buttonStyle(.plain)
+        .disabled(isPastTime)
     }
     
     // MARK: - Booking Button
@@ -410,6 +439,12 @@ struct DoctorDetailView: View {
                 viewModel.selectedTime == nil
             ) {
                 guard let selectedTime = viewModel.selectedTime else {
+                    return
+                }
+                guard viewModel.canBook(
+                    date: viewModel.selectedDate,
+                    time: selectedTime
+                ) else {
                     return
                 }
                 
