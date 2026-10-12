@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		D34A00AF30737D06008AC20D /* Carely.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Carely.app; path = "/Users/lalasuleyman/Desktop/Carely/build/Debug-iphoneos/Carely.app"; sourceTree = "<absolute>"; };
+		D3F79491307CD178009526AE /* Carely.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Carely.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -33,6 +33,7 @@
 			isa = PBXGroup;
 			children = (
 				D34A00D630737D62008AC20D /* Carely */,
+				D3F79491307CD178009526AE /* Carely.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,7 +59,7 @@
 			packageProductDependencies = (
 			);
 			productName = Carely;
-			productReference = D34A00AF30737D06008AC20D /* Carely.app */;
+			productReference = D3F79491307CD178009526AE /* Carely.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */

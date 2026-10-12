@@ -74,15 +74,23 @@ struct AppointmentsView: View {
     private var appointmentsList: some View {
         LazyVStack(spacing: 16) {
             ForEach(viewModel.filteredAppointments) { appointment in
-                AppointmentCard(
-                    appointment: appointment,
-                    viewModel: viewModel,
-                    onCancel: {
-                        viewModel.cancelAppointment(
-                            id: appointment.id
-                        )
-                    }
-                )
+                NavigationLink {
+                    AppointmentDetailView(
+                        appointment: appointment,
+                        viewModel: viewModel
+                    )
+                } label: {
+                    AppointmentCard(
+                        appointment: appointment,
+                        viewModel: viewModel,
+                        onCancel: {
+                            viewModel.cancelAppointment(
+                                id: appointment.id
+                            )
+                        }
+                    )
+                }
+                .buttonStyle(.plain)
             }
         }
     }
@@ -156,7 +164,6 @@ struct AppointmentsView: View {
         }
     }
 
-    // MARK: - Body
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             statusFilter
