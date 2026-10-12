@@ -163,4 +163,28 @@ final class AppointmentViewModel {
             )
         }
     }
+    
+    // MARK: - Completion
+    func completeAppointment(id: UUID) {
+        guard let modelContext,
+              let appointment = appointments.first(where: { $0.id == id })
+        else { return }
+
+        guard appointment.status == .upcoming else { return }
+
+        appointment.status = .completed
+
+        do {
+            try modelContext.save()
+
+            selectedStatus = .completed
+            updateState()
+        } catch {
+            modelContext.rollback()
+            loadAppointments()
+            state = .error(
+                "Failed to complete appointment: \(error.localizedDescription)"
+            )
+        }
+    }
 }

@@ -130,17 +130,31 @@ struct AppointmentDetailView: View {
                 consultationFeeSection
 
                 if viewModel.canCancel(appointment) {
-                    Button(role: .destructive) {
-                        viewModel.cancelAppointment(id: appointment.id)
-                        dismiss()
-                    } label: {
-                        Text("Cancel Appointment")
-                            .font(AppTypography.bodyMedium)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
+                    VStack(spacing: 12) {
+                        Button {
+                            viewModel.completeAppointment(id: appointment.id)
+                            dismiss()
+                        } label: {
+                            Text("Mark as Completed")
+                                .font(AppTypography.bodyMedium)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(AppColors.success)
+
+                        Button(role: .destructive) {
+                            viewModel.cancelAppointment(id: appointment.id)
+                            dismiss()
+                        } label: {
+                            Text("Cancel Appointment")
+                                .font(AppTypography.bodyMedium)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(AppColors.error)
                     }
-                    .buttonStyle(.bordered)
-                    .tint(AppColors.error)
                 }
             }
             .padding(20)
