@@ -7,37 +7,67 @@
 
 import SwiftUI
 import MapKit
-import CoreLocation
-internal import Combine
 
 struct NearbyView: View {
-    @State private var cameraPosition: MapCameraPosition = .region(
-        MKCoordinateRegion(
-            center: CLLocationCoordinate2D(
-                latitude: 40.4093,
-                longitude: 49.8671
-            ),
-            span: MKCoordinateSpan(
-                latitudeDelta: 0.04,
-                longitudeDelta: 0.04
-            )
-        )
-    )
+    @State private var viewModel = NearbyViewModel()
 
-    @StateObject private var locationManager = NearbyLocationManager()
+    private var searchBar: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "magnifyingglass")
+                .foregroundStyle(AppColors.secondaryText)
 
+            Text("Search hospitals and clinics")
+                .font(AppTypography.body)
+                .foregroundStyle(AppColors.secondaryText)
+
+            Spacer()
+        }
+        .padding(16)
+        .background(AppColors.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.06), radius: 8, y: 3)
+    }
+    
+    private var map: some View {
+        Map(
+            position: $viewModel.cameraPosition,
+            interactionModes: [.pan, .zoom, .rotate, .pitch]
+        ) {
+            if let location = viewModel.location {
+                Annotation(
+                    "Your location",
+                    coordinate: location.coordinate,
+                    anchor: .center
+                ) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.blue.opacity(0.20))
+                            .frame(width: 44, height: 44)
+
+                        Circle()
+                            .fill(Color.blue)
+                            .frame(width: 20, height: 20)
+                            .overlay {
+                                Circle()
+                                    .stroke(.white, lineWidth: 3)
+                            }
+                            .shadow(color: .black.opacity(0.2), radius: 3)
+                    }
+                }
+            }
+        }
+        .mapControls {
+            MapCompass()
+            MapUserLocationButton()
+            MapScaleView()
+        }
+        .ignoresSafeArea(edges: .bottom)
+    }
+    
     var body: some View {
         ZStack(alignment: .top) {
-            Map(position: $cameraPosition) {
-                UserAnnotation()
-            }
-            .mapControls {
-                MapCompass()
-                MapUserLocationButton()
-                MapScaleView()
-            }
-            .ignoresSafeArea(edges: .bottom)
-
+            map
+            
             VStack(spacing: 16) {
                 searchBar
 
@@ -57,6 +87,16 @@ struct NearbyView: View {
                 .padding(16)
                 .background(AppColors.surface)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
+
+                if let error = viewModel.locationError {
+                    Text(error)
+                        .font(AppTypography.body)
+                        .foregroundStyle(.red)
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(AppColors.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
             }
             .padding(.horizontal, 20)
             .padding(.top, 12)
@@ -64,83 +104,13 @@ struct NearbyView: View {
         .navigationTitle("Nearby")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            locationManager.requestLocation()
+            viewModel.requestLocation()
         }
-        .onChange(of: locationManager.location) { _, location in
-            guard let location else { return }
-
-            cameraPosition = .region(
-                MKCoordinateRegion(
-                    center: location.coordinate,
-                    span: MKCoordinateSpan(
-                        latitudeDelta: 0.04,
-                        longitudeDelta: 0.04
-                    )
-                )
-            )
-        }
-    }
-
-    private var searchBar: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "magnifyingglass")
-                .foregroundStyle(AppColors.secondaryText)
-
-            Text("Search hospitals and clinics")
-                .font(AppTypography.body)
-                .foregroundStyle(AppColors.secondaryText)
-
-            Spacer()
-        }
-        .padding(16)
-        .background(AppColors.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.06), radius: 8, y: 3)
     }
 }
 
-final class NearbyLocationManager: NSObject,
-                                   ObservableObject,
-                                   CLLocationManagerDelegate {
-    private let manager = CLLocationManager()
-
-    @Published var location: CLLocation?
-
-    override init() {
-        super.init()
-        manager.delegate = self
-        manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-    }
-
-    func requestLocation() {
-        manager.requestWhenInUseAuthorization()
-
-        if manager.authorizationStatus == .authorizedWhenInUse ||
-            manager.authorizationStatus == .authorizedAlways {
-            manager.requestLocation()
-        }
-    }
-
-    func locationManagerDidChangeAuthorization(
-        _ manager: CLLocationManager
-    ) {
-        if manager.authorizationStatus == .authorizedWhenInUse ||
-            manager.authorizationStatus == .authorizedAlways {
-            manager.requestLocation()
-        }
-    }
-
-    func locationManager(
-        _ manager: CLLocationManager,
-        didUpdateLocations locations: [CLLocation]
-    ) {
-        location = locations.last
-    }
-
-    func locationManager(
-        _ manager: CLLocationManager,
-        didFailWithError error: Error
-    ) {
-        print("Location error: \(error.localizedDescription)")
+#Preview {
+    NavigationStack {
+        NearbyView()
     }
 }
