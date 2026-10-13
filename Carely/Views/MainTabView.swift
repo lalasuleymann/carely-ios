@@ -38,10 +38,10 @@ struct MainTabView: View {
             .tag(2)
 
             NavigationStack {
-                Text("Favorites")
+                NearbyView()
             }
             .tabItem {
-                Label("Favorites", systemImage: "heart")
+                Label("Nearby", systemImage: "map")
             }
             .tag(3)
 
