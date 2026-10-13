@@ -183,8 +183,20 @@ struct AppointmentsView: View {
         .navigationTitle("Appointments")
         .navigationBarTitleDisplayMode(.inline)
         .task {
-            viewModel.configure(context: modelContext);
+            viewModel.configure(context: modelContext)
             viewModel.loadAppointments()
+
+            while !Task.isCancelled {
+                do {
+                    try await Task.sleep(for: .seconds(30))
+                } catch {
+                    break
+                }
+
+                guard !Task.isCancelled else { break }
+
+                viewModel.loadAppointments()
+            }
         }
     }
 }

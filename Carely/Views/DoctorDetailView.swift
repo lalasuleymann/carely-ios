@@ -16,6 +16,9 @@ struct DoctorDetailView: View {
     
     @Environment(\.modelContext)
     private var modelContext
+    
+    @Environment(\.selectedTab)
+    private var selectedTab
 
     @State private var showBookingConfirmation = false
     @State private var viewModel = DoctorDetailViewModel()
@@ -465,7 +468,9 @@ struct DoctorDetailView: View {
             "Appointment Booked",
             isPresented: $showBookingConfirmation
         ) {
-            Button("OK", role: .cancel) {}
+            Button("OK", role: .cancel) {
+                selectedTab.wrappedValue = 2
+            }
         } message: {
             Text(
                 "\(doctor.name) üçün \(viewModel.selectedDate.formatted(date: .long, time: .omitted)), saat \(viewModel.selectedTime ?? "") rezervasiya edildi."

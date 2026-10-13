@@ -12,6 +12,7 @@ struct AppointmentCard: View {
     let appointment: Appointment
     let viewModel: AppointmentViewModel
     var onCancel: (() -> Void)? = nil
+    @State private var showCancelConfirmation = false
 
     // MARK: - Doctor Information
     private var doctorSection: some View {
@@ -94,7 +95,9 @@ struct AppointmentCard: View {
 
             if viewModel.canCancel(appointment),
                let onCancel {
-                Button(action: onCancel) {
+                Button {
+                    showCancelConfirmation = true
+                } label: {
                     Text("Cancel")
                         .font(AppTypography.bodyMedium)
                         .foregroundStyle(AppColors.error)
@@ -109,6 +112,21 @@ struct AppointmentCard: View {
                         }
                 }
                 .buttonStyle(.plain)
+                .alert(
+                    "Sure to Cancel?",
+                    isPresented: $showCancelConfirmation
+                ) {
+                    Button("Yes, Cancel", role: .destructive) {
+                        onCancel()
+                    }
+                    
+                    Button("Keep Appointment", role: .cancel) {}
+                    
+                } message: {
+                    Text(
+                        "Are you sure you want to cancel your appointment with \(appointment.doctorName)?"
+                    )
+                }
             }
         }
     }

@@ -51,6 +51,7 @@ final class AppointmentViewModel {
             )
 
             appointments = try modelContext.fetch(descriptor)
+            updateCompletedAppointments()
             updateState()
         } catch {
             state = .error(
@@ -59,6 +60,64 @@ final class AppointmentViewModel {
         }
     }
 
+    private func updateCompletedAppointments() {
+        guard let modelContext else { return }
+
+        let now = Date()
+        var hasChanges = false
+
+        for appointment in appointments {
+            guard appointment.status == .upcoming,
+                  let appointmentDateTime = scheduledDateTime(
+                      for: appointment
+                  ),
+                  appointmentDateTime <= now
+            else {
+                continue
+            }
+
+            appointment.status = .completed
+            hasChanges = true
+        }
+
+        guard hasChanges else { return }
+
+        do {
+            try modelContext.save()
+        } catch {
+            modelContext.rollback()
+            loadAppointments()
+            state = .error(
+                "Failed to update completed appointments: \(error.localizedDescription)"
+            )
+        }
+    }
+
+    private func scheduledDateTime(for appointment: Appointment) -> Date? {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "h:mm a"
+
+        guard let parsedTime = formatter.date(
+            from: appointment.time.uppercased()
+        ) else {
+            return nil
+        }
+
+        let calendar = Calendar.current
+        let timeComponents = calendar.dateComponents(
+            [.hour, .minute],
+            from: parsedTime
+        )
+
+        return calendar.date(
+            bySettingHour: timeComponents.hour ?? 0,
+            minute: timeComponents.minute ?? 0,
+            second: 0,
+            of: appointment.date
+        )
+    }
+    
     // MARK: - State
     private func updateState() {
         state = filteredAppointments.isEmpty ? .empty : .loaded
