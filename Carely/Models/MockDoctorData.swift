@@ -32,8 +32,8 @@ enum MockDoctorData {
             reviewCount: 245,
             experience: 10,
             location: "Baku, Azerbaijan",
-            latitude: 40.4150,
-            longitude: 49.8500,
+            latitude: 40.4093,
+            longitude: 49.8671,
             consultationFee: 45,
             isAvailable: true
         ),

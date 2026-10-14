@@ -5,9 +5,16 @@
 //  Created by Lala Suleymanova on 13.10.26.
 //
 
+
 import SwiftUI
 import MapKit
 import SwiftData
+
+private struct NearbyLocationGroup: Identifiable {
+    let id: String
+    let coordinate: CLLocationCoordinate2D
+    let appointments: [Appointment]
+}
 
 struct NearbyView: View {
 
@@ -18,7 +25,74 @@ struct NearbyView: View {
     private var modelContext
 
     @State private var viewModel = NearbyViewModel()
-    @State private var selectedAppointment: Appointment?
+    @State private var selectedLocationID: String?
+
+    // MARK: - Group appointments by location
+    private var locationGroups: [NearbyLocationGroup] {
+        let doctorsByID = Dictionary(
+            uniqueKeysWithValues: MockDoctorData.doctors.map {
+                ($0.id, $0)
+            }
+        )
+
+        let mappedAppointments = appointmentViewModel.upcomingAppointments
+            .compactMap { appointment -> (
+                key: String,
+                coordinate: CLLocationCoordinate2D,
+                appointment: Appointment
+            )? in
+                guard let doctor = doctorsByID[appointment.doctorID] else {
+                    return nil
+                }
+
+                let latitude = (doctor.latitude * 100_000).rounded() / 100_000
+                let longitude = (doctor.longitude * 100_000).rounded() / 100_000
+
+                let key = String(
+                    format: "%.5f,%.5f",
+                    latitude,
+                    longitude
+                )
+
+                return (
+                    key: key,
+                    coordinate: CLLocationCoordinate2D(
+                        latitude: latitude,
+                        longitude: longitude
+                    ),
+                    appointment: appointment
+                )
+            }
+
+        let grouped = Dictionary(
+            grouping: mappedAppointments,
+            by: \.key
+        )
+
+        return grouped.map { key, items in
+            NearbyLocationGroup(
+                id: key,
+                coordinate: items[0].coordinate,
+                appointments: items
+                    .map(\.appointment)
+                    .sorted {
+                        if $0.date == $1.date {
+                            return $0.time < $1.time
+                        }
+                        return $0.date < $1.date
+                    }
+            )
+        }
+        .sorted { $0.id < $1.id }
+    }
+
+    private var selectedLocationGroup: NearbyLocationGroup? {
+        guard let selectedLocationID else { return nil }
+
+        return locationGroups.first {
+            $0.id == selectedLocationID
+        }
+    }
 
     // MARK: - Search Bar
     private var searchBar: some View {
@@ -69,36 +143,40 @@ struct NearbyView: View {
                     }
                 }
             }
-            
-            ForEach(appointmentViewModel.upcomingAppointments) { appointment in
-                if let doctor = MockDoctorData.doctors.first(
-                    where: { $0.id == appointment.doctorID }
+
+            ForEach(locationGroups) { group in
+                Annotation(
+                    "Appointments nearby",
+                    coordinate: group.coordinate,
+                    anchor: .bottom
                 ) {
-                    Annotation(
-                        appointment.doctorName,
-                        coordinate: CLLocationCoordinate2D(
-                            latitude: doctor.latitude,
-                            longitude: doctor.longitude
-                        ),
-                        anchor: .bottom
-                    ) {
-                        Button {
-                            selectedAppointment = appointment
-                        } label: {
+                    Button {
+                        selectedLocationID = group.id
+                    } label: {
+                        ZStack(alignment: .topTrailing) {
                             Image(systemName: "mappin.circle.fill")
-                                .font(.system(size: 25))
+                                .font(.system(size: 27))
                                 .foregroundStyle(.red)
-                                .padding(3)
                                 .background(.white, in: Circle())
-                                .clipShape(Circle())
                                 .shadow(
                                     color: .black.opacity(0.18),
                                     radius: 3,
                                     y: 2
                                 )
+
+                            if group.appointments.count > 1 {
+                                Text("\(group.appointments.count)")
+                                    .font(
+                                        .system(size: 10, weight: .bold)
+                                    )
+                                    .foregroundStyle(.white)
+                                    .frame(width: 17, height: 17)
+                                    .background(.black, in: Circle())
+                                    .offset(x: 7, y: -5)
+                            }
                         }
-                        .buttonStyle(.plain)
                     }
+                    .buttonStyle(.plain)
                 }
             }
         }
@@ -110,38 +188,230 @@ struct NearbyView: View {
         .ignoresSafeArea(edges: .bottom)
     }
 
-    // MARK: - Appointment Details
-    private var appointmentCard: some View {
-        Group {
-            if let appointment = selectedAppointment {
-                ZStack(alignment: .topTrailing) {
-                    NavigationLink {
-                        AppointmentDetailView(
-                            appointment: appointment,
-                            viewModel: appointmentViewModel
-                        )
-                    } label: {
-                        AppointmentCard(
-                            appointment: appointment,
-                            viewModel: appointmentViewModel
-                        )
-                    }
-                    .buttonStyle(.plain)
+    // MARK: - Appointment Panel
+    private var selectedDoctorCount: Int {
+        Set(selectedLocationGroup?.appointments.map(\.doctorID) ?? []).count
+    }
 
-                    Button {
-                        selectedAppointment = nil
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundStyle(.white)
-                            .frame(width: 20, height: 20)
-                            .background(.black.opacity(0.65), in: Circle())
+    private var appointmentListHeight: CGFloat {
+        guard let group = selectedLocationGroup else {
+            return 0
+        }
+
+        let doctorIDs = Set(group.appointments.map(\.doctorID))
+        let doctorCount = doctorIDs.count
+        let appointmentCount = group.appointments.count
+
+        let appointmentHeight: CGFloat = 80
+        let appointmentSpacing: CGFloat = 10
+        let doctorHeaderHeight: CGFloat = 44
+        let doctorSpacing: CGFloat = 10
+
+        let appointmentsHeight =
+            CGFloat(appointmentCount) * appointmentHeight
+            + CGFloat(max(0, appointmentCount - doctorCount))
+            * appointmentSpacing
+
+        let headersHeight =
+            CGFloat(doctorCount) * doctorHeaderHeight
+            + CGFloat(max(0, doctorCount - 1)) * doctorSpacing
+
+        return min(appointmentsHeight + headersHeight, 300)
+    }
+    
+    private var appointmentPanel: some View {
+        Group {
+            if let group = selectedLocationGroup {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 12) {
+                        let doctorIDs = Array(
+                            Set(group.appointments.map(\.doctorID))
+                        ).sorted()
+
+                        ForEach(doctorIDs, id: \.self) { doctorID in
+                            if let doctor = MockDoctorData.doctors.first(
+                                where: { $0.id == doctorID }
+                            ) {
+                                let appointments = group.appointments
+                                    .filter { $0.doctorID == doctorID }
+                                    .sorted {
+                                        if $0.date == $1.date {
+                                            return $0.time < $1.time
+                                        }
+
+                                        return $0.date < $1.date
+                                    }
+
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack(alignment: .top) {
+                                        VStack(alignment: .leading,spacing: 3) {
+                                            Text(doctor.name)
+                                                .font(.headline)
+                                                .foregroundStyle(AppColors.primaryText)
+
+                                            Text(doctor.specialty)
+                                                .font(.subheadline)
+                                                .foregroundStyle(AppColors.secondaryText)
+                                        }
+
+                                        Spacer()
+
+                                        if doctorID == doctorIDs.first {
+                                            Button {
+                                                selectedLocationID = nil
+                                            } label: {
+                                                Image(
+                                                    systemName: "xmark.circle.fill"
+                                                )
+                                                .font(.title3)
+                                                .foregroundStyle(
+                                                    AppColors.secondaryText
+                                                )
+                                            }
+                                            .buttonStyle(.plain)
+                                        }
+                                    }
+                                    .padding(.horizontal, 4)
+
+
+                                    ForEach(appointments) { appointment in
+                                        NavigationLink {
+                                            AppointmentDetailView(
+                                                appointment: appointment,
+                                                viewModel: appointmentViewModel
+                                            )
+                                        } label: {
+                                            VStack(alignment: .leading,spacing: 8) {
+                                                HStack {
+                                                    Label(
+                                                        appointment.date.formatted(
+                                                            .dateTime
+                                                                .month(.abbreviated)
+                                                                .day()
+                                                                .year()
+                                                        ),
+                                                        systemImage: "calendar"
+                                                    )
+
+                                                    Spacer()
+
+                                                    Text(appointment.time)
+                                                        .lineLimit(1)
+                                                }
+                                                .font(.subheadline)
+                                                .foregroundStyle(
+                                                    AppColors.primaryText
+                                                )
+
+                                                HStack {
+                                                    Text("Consultation Fee")
+                                                        .foregroundStyle(AppColors.secondaryText)
+
+                                                    Spacer()
+
+                                                    Text("$\(Int(appointment.consultationFee))")
+                                                    .fontWeight(.semibold)
+                                                    .foregroundStyle(AppColors.primaryText)
+                                                }
+                                                .font(.subheadline)
+                                            }
+                                            .padding(12)
+                                            .frame(maxWidth: .infinity,alignment: .leading)
+                                            .background(AppColors.surface)
+                                            .clipShape(
+                                                RoundedRectangle(cornerRadius: 14)
+                                            )
+                                            .overlay {
+                                                RoundedRectangle(cornerRadius: 14)
+                                                    .stroke(
+                                                        AppColors.secondaryText
+                                                            .opacity(0.15),
+                                                        lineWidth: 1
+                                                    )
+                                            }
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                }
+                            }
+                        }
                     }
-                    .buttonStyle(.plain)
-                    .padding(8)
                 }
+                .frame(height: appointmentListHeight)
+                .padding(14)
+                .background(AppColors.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .shadow(
+                    color: .black.opacity(0.12),
+                    radius: 10,
+                    y: 4
+                )
                 .padding(.horizontal, 20)
+                .animation(
+                    .easeInOut(duration: 0.2),
+                    value: group.appointments.count
+                )
             }
+        }
+    }
+
+
+    // MARK: - Appointment Row
+    private func appointmentRow(_ appointment: Appointment) -> some View {
+        let doctor = MockDoctorData.doctors.first {
+            $0.id == appointment.doctorID
+        }
+
+        return VStack(alignment: .leading, spacing: 10) {
+            if let doctor {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(doctor.name)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(AppColors.primaryText)
+
+                    Text(doctor.specialty)
+                        .font(.caption)
+                        .foregroundStyle(AppColors.secondaryText)
+                }
+            }
+
+            HStack {
+                Label(appointment.date.formatted(
+                        .dateTime.month(.abbreviated).day().year()
+                    ),
+                    systemImage: "calendar"
+                )
+
+                Spacer()
+
+                Text(appointment.time)
+                    .lineLimit(1)
+            }
+            .font(.subheadline)
+            .foregroundStyle(AppColors.primaryText)
+
+            HStack {
+                Text("Consultation Fee")
+                    .foregroundStyle(AppColors.secondaryText)
+
+                Spacer()
+
+                Text("$\(Int(appointment.consultationFee))")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(AppColors.primaryText)
+            }
+            .font(.subheadline)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AppColors.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay {
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(
+                    AppColors.secondaryText.opacity(0.15),
+                    lineWidth: 1
+                )
         }
     }
 
@@ -165,7 +435,7 @@ struct NearbyView: View {
                     Image(systemName: "chevron.down")
                         .foregroundStyle(AppColors.secondaryText)
                 }
-                .padding(16)
+                .padding(.bottom, 12)
                 .background(AppColors.surface)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
 
@@ -190,7 +460,8 @@ struct NearbyView: View {
 
             VStack {
                 Spacer()
-                appointmentCard
+
+                appointmentPanel
                     .padding(.bottom, 24)
             }
         }
@@ -204,15 +475,15 @@ struct NearbyView: View {
                 viewModel.requestLocation()
             }
         }
-        .onChange(of: appointmentViewModel.upcomingAppointments.map(\.id)) { _, upcomingIDs in
-            guard let selectedAppointment else {
-                return
-            }
+        .onChange(
+            of: appointmentViewModel.upcomingAppointments.map(\.id)) { _, _ in
+            guard let selectedLocationID else { return }
 
-            guard upcomingIDs.contains(selectedAppointment.id) else {
-                self.selectedAppointment = nil
+            if !locationGroups.contains(where: {
+                $0.id == selectedLocationID
+            }) {
+                self.selectedLocationID = nil
                 viewModel.showUserLocation()
-                return
             }
         }
     }
