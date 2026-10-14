@@ -10,9 +10,22 @@
 		D3F79491307CD178009526AE /* Carely.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Carely.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D3F79533307FAEB7009526AE /* Exceptions for "Carely" folder in "Carely" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D34A00AE30737D06008AC20D /* Carely */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D34A00D630737D62008AC20D /* Carely */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D3F79533307FAEB7009526AE /* Exceptions for "Carely" folder in "Carely" target */,
+			);
 			path = Carely;
 			sourceTree = "<group>";
 		};
@@ -245,6 +258,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Carely/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Carely uses your location to find nearby hospitals and clinics.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -277,6 +291,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Carely/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Carely uses your location to find nearby hospitals and clinics.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
