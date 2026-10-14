@@ -18,6 +18,8 @@ enum MockDoctorData {
             reviewCount: 312,
             experience: 12,
             location: "Baku, Azerbaijan",
+            latitude: 40.4093,
+            longitude: 49.8671,
             consultationFee: 50,
             isAvailable: true
         ),
@@ -30,6 +32,8 @@ enum MockDoctorData {
             reviewCount: 245,
             experience: 10,
             location: "Baku, Azerbaijan",
+            latitude: 40.4150,
+            longitude: 49.8500,
             consultationFee: 45,
             isAvailable: true
         ),
@@ -42,6 +46,8 @@ enum MockDoctorData {
             reviewCount: 189,
             experience: 8,
             location: "Baku, Azerbaijan",
+            latitude: 40.4000,
+            longitude: 49.8600,
             consultationFee: 40,
             isAvailable: false
         ),
@@ -54,6 +60,8 @@ enum MockDoctorData {
             reviewCount: 278,
             experience: 15,
             location: "Baku, Azerbaijan",
+            latitude: 40.4200,
+            longitude: 49.8750,
             consultationFee: 35,
             isAvailable: true
         ),
@@ -66,6 +74,8 @@ enum MockDoctorData {
             reviewCount: 221,
             experience: 11,
             location: "Baku, Azerbaijan",
+            latitude: 40.3950,
+            longitude: 49.8400,
             consultationFee: 40,
             isAvailable: true
         )

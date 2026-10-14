@@ -17,6 +17,10 @@ final class AppointmentViewModel {
     private(set) var state: AppointmentsViewState = .idle
     private(set) var selectedStatus: AppointmentStatus = .upcoming
 
+    var upcomingAppointments: [Appointment] {
+        appointments.filter { $0.status == .upcoming }
+    }
+    
     private var modelContext: ModelContext?
 
     // MARK: - Configuration

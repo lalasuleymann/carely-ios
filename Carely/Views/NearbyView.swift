@@ -7,10 +7,20 @@
 
 import SwiftUI
 import MapKit
+import SwiftData
 
 struct NearbyView: View {
-    @State private var viewModel = NearbyViewModel()
 
+    @Environment(AppointmentViewModel.self)
+    private var appointmentViewModel
+
+    @Environment(\.modelContext)
+    private var modelContext
+
+    @State private var viewModel = NearbyViewModel()
+    @State private var selectedAppointment: Appointment?
+
+    // MARK: - Search Bar
     private var searchBar: some View {
         HStack(spacing: 12) {
             Image(systemName: "magnifyingglass")
@@ -27,7 +37,8 @@ struct NearbyView: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.06), radius: 8, y: 3)
     }
-    
+
+    // MARK: - Map
     private var map: some View {
         Map(
             position: $viewModel.cameraPosition,
@@ -51,7 +62,42 @@ struct NearbyView: View {
                                 Circle()
                                     .stroke(.white, lineWidth: 3)
                             }
-                            .shadow(color: .black.opacity(0.2), radius: 3)
+                            .shadow(
+                                color: .black.opacity(0.2),
+                                radius: 3
+                            )
+                    }
+                }
+            }
+            
+            ForEach(appointmentViewModel.upcomingAppointments) { appointment in
+                if let doctor = MockDoctorData.doctors.first(
+                    where: { $0.id == appointment.doctorID }
+                ) {
+                    Annotation(
+                        appointment.doctorName,
+                        coordinate: CLLocationCoordinate2D(
+                            latitude: doctor.latitude,
+                            longitude: doctor.longitude
+                        ),
+                        anchor: .bottom
+                    ) {
+                        Button {
+                            selectedAppointment = appointment
+                        } label: {
+                            Image(systemName: "mappin.circle.fill")
+                                .font(.system(size: 25))
+                                .foregroundStyle(.red)
+                                .padding(3)
+                                .background(.white, in: Circle())
+                                .clipShape(Circle())
+                                .shadow(
+                                    color: .black.opacity(0.18),
+                                    radius: 3,
+                                    y: 2
+                                )
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
             }
@@ -63,11 +109,46 @@ struct NearbyView: View {
         }
         .ignoresSafeArea(edges: .bottom)
     }
-    
+
+    // MARK: - Appointment Details
+    private var appointmentCard: some View {
+        Group {
+            if let appointment = selectedAppointment {
+                ZStack(alignment: .topTrailing) {
+                    NavigationLink {
+                        AppointmentDetailView(
+                            appointment: appointment,
+                            viewModel: appointmentViewModel
+                        )
+                    } label: {
+                        AppointmentCard(
+                            appointment: appointment,
+                            viewModel: appointmentViewModel
+                        )
+                    }
+                    .buttonStyle(.plain)
+
+                    Button {
+                        selectedAppointment = nil
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundStyle(.white)
+                            .frame(width: 20, height: 20)
+                            .background(.black.opacity(0.65), in: Circle())
+                    }
+                    .buttonStyle(.plain)
+                    .padding(8)
+                }
+                .padding(.horizontal, 20)
+            }
+        }
+    }
+
     var body: some View {
         ZStack(alignment: .top) {
             map
-            
+
             VStack(spacing: 16) {
                 searchBar
 
@@ -93,18 +174,46 @@ struct NearbyView: View {
                         .font(AppTypography.body)
                         .foregroundStyle(.red)
                         .padding(12)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(
+                            maxWidth: .infinity,
+                            alignment: .leading
+                        )
                         .background(AppColors.surface)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
+
+                Spacer()
             }
             .padding(.horizontal, 20)
             .padding(.top, 12)
+            .allowsHitTesting(false)
+
+            VStack {
+                Spacer()
+                appointmentCard
+                    .padding(.bottom, 24)
+            }
         }
         .navigationTitle("Nearby")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            viewModel.requestLocation()
+            appointmentViewModel.configure(context: modelContext)
+            appointmentViewModel.loadAppointments()
+
+            if viewModel.location == nil {
+                viewModel.requestLocation()
+            }
+        }
+        .onChange(of: appointmentViewModel.upcomingAppointments.map(\.id)) { _, upcomingIDs in
+            guard let selectedAppointment else {
+                return
+            }
+
+            guard upcomingIDs.contains(selectedAppointment.id) else {
+                self.selectedAppointment = nil
+                viewModel.showUserLocation()
+                return
+            }
         }
     }
 }
@@ -113,4 +222,6 @@ struct NearbyView: View {
     NavigationStack {
         NearbyView()
     }
+    .environment(AppointmentViewModel())
+    .modelContainer(for: Appointment.self)
 }

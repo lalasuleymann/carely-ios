@@ -16,6 +16,8 @@ struct Doctor: Identifiable, Codable, Hashable {
     let reviewCount: Int
     let experience: Int
     let location: String
+    let latitude: Double
+    let longitude: Double
     let consultationFee: Double
     let isAvailable: Bool
 }
