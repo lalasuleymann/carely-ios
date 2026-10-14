@@ -19,6 +19,7 @@ struct NearbyView: View {
 
     @State private var viewModel = NearbyViewModel()
     @State private var selectedLocationID: String?
+    @State private var didFitAllLocations = false
 
     // MARK: - Location Groups
     private var locationGroups: [NearbyLocationGroup] {
@@ -107,6 +108,76 @@ struct NearbyView: View {
         .shadow(color: .black.opacity(0.06), radius: 8, y: 3)
     }
 
+    // MARK: - Fit All Locations
+
+    private func fitAllLocations() {
+        let coordinates = locationGroups.map(\.coordinate)
+            + (viewModel.location.map { [$0.coordinate] } ?? [])
+
+        guard !coordinates.isEmpty else { return }
+
+        let latitudes = coordinates.map(\.latitude)
+        let longitudes = coordinates.map(\.longitude)
+
+        guard
+            let minLatitude = latitudes.min(),
+            let maxLatitude = latitudes.max(),
+            let minLongitude = longitudes.min(),
+            let maxLongitude = longitudes.max()
+        else {
+            return
+        }
+
+        let center = CLLocationCoordinate2D(
+            latitude: (minLatitude + maxLatitude) / 2,
+            longitude: (minLongitude + maxLongitude) / 2
+        )
+
+        let latitudeDelta = max(
+            (maxLatitude - minLatitude) * 1.5,
+            0.01
+        )
+
+        let longitudeDelta = max(
+            (maxLongitude - minLongitude) * 1.5,
+            0.01
+        )
+
+        let region = MKCoordinateRegion(
+            center: center,
+            span: MKCoordinateSpan(
+                latitudeDelta: latitudeDelta,
+                longitudeDelta: longitudeDelta
+            )
+        )
+
+        viewModel.cameraPosition = .region(region)
+    }
+    
+    private func fitAllLocationsIfNeeded() {
+        guard !didFitAllLocations else { return }
+        guard !locationGroups.isEmpty else { return }
+
+        didFitAllLocations = true
+        fitAllLocations()
+    }
+    
+    private var fitAllLocationsButton: some View {
+        Button {
+            fitAllLocations()
+        } label: {
+            Image(systemName: "arrow.up.left.and.arrow.down.right")
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(AppColors.primaryText)
+                .frame(width: 44, height: 44)
+                .background(AppColors.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .shadow(color: .black.opacity(0.12), radius: 6, y: 3)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("Show all locations")
+    }
+    
     // MARK: - Map
     private var map: some View {
         Map(
@@ -181,7 +252,6 @@ struct NearbyView: View {
         .ignoresSafeArea(edges: .bottom)
     }
 
-    // MARK: - Body
     var body: some View {
         ZStack(alignment: .top) {
             map
@@ -211,7 +281,10 @@ struct NearbyView: View {
                         .font(AppTypography.body)
                         .foregroundStyle(.red)
                         .padding(12)
-                        .frame(maxWidth: .infinity,alignment: .leading)
+                        .frame(
+                            maxWidth: .infinity,
+                            alignment: .leading
+                        )
                         .background(AppColors.surface)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
@@ -220,6 +293,19 @@ struct NearbyView: View {
             }
             .padding(.horizontal, 20)
             .padding(.top, 12)
+
+            VStack {
+                Spacer()
+
+                HStack {
+                    Spacer()
+
+                    fitAllLocationsButton
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, selectedLocationGroup == nil ? 100 : 320)
+            }
+            .allowsHitTesting(true)
 
             VStack {
                 Spacer()
@@ -233,7 +319,10 @@ struct NearbyView: View {
                         }
                     )
                     .padding(.bottom, 12)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .transition(
+                        .move(edge: .bottom)
+                            .combined(with: .opacity)
+                    )
                 }
             }
             .animation(
@@ -250,9 +339,12 @@ struct NearbyView: View {
             if viewModel.location == nil {
                 viewModel.requestLocation()
             }
+
+            fitAllLocationsIfNeeded()
         }
         .onChange(
-            of: appointmentViewModel.upcomingAppointments.map(\.id)) { _, _ in
+            of: appointmentViewModel.upcomingAppointments.map(\.id)
+        ) { _, _ in
             guard let selectedLocationID else {
                 return
             }
