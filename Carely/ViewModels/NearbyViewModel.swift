@@ -21,6 +21,24 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
     var selectedDoctor: Doctor?
     
     private let locationManager = CLLocationManager()
+
+    var selectedCategory: NearbyPlaceCategory = .all
+    var nearbyPlaces: [NearbyPlace] = []
+    var placesViewState: NearbyPlacesViewState = .idle
+    var selectedPlace: NearbyPlace?
+
+    var placesSearchRegion = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(
+            latitude: 40.4093,
+            longitude: 49.8671
+        ),
+        span: MKCoordinateSpan(
+            latitudeDelta: 0.04,
+            longitudeDelta: 0.04
+        )
+    )
+    
+    private let placesService = NearbyPlacesService()
     
     override init() {
         super.init()
@@ -60,6 +78,36 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
         }
     }
 
+    // MARK: - Nearby Places Search
+
+    func searchNearbyPlaces(in region: MKCoordinateRegion) async {
+        placesSearchRegion = region
+        placesViewState = .loading
+
+        do {
+            let results = try await placesService.search(
+                category: selectedCategory,
+                region: region
+            )
+
+            nearbyPlaces = results
+
+            if results.isEmpty {
+                placesViewState = .empty
+            } else {
+                placesViewState = .loaded
+            }
+        } catch {
+            nearbyPlaces = []
+            placesViewState = .error(
+                "Yaxınlıqdakı məkanları yükləmək mümkün olmadı."
+            )
+
+            print("Nearby places error: \(error.localizedDescription)")
+        }
+    }
+    
+    
     // MARK: - Location
     func requestLocation() {
         switch locationManager.authorizationStatus {

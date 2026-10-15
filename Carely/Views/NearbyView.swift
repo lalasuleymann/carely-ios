@@ -1,4 +1,3 @@
-
 //
 //  NearbyView.swift
 //  Carely
@@ -13,14 +12,14 @@ import SwiftData
 struct NearbyView: View {
     @Environment(AppointmentViewModel.self)
     private var appointmentViewModel
-
+    
     @Environment(\.modelContext)
     private var modelContext
-
+    
     @State private var viewModel = NearbyViewModel()
     @State private var selectedLocationID: String?
     @State private var didFitAllLocations = false
-
+    
     // MARK: - Location Groups
     private var locationGroups: [NearbyLocationGroup] {
         let doctorsByID = Dictionary(
@@ -28,7 +27,7 @@ struct NearbyView: View {
                 ($0.id, $0)
             }
         )
-
+        
         let mappedAppointments = appointmentViewModel.upcomingAppointments
             .compactMap { appointment -> (
                 key: String,
@@ -38,19 +37,19 @@ struct NearbyView: View {
                 guard let doctor = doctorsByID[appointment.doctorID] else {
                     return nil
                 }
-
+                
                 let latitude =
-                    (doctor.latitude * 100_000).rounded() / 100_000
-
+                (doctor.latitude * 100_000).rounded() / 100_000
+                
                 let longitude =
-                    (doctor.longitude * 100_000).rounded() / 100_000
-
+                (doctor.longitude * 100_000).rounded() / 100_000
+                
                 let key = String(
                     format: "%.5f,%.5f",
                     latitude,
                     longitude
                 )
-
+                
                 return (
                     key: key,
                     coordinate: CLLocationCoordinate2D(
@@ -60,12 +59,12 @@ struct NearbyView: View {
                     appointment: appointment
                 )
             }
-
+        
         let grouped = Dictionary(
             grouping: mappedAppointments,
             by: \.key
         )
-
+        
         return grouped.map { key, items in
             NearbyLocationGroup(
                 id: key,
@@ -76,30 +75,30 @@ struct NearbyView: View {
                         if $0.date == $1.date {
                             return $0.time < $1.time
                         }
-
+                        
                         return $0.date < $1.date
                     }
             )
         }
         .sorted { $0.id < $1.id }
     }
-
+    
     private var selectedLocationGroup: NearbyLocationGroup? {
         guard let selectedLocationID else {
             return nil
         }
-
+        
         return locationGroups.first {
             $0.id == selectedLocationID
         }
     }
-
+    
     private var isSearching: Bool {
         !viewModel.searchText
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .isEmpty
     }
-
+    
     // MARK: - Doctor Location Group
     private func locationGroup(for doctor: Doctor) -> NearbyLocationGroup? {
         locationGroups.first { group in
@@ -108,13 +107,13 @@ struct NearbyView: View {
             }
         }
     }
-
+    
     // MARK: - Search
     private var searchBar: some View {
         HStack(spacing: 12) {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(AppColors.secondaryText)
-
+            
             TextField(
                 "Search doctors or specialties",
                 text: $viewModel.searchText
@@ -124,7 +123,7 @@ struct NearbyView: View {
             .textInputAutocapitalization(.words)
             .autocorrectionDisabled()
             .submitLabel(.search)
-
+            
             if !viewModel.searchText.isEmpty {
                 Button {
                     clearSearch()
@@ -145,7 +144,7 @@ struct NearbyView: View {
             y: 3
         )
     }
-
+    
     private func clearSearch() {
         viewModel.clearSearch()
         selectedLocationID = nil
@@ -154,12 +153,12 @@ struct NearbyView: View {
     
     private func selectDoctor(_ doctor: Doctor) {
         viewModel.selectDoctor(doctor)
-
+        
         let coordinate = CLLocationCoordinate2D(
             latitude: doctor.latitude,
             longitude: doctor.longitude
         )
-
+        
         viewModel.cameraPosition = .region(
             MKCoordinateRegion(
                 center: coordinate,
@@ -169,7 +168,7 @@ struct NearbyView: View {
                 )
             )
         )
-
+        
         selectedLocationID = locationGroup(for: doctor)?.id
     }
     
@@ -202,23 +201,23 @@ struct NearbyView: View {
                                                 AppColors.primary.opacity(0.10)
                                             )
                                             .clipShape(RoundedRectangle(cornerRadius: 12))
-
+                                        
                                         VStack(alignment: .leading,spacing: 4) {
                                             Text(doctor.name)
                                                 .font(.subheadline.weight(.semibold))
                                                 .foregroundStyle(
                                                     AppColors.primaryText
                                                 )
-
+                                            
                                             Text(doctor.specialty)
                                                 .font(.caption)
                                                 .foregroundStyle(
                                                     AppColors.secondaryText
                                                 )
                                         }
-
+                                        
                                         Spacer()
-
+                                        
                                         Image(systemName: "arrow.up.left")
                                             .font(.caption)
                                             .foregroundStyle(
@@ -229,7 +228,7 @@ struct NearbyView: View {
                                     .contentShape(Rectangle())
                                 }
                                 .buttonStyle(.plain)
-
+                                
                                 if doctor.id != viewModel.searchResults.last?.id {
                                     Divider()
                                         .padding(.leading, 66)
@@ -251,16 +250,16 @@ struct NearbyView: View {
             }
         }
     }
-
+    
     // MARK: - Fit All Locations
     private func fitAllLocations() {
         let coordinates = locationGroups.map(\.coordinate) + (viewModel.location.map { [$0.coordinate] } ?? [])
-
+        
         guard !coordinates.isEmpty else { return }
-
+        
         let latitudes = coordinates.map(\.latitude)
         let longitudes = coordinates.map(\.longitude)
-
+        
         guard
             let minLatitude = latitudes.min(),
             let maxLatitude = latitudes.max(),
@@ -269,22 +268,22 @@ struct NearbyView: View {
         else {
             return
         }
-
+        
         let center = CLLocationCoordinate2D(
             latitude: (minLatitude + maxLatitude) / 2,
             longitude: (minLongitude + maxLongitude) / 2
         )
-
+        
         let latitudeDelta = max(
             (maxLatitude - minLatitude) * 1.5,
             0.01
         )
-
+        
         let longitudeDelta = max(
             (maxLongitude - minLongitude) * 1.5,
             0.01
         )
-
+        
         viewModel.cameraPosition = .region(
             MKCoordinateRegion(
                 center: center,
@@ -295,41 +294,154 @@ struct NearbyView: View {
             )
         )
     }
-
+    
     private func fitAllLocationsIfNeeded() {
         guard !didFitAllLocations else { return }
         guard !locationGroups.isEmpty else { return }
-
+        
         didFitAllLocations = true
         fitAllLocations()
     }
-
+    
     private var fitAllLocationsButton: some View {
         Button {
             clearSearch()
         } label: {
             Image(systemName: "arrow.up.left.and.arrow.down.right")
-            .font(.system(size: 16, weight: .semibold))
-            .foregroundStyle(AppColors.primaryText)
-            .frame(width: 44, height: 44)
-            .background(AppColors.surface)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-            .shadow(
-                color: .black.opacity(0.12),
-                radius: 6,
-                y: 3
-            )
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(AppColors.primaryText)
+                .frame(width: 44, height: 44)
+                .background(AppColors.surface)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .shadow(
+                    color: .black.opacity(0.12),
+                    radius: 6,
+                    y: 3
+                )
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Show all locations")
     }
+    
+    // MARK: - Nearby Place Detail Card
+    private func nearbyPlaceDetailCard(_ place: NearbyPlace) -> some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: viewModel.selectedCategory.icon)
+                    .font(.title2)
+                    .foregroundStyle(AppColors.primary)
+                    .frame(width: 48, height: 48)
+                    .background(
+                        AppColors.primary.opacity(0.10)
+                    )
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: 14)
+                    )
 
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(place.name)
+                        .font(AppTypography.bodyMedium)
+                        .foregroundStyle(AppColors.primaryText)
+
+                    Text(viewModel.selectedCategory.rawValue)
+                        .font(AppTypography.caption)
+                        .foregroundStyle(AppColors.secondaryText)
+                }
+
+                Spacer()
+
+                Button {
+                    viewModel.selectedPlace = nil
+                } label: {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(AppColors.secondaryText)
+                        .frame(width: 32, height: 32)
+                        .background(
+                            AppColors.primary.opacity(0.08),
+                            in: Circle()
+                        )
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Close place details")
+            }
+
+            if !place.address.isEmpty {
+                Label(place.address, systemImage: "mappin.and.ellipse")
+                    .font(AppTypography.caption)
+                    .foregroundStyle(AppColors.secondaryText)
+            }
+
+            if let phone = place.phoneNumber,
+               !phone.isEmpty {
+                Label(phone, systemImage: "phone")
+                    .font(AppTypography.caption)
+                    .foregroundStyle(AppColors.secondaryText)
+            }
+
+            HStack(spacing: 10) {
+                Button {
+                    let mapItem = place.mapItem
+                    mapItem.name = place.name
+
+                    mapItem.openInMaps(
+                        launchOptions: [
+                            MKLaunchOptionsDirectionsModeKey:
+                                MKLaunchOptionsDirectionsModeDriving
+                        ]
+                    )
+                } label: {
+                    Label("Get Directions", systemImage: "arrow.triangle.turn.up.right.diamond.fill")
+                        .font(AppTypography.button)
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 13)
+                        .background(AppColors.primary)
+                        .clipShape(
+                            RoundedRectangle(cornerRadius: 14)
+                        )
+                }
+                .buttonStyle(.plain)
+
+                if let website = place.website {
+                    Link(destination: website) {
+                        Image(systemName: "globe")
+                            .font(.title3)
+                            .foregroundStyle(AppColors.primary)
+                            .frame(width: 48, height: 46)
+                            .background(
+                                AppColors.primary.opacity(0.10)
+                            )
+                            .clipShape(
+                                RoundedRectangle(cornerRadius: 14)
+                            )
+                    }
+                    .accessibilityLabel("Open website")
+                }
+            }
+        }
+        .padding(16)
+        .background(AppColors.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .shadow(
+            color: .black.opacity(0.10),
+            radius: 12,
+            y: 4
+        )
+        .padding(.horizontal, 16)
+        .padding(.bottom, 12)
+        .transition(
+            .move(edge: .bottom)
+                .combined(with: .opacity)
+        )
+    }
+    
     // MARK: - Map
     private var map: some View {
         Map(
             position: $viewModel.cameraPosition,
-            interactionModes: [.pan, .zoom, .rotate, .pitch]
-        ) {
+            interactionModes: [.pan, .zoom, .rotate, .pitch] ) {
+     
             if let location = viewModel.location {
                 Annotation(
                     "Your location",
@@ -380,7 +492,9 @@ struct NearbyView: View {
                             .contentShape(Circle())
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel("Show \(doctor.name) appointments")
+                    .accessibilityLabel(
+                        "Show \(doctor.name) appointments"
+                    )
                 }
             }
 
@@ -419,6 +533,29 @@ struct NearbyView: View {
                     }
                 }
             }
+            ForEach(viewModel.nearbyPlaces) { place in
+                Annotation(
+                    place.name,
+                    coordinate: place.coordinate,
+                    anchor: .bottom
+                ) {
+                    Button {
+                        viewModel.selectedPlace = place
+                    } label: {
+                        Image(systemName: "mappin.circle.fill")
+                            .font(.system(size: 30))
+                            .foregroundStyle(.red)
+                            .background(.white, in: Circle())
+                            .shadow(
+                                color: .black.opacity(0.18),
+                                radius: 3,
+                                y: 2
+                            )
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(place.name)
+                }
+            }
         }
         .mapControls {
             MapCompass()
@@ -427,7 +564,7 @@ struct NearbyView: View {
         }
         .ignoresSafeArea(edges: .bottom)
     }
-
+    
     // MARK: - Appointment Panel
     @ViewBuilder
     private var appointmentPanel: some View {
@@ -440,7 +577,7 @@ struct NearbyView: View {
                     }
                     return $0.date < $1.date
                 }
-
+            
             if !doctorAppointments.isEmpty {
                 NearbyAppointmentPanel(
                     group: NearbyLocationGroup(
@@ -465,7 +602,7 @@ struct NearbyView: View {
                 .padding(.bottom, 12)
                 .transition(
                     .move(edge: .bottom)
-                        .combined(with: .opacity)
+                    .combined(with: .opacity)
                 )
             }
         } else if !isSearching,
@@ -480,37 +617,104 @@ struct NearbyView: View {
             .padding(.bottom, 12)
             .transition(
                 .move(edge: .bottom)
-                    .combined(with: .opacity)
+                .combined(with: .opacity)
             )
         }
     }
+    
+    // MARK: - Nearby Places State
+    @ViewBuilder
+    private var nearbyPlacesContent: some View {
+        switch viewModel.placesViewState {
+        case .idle, .loaded:
+            EmptyView()
+            
+        case .loading:
+            HStack(spacing: 10) {
+                ProgressView()
+                    .controlSize(.small)
+                    .tint(AppColors.primary)
 
+                Text("Searching nearby places...")
+                    .font(AppTypography.caption)
+                    .foregroundStyle(AppColors.secondaryText)
+
+                Spacer()
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(AppColors.surface.opacity(0.95))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            
+        case .empty:
+            EmptyStateView(
+                icon: "mappin.slash",
+                title: "No Places Found",
+                message: "No places matching this category were found nearby."
+            )
+            
+        case .error(let message):
+            ErrorStateView(
+                title: "Something Went Wrong",
+                message: message,
+                retryAction: {
+                    Task {
+                        await viewModel.searchNearbyPlaces(
+                            in: viewModel.placesSearchRegion
+                        )
+                    }
+                }
+            )
+        }
+    }
+    
     var body: some View {
         ZStack(alignment: .top) {
             map
-
+            
             VStack(spacing: 12) {
                 searchBar
-
+                
                 searchResultsList
+                
+                nearbyPlacesContent
+                    .background(AppColors.surface)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        ForEach(NearbyPlaceCategory.allCases) { category in
+                            Button {
+                                viewModel.selectedPlace = nil
+                                viewModel.selectedCategory = category
+                                selectedLocationID = nil
 
-                HStack {
-                    Label(
-                        "Hospitals & Clinics",
-                        systemImage: "cross.case"
-                    )
-                    .font(AppTypography.bodyMedium)
-                    .foregroundStyle(AppColors.primaryText)
-
-                    Spacer()
-
-                    Image(systemName: "chevron.down")
-                        .foregroundStyle(AppColors.secondaryText)
+                                Task {
+                                    await viewModel.searchNearbyPlaces(
+                                        in: viewModel.placesSearchRegion
+                                    )
+                                }
+                            } label: {
+                                Label(
+                                    category.rawValue,
+                                    systemImage: category.icon
+                                )
+                                .font(AppTypography.bodyMedium)
+                                .foregroundStyle(
+                                    viewModel.selectedCategory == category ? .white : AppColors.primaryText
+                                )
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 12)
+                                .background(
+                                    viewModel.selectedCategory == category ? AppColors.primary : AppColors.surface
+                                )
+                                .clipShape(Capsule())
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
                 }
-                .padding(16)
-                .background(AppColors.surface)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-
+                
                 if let error = viewModel.locationError {
                     Text(error)
                         .font(AppTypography.body)
@@ -520,33 +724,35 @@ struct NearbyView: View {
                         .background(AppColors.surface)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
-
+                
                 Spacer()
             }
             .padding(.horizontal, 20)
             .padding(.top, 12)
-
+            
             VStack {
                 Spacer()
-
+                
                 HStack {
                     Spacer()
                     fitAllLocationsButton
                 }
                 .padding(.horizontal, 20)
-                .padding(
-                    .bottom,
-                    selectedLocationGroup == nil ? 100 : 320
-                )
+                .padding(.bottom,selectedLocationGroup == nil ? 100 : 320)
             }
-
+            
             VStack {
                 Spacer()
-                appointmentPanel
+                
+                if let place = viewModel.selectedPlace {
+                    nearbyPlaceDetailCard(place)
+                } else {
+                    appointmentPanel
+                }
             }
             .animation(
                 .easeInOut(duration: 0.2),
-                value: selectedLocationID
+                value: viewModel.selectedPlace?.id
             )
         }
         .navigationTitle("Nearby")
@@ -560,6 +766,10 @@ struct NearbyView: View {
             }
 
             fitAllLocationsIfNeeded()
+        }
+        .onDisappear {
+            viewModel.selectedPlace = nil
+            selectedLocationID = nil
         }
         .onChange(
             of: appointmentViewModel.upcomingAppointments.map(\.id)) { _, _ in
