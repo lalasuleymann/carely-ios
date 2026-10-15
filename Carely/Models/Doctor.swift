@@ -20,4 +20,6 @@ struct Doctor: Identifiable, Codable, Hashable {
     let longitude: Double
     let consultationFee: Double
     let isAvailable: Bool
+    
+    var facilityIDs: [Int]? = nil
 }

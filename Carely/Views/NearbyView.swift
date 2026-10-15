@@ -19,6 +19,8 @@ struct NearbyView: View {
     @State private var viewModel = NearbyViewModel()
     @State private var selectedLocationID: String?
     @State private var didFitAllLocations = false
+    @State private var showingDoctorsFor: NearbyPlace?
+    @Environment(\.selectedTab) private var selectedTab
     
     // MARK: - Location Groups
     private var locationGroups: [NearbyLocationGroup] {
@@ -361,6 +363,25 @@ struct NearbyView: View {
 
                 Spacer()
 
+                Button {
+                    selectedLocationID = nil
+                    viewModel.selectedDoctor = nil
+                    viewModel.searchText = ""
+
+                    showingDoctorsFor = place
+                } label: {
+                    Image(systemName: "stethoscope")
+                        .font(.system(size: 17, weight: .medium))
+                        .foregroundStyle(AppColors.primary)
+                        .frame(width: 36, height: 36)
+                        .background(
+                            AppColors.primary.opacity(0.10),
+                            in: Circle()
+                        )
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("View doctors")
+                
                 Button {
                     viewModel.selectedPlace = nil
                 } label: {
@@ -776,6 +797,18 @@ struct NearbyView: View {
         }
         .navigationTitle("Nearby")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $showingDoctorsFor) { place in
+            NavigationStack {
+                FacilityDoctorsView(place: place) {
+                    showingDoctorsFor = nil
+                    viewModel.selectedPlace = nil
+                    selectedLocationID = nil
+                    viewModel.selectedDoctor = nil
+                    viewModel.searchText = ""
+                    selectedTab.wrappedValue = 2
+                }
+            }
+        }
         .onAppear {
             appointmentViewModel.configure(context: modelContext)
             appointmentViewModel.loadAppointments()

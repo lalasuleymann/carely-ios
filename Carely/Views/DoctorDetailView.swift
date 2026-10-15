@@ -24,6 +24,8 @@ struct DoctorDetailView: View {
     @State private var viewModel = DoctorDetailViewModel()
     @State private var showDatePicker = false
     
+    var onBookingConfirmed: (() -> Void)? = nil
+    
     // MARK: - Doctor Profile
     private var profileSection: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -468,8 +470,12 @@ struct DoctorDetailView: View {
             "Appointment Booked",
             isPresented: $showBookingConfirmation
         ) {
-            Button("OK", role: .cancel) {
-                selectedTab.wrappedValue = 2
+            Button("OK") {
+                if let onBookingConfirmed {
+                    onBookingConfirmed()
+                } else {
+                    selectedTab.wrappedValue = 2
+                }
             }
         } message: {
             Text(
@@ -488,10 +494,7 @@ struct DoctorDetailView: View {
                 
                 scheduleSection
                     .padding(20)
-                    .frame(
-                        maxWidth: .infinity,
-                        alignment: .leading
-                    )
+                    .frame(maxWidth: .infinity,alignment: .leading)
                     .background(AppColors.surface)
                     .clipShape(
                         UnevenRoundedRectangle(
@@ -525,9 +528,7 @@ struct DoctorDetailView: View {
                     }
                 } label: {
                     Image(systemName: "ellipsis")
-                        .font(
-                            .system(size: 20, weight: .semibold)
-                        )
+                        .font(.system(size: 20, weight: .semibold))
                         .foregroundStyle(AppColors.primaryText)
                 }
             }
