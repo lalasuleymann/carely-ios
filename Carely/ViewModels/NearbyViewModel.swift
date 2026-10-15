@@ -13,6 +13,24 @@ import CoreLocation
 @Observable
 final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
 
+    var location: CLLocation?
+    var authorizationStatus: CLAuthorizationStatus = .notDetermined
+    var locationError: String?
+    
+    var searchText = ""
+    var selectedDoctor: Doctor?
+    
+    private let locationManager = CLLocationManager()
+    
+    override init() {
+        super.init()
+
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        authorizationStatus = locationManager.authorizationStatus
+    }
+
+    // MARK: - Map
     var cameraPosition: MapCameraPosition = .region(
         MKCoordinateRegion(
             center: CLLocationCoordinate2D(
@@ -26,19 +44,23 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
         )
     )
 
-    var location: CLLocation?
-    var authorizationStatus: CLAuthorizationStatus = .notDetermined
-    var locationError: String?
+    // MARK: - Search
+    var searchResults: [Doctor] {
+        let query = searchText.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
 
-    private let locationManager = CLLocationManager()
+        guard !query.isEmpty else {
+            return []
+        }
 
-    override init() {
-        super.init()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        authorizationStatus = locationManager.authorizationStatus
+        return MockDoctorData.doctors.filter { doctor in
+            doctor.name.localizedCaseInsensitiveContains(query)
+                || doctor.specialty.localizedCaseInsensitiveContains(query)
+        }
     }
 
+    // MARK: - Location
     func requestLocation() {
         switch locationManager.authorizationStatus {
         case .notDetermined:
@@ -48,35 +70,38 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
             locationManager.requestLocation()
 
         case .denied, .restricted:
-            locationError = "Location access is disabled. Please enable it in Settings."
+            locationError =
+                "Location access is disabled. Please enable it in Settings."
 
         @unknown default:
             break
         }
     }
 
-    func locationManagerDidChangeAuthorization(
-        _ manager: CLLocationManager
-    ) {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         authorizationStatus = manager.authorizationStatus
 
-        if manager.authorizationStatus == .authorizedWhenInUse ||
-            manager.authorizationStatus == .authorizedAlways {
+        if manager.authorizationStatus == .authorizedWhenInUse
+            || manager.authorizationStatus == .authorizedAlways {
             manager.requestLocation()
-        } else if manager.authorizationStatus == .denied ||
-                    manager.authorizationStatus == .restricted {
-            locationError = "Location access is disabled. Please enable it in Settings."
+        } else if manager.authorizationStatus == .denied
+                    || manager.authorizationStatus == .restricted {
+            locationError =
+                "Location access is disabled. Please enable it in Settings."
         }
     }
 
-    func locationManager(
-        _ manager: CLLocationManager,
-        didUpdateLocations locations: [CLLocation]
-    ) {
-        guard let currentLocation = locations.last else { return }
+    func locationManager(_ manager: CLLocationManager,didUpdateLocations locations: [CLLocation]) {
+        guard let currentLocation = locations.last else {
+            return
+        }
 
         location = currentLocation
         locationError = nil
+
+        guard selectedDoctor == nil else {
+            return
+        }
 
         cameraPosition = .region(
             MKCoordinateRegion(
@@ -89,19 +114,43 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
         )
     }
 
-    func locationManager(
-        _ manager: CLLocationManager,
-        didFailWithError error: Error
-    ) {
+    func locationManager(_ manager: CLLocationManager,didFailWithError error: Error) {
         locationError = error.localizedDescription
         print("Location error: \(error.localizedDescription)")
     }
 
+    // MARK: - Search Actions
+    func selectDoctor(_ doctor: Doctor) {
+        selectedDoctor = doctor
+        searchText = doctor.name
+
+        let region = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(
+                latitude: doctor.latitude,
+                longitude: doctor.longitude
+            ),
+            span: MKCoordinateSpan(
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01
+            )
+        )
+
+        cameraPosition = .region(region)
+    }
+
+    func clearSearch() {
+        searchText = ""
+        selectedDoctor = nil
+    }
+
+    // MARK: - User Location
     func showUserLocation() {
         guard let location else {
             requestLocation()
             return
         }
+
+        selectedDoctor = nil
 
         cameraPosition = .region(
             MKCoordinateRegion(
