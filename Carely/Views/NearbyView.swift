@@ -295,6 +295,21 @@ struct NearbyView: View {
         )
     }
     
+    private func resetMap() {
+        selectedLocationID = nil
+        didFitAllLocations = true
+
+        viewModel.searchText = ""
+        viewModel.selectedDoctor = nil
+        viewModel.selectedPlace = nil
+
+        viewModel.nearbyPlaces = []
+        viewModel.placesViewState = .idle
+        viewModel.selectedCategory = .all
+
+        fitAllLocations()
+    }
+
     private func fitAllLocationsIfNeeded() {
         guard !didFitAllLocations else { return }
         guard !locationGroups.isEmpty else { return }
@@ -305,24 +320,20 @@ struct NearbyView: View {
     
     private var fitAllLocationsButton: some View {
         Button {
-            clearSearch()
+            resetMap()
         } label: {
-            Image(systemName: "arrow.up.left.and.arrow.down.right")
+            Image(systemName: "arrow.counterclockwise")
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(AppColors.primaryText)
                 .frame(width: 44, height: 44)
                 .background(AppColors.surface)
                 .clipShape(RoundedRectangle(cornerRadius: 14))
-                .shadow(
-                    color: .black.opacity(0.12),
-                    radius: 6,
-                    y: 3
-                )
+                .shadow(color: .black.opacity(0.12), radius: 6, y: 3)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("Show all locations")
+        .accessibilityLabel("Reset map")
     }
-    
+
     // MARK: - Nearby Place Detail Card
     private func nearbyPlaceDetailCard(_ place: NearbyPlace) -> some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -506,6 +517,9 @@ struct NearbyView: View {
                         anchor: .bottom
                     ) {
                         Button {
+                            viewModel.selectedPlace = nil
+                            viewModel.selectedDoctor = nil
+                            viewModel.searchText = ""
                             selectedLocationID = group.id
                         } label: {
                             ZStack(alignment: .topTrailing) {
@@ -540,6 +554,9 @@ struct NearbyView: View {
                     anchor: .bottom
                 ) {
                     Button {
+                        selectedLocationID = nil
+                        viewModel.selectedDoctor = nil
+                        viewModel.searchText = ""
                         viewModel.selectedPlace = place
                     } label: {
                         Image(systemName: "mappin.circle.fill")
@@ -686,6 +703,8 @@ struct NearbyView: View {
                         ForEach(NearbyPlaceCategory.allCases) { category in
                             Button {
                                 viewModel.selectedPlace = nil
+                                viewModel.selectedDoctor = nil
+                                viewModel.searchText = ""
                                 viewModel.selectedCategory = category
                                 selectedLocationID = nil
 
