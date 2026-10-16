@@ -8,5 +8,5 @@
 import Foundation
 
 protocol NetworkService {
-    func fetch<T: Decodable>(_ type: T.Type,from endpoint: Endpoint) async throws -> T
+    func request<T: Decodable>(_ type: T.Type,from endpoint: Endpoint) async throws -> T
 }
