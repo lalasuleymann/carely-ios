@@ -5,6 +5,7 @@
 //  Created by Lala Suleymanova on 08.10.26.
 //
 
+
 import SwiftUI
 
 struct FilterSheetView: View {
@@ -18,7 +19,7 @@ struct FilterSheetView: View {
                 "Specialty",
                 selection: $viewModel.selectedSpecialty
             ) {
-                ForEach(viewModel.specialties,id: \.self) { specialty in
+                ForEach(viewModel.specialties, id: \.self) { specialty in
                     Text(specialty)
                 }
             }
@@ -32,7 +33,7 @@ struct FilterSheetView: View {
                 "Rating",
                 selection: $viewModel.selectedRating
             ) {
-                ForEach(viewModel.ratings,id: \.self) { rating in
+                ForEach(viewModel.ratings, id: \.self) { rating in
                     Text(rating)
                 }
             }
@@ -41,22 +42,18 @@ struct FilterSheetView: View {
 
     // MARK: - Price
     private var priceSection: some View {
-        Section("Consultation Fee") {
+        Section("Minimum Consultation Fee") {
             VStack(spacing: 12) {
                 HStack {
-                    Text("$\(Int(viewModel.minimumPrice))")
+                    Text("₼\(Int(viewModel.minimumPrice))")
                         .font(AppTypography.bodyMedium)
-                        .foregroundStyle(
-                            AppColors.primaryText
-                        )
+                        .foregroundStyle(AppColors.primaryText)
 
                     Spacer()
 
-                    Text("$100")
+                    Text("₼100")
                         .font(AppTypography.bodyMedium)
-                        .foregroundStyle(
-                            AppColors.secondaryText
-                        )
+                        .foregroundStyle(AppColors.secondaryText)
                 }
 
                 Slider(
@@ -64,13 +61,13 @@ struct FilterSheetView: View {
                     in: 0...100,
                     step: 5
                 ) {
-                    Text("Minimum price")
+                    Text("Minimum consultation fee")
                 }
                 .tint(AppColors.primary)
             }
         }
     }
-    
+
     // MARK: - Availability
     private var availabilitySection: some View {
         Section("Availability") {
@@ -87,13 +84,15 @@ struct FilterSheetView: View {
         viewModel.selectedRating = "Any"
         viewModel.minimumPrice = 0
         viewModel.onlyAvailable = false
+
+        viewModel.applyFilters()
     }
 
     private func applyFilters() {
         viewModel.applyFilters()
         dismiss()
     }
-    
+
     var body: some View {
         NavigationStack {
             Form {
@@ -105,28 +104,20 @@ struct FilterSheetView: View {
             .navigationTitle("Filters")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(
-                    placement: .cancellationAction
-                ) {
-                    Button("Reset") {
-                        resetFilters()
-                    }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Reset", action: resetFilters)
                 }
 
-                ToolbarItem(
-                    placement: .confirmationAction
-                ) {
-                    Button("Apply") {
-                        applyFilters()
-                    }
-                    .fontWeight(.semibold)
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Apply", action: applyFilters)
+                        .fontWeight(.semibold)
                 }
             }
         }
     }
-
 }
 
 #Preview {
     FilterSheetView(viewModel: SearchViewModel())
 }
+

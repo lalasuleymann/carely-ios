@@ -80,10 +80,19 @@ struct SearchView: View {
         case .empty:
             noResultsView
         case .error(let message):
-            ErrorStateView(
-                title: "Something went wrong",
-                message: message
-            )
+            VStack(spacing: 12) {
+                ErrorStateView(
+                    title: "Something went wrong",
+                    message: message
+                )
+                
+                Button("Try Again") {
+                    Task {
+                        await viewModel.loadDoctors()
+                    }
+                }
+                .foregroundStyle(AppColors.primary)
+            }
         }
     }
 
@@ -119,6 +128,12 @@ struct SearchView: View {
         .sheet(isPresented: $showFilters) {
             FilterSheetView(viewModel: viewModel)
                 .presentationDetents([.large])
+        }
+        .task {
+            async let doctorsTask: Void = viewModel.loadDoctors()
+            async let specialtiesTask: Void = viewModel.loadSpecialties()
+
+            _ = await (doctorsTask, specialtiesTask)
         }
     }
 }
