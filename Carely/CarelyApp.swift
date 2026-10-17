@@ -14,7 +14,7 @@ struct CarelyApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MainTabView()
+            AuthRootView()
                 .environment(appointmentViewModel)
                 .modelContainer(for: Appointment.self)
         }

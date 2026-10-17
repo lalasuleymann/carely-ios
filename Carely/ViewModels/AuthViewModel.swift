@@ -38,9 +38,10 @@ final class AuthViewModel {
                 password: password
             )
 
+            try KeychainService.save(token: response.token)
+
             currentUser = response.user
             isAuthenticated = true
-
             return true
         } catch {
             errorMessage = error.localizedDescription
@@ -69,15 +70,34 @@ final class AuthViewModel {
                 password: password
             )
 
+            try KeychainService.save(token: response.token)
+
             currentUser = response.user
             isAuthenticated = true
-
             return true
         } catch {
             errorMessage = error.localizedDescription
             return false
         }
     }
+    
+    func checkAuthentication() {
+        do {
+            guard let token = try KeychainService.readToken(),
+                  !token.isEmpty else {
+                isAuthenticated = false
+                currentUser = nil
+                return
+            }
+
+            isAuthenticated = true
+        } catch {
+            isAuthenticated = false
+            currentUser = nil
+            errorMessage = error.localizedDescription
+        }
+    }
+
 
     func clearError() {
         errorMessage = nil
