@@ -8,6 +8,7 @@
 
 import Foundation
 import Observation
+import SwiftUI
 
 @Observable
 final class DoctorDetailViewModel {
@@ -19,20 +20,40 @@ final class DoctorDetailViewModel {
     var displayedYear = Calendar.current.component(.year, from: .now)
     var showingMonthYearPicker = false
 
-    let timeSlots = [
-        "10:00 am",
-        "10:30 am",
-        "11:00 am",
-        "11:30 am",
-        "12:00 pm",
-        "12:30 pm"
-    ]
+    private(set) var timeSlots: [String] = []
+    var isLoadingAvailability = false
+    var availabilityError: String?
 
     let weekdays = [
         "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
     ]
 
     let months = Calendar.current.monthSymbols
+
+    private let networkService: NetworkService
+
+    init(networkService: NetworkService = DefaultNetworkService()) {
+        self.networkService = networkService
+    }
+    
+    var allWorkingTimeSlots: [String] {
+        (9..<17).flatMap { hour in
+            ["\(String(format: "%02d", hour)):00",
+             "\(String(format: "%02d", hour)):30"]
+        }
+    }
+
+    var slotPages: [[String]] {
+        let slots = allWorkingTimeSlots
+        return stride(from: 0, to: slots.count, by: 6).map { start in
+            Array(slots[start..<min(start + 6, slots.count)])
+        }
+    }
+    
+    func isWeekend(_ date: Date) -> Bool {
+        let weekday = Calendar.current.component(.weekday, from: date)
+        return weekday == 1 || weekday == 7
+    }
 
     private var calendar: Calendar {
         var value = Calendar(identifier: .gregorian)
@@ -97,7 +118,42 @@ final class DoctorDetailViewModel {
 
         return days
     }
+    
+    func loadAvailability(for doctorId: Int) async {
+        isLoadingAvailability = true
+        availabilityError = nil
+        selectedTime = nil
 
+        defer {
+            isLoadingAvailability = false
+        }
+
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(identifier: "Asia/Baku")
+        formatter.dateFormat = "yyyy-MM-dd"
+
+        let dateString = formatter.string(from: selectedDate)
+
+        do {
+            let response: DoctorAvailabilityDTO =
+                try await networkService.request(
+                    DoctorAvailabilityEndpoint.availability(
+                        doctorId: doctorId,
+                        date: dateString
+                    ),
+                    token: nil
+                )
+
+            timeSlots = response.availableSlots
+        } catch {
+            timeSlots = []
+            availabilityError = error.localizedDescription
+            print("Failed to load availability: \(error.localizedDescription)")
+        }
+    }
+    
     func openCalendar() {
         draftDate = selectedDate
         displayedMonth = calendar.component(.month, from: draftDate)
@@ -144,22 +200,22 @@ final class DoctorDetailViewModel {
     }
 
     private func dateForTime(_ time: String, on date: Date) -> Date? {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "h:mm a"
+        let components = time.split(separator: ":")
 
-        guard let parsedTime = formatter.date(from: time) else {
+        guard components.count == 2,
+              let hour = Int(components[0]),
+              let minute = Int(components[1]),
+              (0...23).contains(hour),
+              (0...59).contains(minute) else {
             return nil
         }
 
-        let components = Calendar.current.dateComponents(
-            [.hour, .minute],
-            from: parsedTime
-        )
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "Asia/Baku") ?? .current
 
-        return Calendar.current.date(
-            bySettingHour: components.hour ?? 0,
-            minute: components.minute ?? 0,
+        return calendar.date(
+            bySettingHour: hour,
+            minute: minute,
             second: 0,
             of: date
         )
