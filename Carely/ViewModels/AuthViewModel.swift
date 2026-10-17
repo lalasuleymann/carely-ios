@@ -41,7 +41,6 @@ final class AuthViewModel {
             currentUser = response.user
             isAuthenticated = true
 
-            // Token storage will be added in the next step.
             return true
         } catch {
             errorMessage = error.localizedDescription
@@ -49,12 +48,7 @@ final class AuthViewModel {
         }
     }
 
-    func register(
-        firstName: String,
-        lastName: String,
-        email: String,
-        password: String
-    ) async -> Bool {
+    func register(firstName: String,lastName: String,email: String,password: String) async -> Bool {
         guard firstName.trimmingCharacters(in: .whitespacesAndNewlines).count >= 2,
               lastName.trimmingCharacters(in: .whitespacesAndNewlines).count >= 2,
               validateEmail(email),
@@ -78,7 +72,6 @@ final class AuthViewModel {
             currentUser = response.user
             isAuthenticated = true
 
-            // Token storage will be added in the next step.
             return true
         } catch {
             errorMessage = error.localizedDescription
