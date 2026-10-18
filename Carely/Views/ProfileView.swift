@@ -21,6 +21,7 @@ struct ProfileView: View {
     @State private var showDeleteConfirmation = false
     @State private var showEditProfile = false
     @State private var photoError: String?
+    @State private var showChangePassword = false
 
     private let photoFileName = "carely-profile-photo.jpg"
 
@@ -223,6 +224,7 @@ struct ProfileView: View {
                 title: "Change Password",
                 icon: "lock"
             ) {
+                showChangePassword = true
             }
 
             menuDivider
@@ -375,6 +377,10 @@ struct ProfileView: View {
         .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(isPresented: $showChangePassword) {
+            ChangePasswordView()
+                .environment(authViewModel)
+        }
         .task {
             await profileViewModel.loadProfile()
         }

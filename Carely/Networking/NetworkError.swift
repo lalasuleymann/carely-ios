@@ -11,6 +11,7 @@ enum NetworkError: LocalizedError {
     case invalidURL
     case invalidResponse
     case serverError(statusCode: Int)
+    case serverMessage(String)
     case decodingError
     case encodingError
     case unauthorized
@@ -21,18 +22,28 @@ enum NetworkError: LocalizedError {
         switch self {
         case .invalidURL:
             return "API URL düzgün deyil."
+
         case .invalidResponse:
             return "Serverdən düzgün cavab alınmadı."
+
         case .serverError(let statusCode):
             return "Server xətası: \(statusCode)"
+
+        case .serverMessage(let message):
+            return message
+
         case .decodingError:
             return "Server məlumatlarını oxumaq mümkün olmadı."
+
         case .encodingError:
             return "Sorğu məlumatlarını hazırlamaq mümkün olmadı."
+
         case .unauthorized:
             return "Sessiya bitib. Yenidən daxil ol."
+
         case .noInternetConnection:
             return "İnternet bağlantısını yoxla."
+
         case .unknown(let error):
             return error.localizedDescription
         }

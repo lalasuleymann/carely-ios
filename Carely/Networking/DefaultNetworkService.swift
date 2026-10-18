@@ -24,15 +24,30 @@ nonisolated final class DefaultNetworkService: NetworkService {
                 throw NetworkError.invalidResponse
             }
 
+            
             guard (200..<300).contains(httpResponse.statusCode) else {
+                let responseBody = String(
+                    data: data,
+                    encoding: .utf8
+                ) ?? ""
+
+
                 if httpResponse.statusCode == 401 {
                     throw NetworkError.unauthorized
+                }
+
+                if let json = try? JSONSerialization.jsonObject(
+                    with: data
+                ) as? [String: Any],
+                   let message = json["message"] as? String {
+                    throw NetworkError.serverMessage(message)
                 }
 
                 throw NetworkError.serverError(
                     statusCode: httpResponse.statusCode
                 )
             }
+
 
             do {
                 return try JSONDecoder().decode(T.self, from: data)

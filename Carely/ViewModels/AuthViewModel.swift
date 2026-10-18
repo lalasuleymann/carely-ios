@@ -191,6 +191,63 @@ final class AuthViewModel {
         )
     }
     
+    // MARK: - Change Password
+    func changePassword(currentPassword: String,newPassword: String,confirmPassword: String) async -> Bool {
+        guard !currentPassword.isEmpty else {
+            errorMessage = "Please enter your current password."
+            return false
+        }
+
+        guard newPassword.count >= 8 else {
+            errorMessage = "New password must contain at least 8 characters."
+            return false
+        }
+
+        guard newPassword.count <= 100 else {
+            errorMessage = "New password cannot exceed 100 characters."
+            return false
+        }
+
+        guard newPassword == confirmPassword else {
+            errorMessage = "New passwords do not match."
+            return false
+        }
+
+        guard currentPassword != newPassword else {
+            errorMessage = "New password must be different from the current password."
+            return false
+        }
+
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
+
+        do {
+            guard let token = try KeychainService.readToken(),
+                  !token.isEmpty else {
+                errorMessage = "Please log in again."
+                return false
+            }
+
+            let request = ChangePasswordRequestDTO(
+                currentPassword: currentPassword,
+                newPassword: newPassword
+            )
+
+            let _: ChangePasswordResponseDTO =
+                try await networkService.request(
+                    ChangePasswordEndpoint.changePassword(request),
+                    token: token
+                )
+
+            return true
+        } catch {
+            errorMessage = error.localizedDescription
+            print("Change password error: \(error)")
+            return false
+        }
+    }
+
     // MARK: - Logout
     func logout() {
         do {
