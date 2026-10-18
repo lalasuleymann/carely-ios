@@ -13,6 +13,9 @@ import GoogleSignIn
 struct CarelyApp: App {
     @State private var appointmentViewModel = AppointmentViewModel()
 
+    @AppStorage("carely_appearance")
+    private var appearance = "System"
+    
     init() {
         let iosClientID = "818466594908-43oars70nnp36mf49e0ht20uluvf8o8t.apps.googleusercontent.com"
         let webClientID = "818466594908-j08reb92eo4uoqm8p9ekuttmeqhfbt68.apps.googleusercontent.com"
@@ -28,6 +31,10 @@ struct CarelyApp: App {
             AuthRootView()
                 .environment(appointmentViewModel)
                 .modelContainer(for: Appointment.self)
+                .preferredColorScheme(
+                    appearance == "Light" ? .light :
+                    appearance == "Dark" ? .dark : nil
+                )
         }
     }
 }
