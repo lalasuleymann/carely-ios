@@ -29,7 +29,7 @@ struct NearbyAppointmentPanel: View {
                 if $0.date == $1.date {
                     return $0.time < $1.time
                 }
-                
+
                 return $0.date < $1.date
             }
     }
@@ -43,39 +43,32 @@ struct NearbyAppointmentPanel: View {
         let rowHeight: CGFloat = 80
         let spacing: CGFloat = 12
 
-        let totalHeight = CGFloat(doctorCount) * headerHeight + CGFloat(appointmentCount) * rowHeight + CGFloat(max(0, doctorCount + appointmentCount - 1)) * spacing
+        let totalHeight =
+            CGFloat(doctorCount) * headerHeight
+            + CGFloat(appointmentCount) * rowHeight
+            + CGFloat(max(0, doctorCount + appointmentCount - 1)) * spacing
 
         return min(totalHeight, 300)
     }
 
-    // MARK: - Doctor Coordinate
-    private var doctorCoordinate: CLLocationCoordinate2D? {
-        guard
-            let doctorID = doctorIDs.first,
-            let doctor = MockDoctorData.doctors.first(
-                where: { $0.id == doctorID }
-            )
-        else {
-            return nil
-        }
-
-        return CLLocationCoordinate2D(
-            latitude: doctor.latitude,
-            longitude: doctor.longitude
-        )
+    // MARK: - Location Coordinate
+    private var doctorCoordinate: CLLocationCoordinate2D {
+        group.coordinate
     }
 
     // MARK: - Doctor Section
-    @ViewBuilder
-    private func doctorSection(doctor: Doctor,doctorID: Int) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+    private func doctorSection(doctorID: Int) -> some View {
+        let doctorAppointments = appointments(for: doctorID)
+        let firstAppointment = doctorAppointments.first
+
+        return VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(doctor.name)
+                    Text(firstAppointment?.doctorName ?? "Doctor")
                         .font(.headline)
                         .foregroundStyle(AppColors.primaryText)
 
-                    Text(doctor.specialty)
+                    Text(firstAppointment?.specialty ?? "")
                         .font(.subheadline)
                         .foregroundStyle(AppColors.secondaryText)
                 }
@@ -88,8 +81,7 @@ struct NearbyAppointmentPanel: View {
                             showDirectionsOptions = true
                         } label: {
                             Image(
-                                systemName:
-                                    "arrow.triangle.turn.up.right.diamond.fill"
+                                systemName: "arrow.triangle.turn.up.right.diamond.fill"
                             )
                             .font(.title3)
                             .foregroundStyle(AppColors.primary)
@@ -109,7 +101,7 @@ struct NearbyAppointmentPanel: View {
             }
             .padding(.horizontal, 4)
 
-            ForEach(appointments(for: doctorID)) { appointment in
+            ForEach(doctorAppointments) { appointment in
                 NearbyAppointmentRow(
                     appointment: appointment,
                     appointmentViewModel: appointmentViewModel
@@ -120,19 +112,15 @@ struct NearbyAppointmentPanel: View {
 
     // MARK: - Apple Maps
     private func openAppleMaps() {
-        guard let coordinate = doctorCoordinate else {
-            return
-        }
+        let coordinate = doctorCoordinate
 
         let source = MKMapItem.forCurrentLocation()
         source.name = "My Location"
 
         let destination = MKMapItem(
-            placemark: MKPlacemark(
-                coordinate: coordinate
-            )
+            placemark: MKPlacemark(coordinate: coordinate)
         )
-        destination.name = "Clinic"
+        destination.name = "Appointment Location"
 
         MKMapItem.openMaps(
             with: [source, destination],
@@ -145,7 +133,7 @@ struct NearbyAppointmentPanel: View {
 
     // MARK: - Google Maps
     private func openGoogleMaps() {
-        guard let coordinate = doctorCoordinate else { return }
+        let coordinate = doctorCoordinate
 
         var components = URLComponents()
         components.scheme = "comgooglemaps"
@@ -192,14 +180,7 @@ struct NearbyAppointmentPanel: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
                 ForEach(doctorIDs, id: \.self) { doctorID in
-                    if let doctor = MockDoctorData.doctors.first(
-                        where: { $0.id == doctorID }
-                    ) {
-                        doctorSection(
-                            doctor: doctor,
-                            doctorID: doctorID
-                        )
-                    }
+                    doctorSection(doctorID: doctorID)
                 }
             }
             .padding(14)
