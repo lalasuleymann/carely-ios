@@ -5,6 +5,7 @@
 //  Created by Lala Suleymanova on 17.10.26.
 //
 
+
 import Foundation
 import Observation
 
@@ -12,16 +13,22 @@ import Observation
 @Observable
 final class AuthViewModel {
     private let authService: AuthService
+    private let networkService: NetworkService
 
     private(set) var isLoading = false
     private(set) var errorMessage: String?
     private(set) var currentUser: AuthUserDTO?
     private(set) var isAuthenticated = false
 
-    init(authService: AuthService = DefaultAuthService()) {
+    init(
+        authService: AuthService = DefaultAuthService(),
+        networkService: NetworkService = DefaultNetworkService()
+    ) {
         self.authService = authService
+        self.networkService = networkService
     }
 
+    // MARK: - Email Login
     func login(email: String, password: String) async -> Bool {
         guard validateEmail(email), !password.isEmpty else {
             errorMessage = "Please enter a valid email and password."
@@ -49,11 +56,44 @@ final class AuthViewModel {
         }
     }
 
+    // MARK: - Google Login
+    func loginWithGoogle(idToken: String) async -> Bool {
+        guard !idToken.isEmpty else {
+            errorMessage = "Google authentication failed. Please try again."
+            return false
+        }
+
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
+
+        do {
+            let response: AuthResponseDTO = try await networkService.request(
+                AuthEndpoint.google(
+                    GoogleLoginRequestDTO(idToken: idToken)
+                ),
+                token: nil
+            )
+
+            try KeychainService.save(token: response.token)
+
+            currentUser = response.user
+            isAuthenticated = true
+            return true
+        } catch {
+            errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
+    // MARK: - Register
     func register(firstName: String,lastName: String,email: String,password: String) async -> Bool {
-        guard firstName.trimmingCharacters(in: .whitespacesAndNewlines).count >= 2,
-              lastName.trimmingCharacters(in: .whitespacesAndNewlines).count >= 2,
-              validateEmail(email),
-              password.count >= 8 else {
+        guard
+            firstName.trimmingCharacters(in: .whitespacesAndNewlines).count >= 2,
+            lastName.trimmingCharacters(in: .whitespacesAndNewlines).count >= 2,
+            validateEmail(email),
+            password.count >= 8
+        else {
             errorMessage = "Check your details. Password must contain at least 8 characters."
             return false
         }
@@ -80,7 +120,8 @@ final class AuthViewModel {
             return false
         }
     }
-    
+
+    // MARK: - Authentication State
     func checkAuthentication() {
         do {
             guard let token = try KeychainService.readToken(),
@@ -98,11 +139,11 @@ final class AuthViewModel {
         }
     }
 
-
     func clearError() {
         errorMessage = nil
     }
 
+    // MARK: - Validation
     private func validateEmail(_ email: String) -> Bool {
         let value = email.trimmingCharacters(in: .whitespacesAndNewlines)
 

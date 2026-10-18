@@ -12,7 +12,7 @@ protocol AuthService {
     func register(firstName: String,lastName: String,email: String,password: String) async throws -> AuthResponseDTO
 }
 
-final class DefaultAuthService: AuthService {
+nonisolated final class DefaultAuthService: AuthService {
     private let networkService: NetworkService
 
     init(networkService: NetworkService = DefaultNetworkService()) {

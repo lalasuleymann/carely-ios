@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import GoogleSignIn
+import UIKit
 
 struct LoginView: View {
     @Bindable var viewModel: AuthViewModel
@@ -117,25 +119,65 @@ struct LoginView: View {
                     .frame(height: 1)
             }
 
+            
             Button {
+                guard !viewModel.isLoading else { return }
+
+                guard let windowScene = UIApplication.shared.connectedScenes
+                    .compactMap({ $0 as? UIWindowScene })
+                    .first(where: { $0.activationState == .foregroundActive }),
+                      let rootViewController = windowScene.windows
+                    .first(where: { $0.isKeyWindow })?
+                    .rootViewController else {
+                    return
+                }
+
+                Task {
+                    do {
+                        let result = try await GIDSignIn.sharedInstance.signIn(
+                            withPresenting: rootViewController
+                        )
+
+                        guard let idToken = result.user.idToken?.tokenString else {
+                            return
+                        }
+
+                        await viewModel.loginWithGoogle(idToken: idToken)
+                    } catch {
+                        if (error as NSError).code != GIDSignInError.canceled.rawValue {
+                            print("Google Sign-In error: \(error.localizedDescription)")
+                        }
+                    }
+                }
             } label: {
-                HStack(spacing: 10) {
-                    Image(systemName: "g.circle.fill")
-                        .font(.system(size: 20))
+                HStack(spacing: 12) {
+                    Text("G")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(width: 22, height: 22)
+                        .background(Color(red: 0.13, green: 0.16, blue: 0.17))
+                        .clipShape(Circle())
 
                     Text("Continue with Google")
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 15, weight: .semibold))
                 }
-                .foregroundStyle(AppColors.primaryText)
                 .frame(maxWidth: .infinity)
-                .frame(height: 52)
+                .frame(height: 56)
+                .foregroundStyle(AppColors.primaryText)
                 .background(AppColors.surface)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .clipShape(RoundedRectangle(cornerRadius: 15))
                 .overlay {
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(AppColors.secondaryText.opacity(0.18), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 15)
+                        .stroke(
+                            AppColors.secondaryText.opacity(0.18),
+                            lineWidth: 1
+                        )
                 }
             }
+            .buttonStyle(.plain)
+            .disabled(viewModel.isLoading)
+
+
 
             Button {
             } label: {
