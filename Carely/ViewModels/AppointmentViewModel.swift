@@ -33,7 +33,6 @@ final class AppointmentViewModel {
     }
 
     // MARK: - Filtering
-
     func selectStatus(_ status: AppointmentStatus) {
         selectedStatus = status
         updateState()
@@ -44,7 +43,6 @@ final class AppointmentViewModel {
     }
 
     // MARK: - Loading from backend
-
     func loadAppointments() {
         Task {
             await fetchAppointments()
@@ -104,8 +102,6 @@ final class AppointmentViewModel {
             status: status
         )
     }
-
-
     
     private func parseDate(_ value: String) throws -> Date {
         let formatter = ISO8601DateFormatter()
@@ -125,7 +121,6 @@ final class AppointmentViewModel {
             return date
         }
 
-        // Fallback for timestamps without timezone information.
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
@@ -141,10 +136,8 @@ final class AppointmentViewModel {
             return date
         }
 
-        print("❌ Could not parse appointment date: \(value)")
         throw NetworkError.decodingError
     }
-
 
     private func parseStatus(_ value: String) -> AppointmentStatus {
         switch value.lowercased() {
@@ -160,13 +153,11 @@ final class AppointmentViewModel {
     }
 
     // MARK: - State
-
     private func updateState() {
         state = filteredAppointments.isEmpty ? .empty : .loaded
     }
 
     // MARK: - Appointment Information
-
     func statusTitle(for appointment: Appointment) -> String {
         switch appointment.status {
         case .upcoming:
@@ -204,15 +195,82 @@ final class AppointmentViewModel {
     }
 
     // MARK: - Booking (not connected yet)
+    func bookAppointment(doctor: Doctor,date: Date,time: String) {
+        guard let startAt = makeAppointmentDate(date: date, time: time) else {
+            state = .error("Could not read the selected appointment time.")
+            return
+        }
 
-    func bookAppointment(
-        doctor: Doctor,
-        date: Date,
-        time: String
-    ) {
-        state = .error(
-            "Online booking has not been connected yet."
+        guard startAt > Date() else {
+            state = .error("Appointment time must be in the future.")
+            return
+        }
+
+        Task {
+            await createAppointmentOnServer(
+                doctorID: doctor.id,
+                startAt: startAt
+            )
+        }
+    }
+
+    private func makeAppointmentDate(date: Date, time: String) -> Date? {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(identifier: "Asia/Baku")
+        formatter.dateFormat = "HH:mm"
+
+        guard let parsedTime = formatter.date(from: time) else {
+            return nil
+        }
+
+        let calendar = Calendar(identifier: .gregorian)
+        let timeComponents = calendar.dateComponents(
+            [.hour, .minute],
+            from: parsedTime
         )
+
+        return calendar.date(
+            bySettingHour: timeComponents.hour ?? 0,
+            minute: timeComponents.minute ?? 0,
+            second: 0,
+            of: date
+        )
+    }
+
+    private func createAppointmentOnServer(doctorID: Int,startAt: Date) async {
+        state = .loading
+
+        do {
+            guard let token = try KeychainService.readToken(),
+                  !token.isEmpty else {
+                state = .error("Please log in again to book an appointment.")
+                return
+            }
+
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = [
+                .withInternetDateTime,
+                .withFractionalSeconds
+            ]
+
+            let request = CreateAppointmentRequestDTO(
+                doctorId: doctorID,
+                startAt: formatter.string(from: startAt),
+                notes: nil
+            )
+
+            let _: AppointmentDTO = try await networkService.request(
+                CreateAppointmentEndpoint.create(request),
+                token: token
+            )
+
+            await fetchAppointments()
+        } catch {
+            state = .error(
+                "Failed to book appointment: \(error.localizedDescription)"
+            )
+        }
     }
 
     // MARK: - Cancellation (not connected yet)
@@ -256,12 +314,47 @@ final class AppointmentViewModel {
         }
     }
 
-
     // MARK: - Completion (server-managed)
-
     func completeAppointment(id: UUID) {
-        state = .error(
-            "Appointment completion is managed by the server."
-        )
+        guard let appointment = appointments.first(where: { $0.id == id }) else {
+            return
+        }
+
+        guard appointment.status == .upcoming else {
+            return
+        }
+
+        guard let serverID = appointment.serverID else {
+            state = .error("This appointment is not linked to the server.")
+            return
+        }
+
+        Task {
+            await completeAppointmentOnServer(serverID: serverID)
+        }
     }
+
+    private func completeAppointmentOnServer(serverID: Int) async {
+        do {
+            guard let token = try KeychainService.readToken(),
+                  !token.isEmpty else {
+                state = .error("Please log in again to complete this appointment.")
+                return
+            }
+
+            let _: CompleteAppointmentResponseDTO =
+                try await networkService.request(
+                    CompleteAppointmentEndpoint.completeAppointment(id: serverID),
+                    token: token
+                )
+
+            await fetchAppointments()
+
+        } catch {
+            state = .error(
+                "Failed to complete appointment: \(error.localizedDescription)"
+            )
+        }
+    }
+
 }

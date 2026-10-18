@@ -37,9 +37,7 @@ struct AppointmentsView: View {
             Text(statusTitle(for: status))
                 .font(AppTypography.bodyMedium)
                 .foregroundStyle(
-                    isSelected
-                    ? AppColors.primaryText
-                    : AppColors.secondaryText
+                    isSelected ? AppColors.primaryText : AppColors.secondaryText
                 )
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
@@ -174,11 +172,7 @@ struct AppointmentsView: View {
             }
         }
         .padding(.horizontal, 20)
-        .frame(
-            maxWidth: .infinity,
-            maxHeight: .infinity,
-            alignment: .top
-        )
+        .frame(maxWidth: .infinity,maxHeight: .infinity,alignment: .top)
         .background(AppColors.background)
         .navigationTitle("Appointments")
         .navigationBarTitleDisplayMode(.inline)
