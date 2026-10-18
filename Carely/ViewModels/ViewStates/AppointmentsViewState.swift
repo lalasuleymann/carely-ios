@@ -1,14 +1,13 @@
 //
-//  SearchViewState.swift
+//  AppointmentsViewState.swift
 //  Carely
 //
-//  Created by Lala Suleymanova on 09.10.26.
+//  Created by Lala Suleymanova on 12.10.26.
 //
-
 
 import Foundation
 
-enum SearchViewState {
+enum AppointmentsViewState {
     case idle
     case loading
     case loaded
