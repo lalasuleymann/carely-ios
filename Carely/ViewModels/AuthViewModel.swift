@@ -86,6 +86,41 @@ final class AuthViewModel {
         }
     }
 
+    // MARK: - Apple Login
+    func loginWithApple(identityToken: String,firstName: String?,lastName: String?,email: String?) async -> Bool {
+        guard !identityToken.isEmpty else {
+            errorMessage = "Apple authentication failed. Please try again."
+            return false
+        }
+
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
+
+        do {
+            let request = AppleLoginRequestDTO(
+                identityToken: identityToken,
+                firstName: firstName,
+                lastName: lastName,
+                email: email
+            )
+
+            let response: AuthResponseDTO = try await networkService.request(
+                AuthEndpoint.apple(request),
+                token: nil
+            )
+
+            try KeychainService.save(token: response.token)
+
+            currentUser = response.user
+            isAuthenticated = true
+            return true
+        } catch {
+            errorMessage = error.localizedDescription
+            return false
+        }
+    }
+    
     // MARK: - Register
     func register(firstName: String,lastName: String,email: String,password: String) async -> Bool {
         guard

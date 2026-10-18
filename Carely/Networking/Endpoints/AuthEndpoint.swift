@@ -12,6 +12,7 @@ enum AuthEndpoint: Endpoint {
     case login(LoginRequestDTO)
     case register(RegisterRequestDTO)
     case google(GoogleLoginRequestDTO)
+    case apple(AppleLoginRequestDTO)
 
     var baseURL: String {
         APIConfig.baseURL
@@ -25,6 +26,8 @@ enum AuthEndpoint: Endpoint {
             return "/api/auth/register"
         case .google:
             return "/api/auth/google"
+        case .apple:
+            return "/api/auth/apple"
         }
     }
 
@@ -41,6 +44,8 @@ enum AuthEndpoint: Endpoint {
         case .register(let request):
             return try? encoder.encode(request)
         case .google(let request):
+            return try? encoder.encode(request)
+        case .apple(let request):
             return try? encoder.encode(request)
         }
     }

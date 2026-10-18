@@ -8,6 +8,7 @@
 import SwiftUI
 import GoogleSignIn
 import UIKit
+import AuthenticationServices
 
 struct LoginView: View {
     @Bindable var viewModel: AuthViewModel
@@ -177,27 +178,55 @@ struct LoginView: View {
             .buttonStyle(.plain)
             .disabled(viewModel.isLoading)
 
+//            SignInWithAppleButton(
+//                .signIn,
+//                onRequest: { request in
+//                    request.requestedScopes = [.fullName, .email]
+//                },
+//                onCompletion: { result in
+//                    switch result {
+//                    case .success(let authorization):
+//                        guard
+//                            let credential = authorization.credential
+//                                as? ASAuthorizationAppleIDCredential,
+//                            let tokenData = credential.identityToken,
+//                            let identityToken = String(
+//                                data: tokenData,
+//                                encoding: .utf8
+//                            )
+//                        else {
+//                            viewModel.clearError()
+//                            return
+//                        }
+//
+//                        let firstName = credential.fullName?.givenName
+//                        let lastName = credential.fullName?.familyName
+//                        let email = credential.email
+//
+//                        Task {
+//                            await viewModel.loginWithApple(
+//                                identityToken: identityToken,
+//                                firstName: firstName,
+//                                lastName: lastName,
+//                                email: email
+//                            )
+//                        }
+//
+//                    case .failure(let error):
+//                        let authError = error as? ASAuthorizationError
+//
+//                        if authError?.code != .canceled {
+//                            print("Apple Sign-In error: \(error.localizedDescription)")
+//                        }
+//                    }
+//                }
+//            )
+//            .signInWithAppleButtonStyle(.black)
+//            .frame(maxWidth: .infinity)
+//            .frame(height: 52)
+//            .clipShape(RoundedRectangle(cornerRadius: 14))
+//            .disabled(viewModel.isLoading)
 
-
-            Button {
-            } label: {
-                HStack(spacing: 10) {
-                    Image(systemName: "apple.logo")
-                        .font(.system(size: 19))
-
-                    Text("Continue with Apple")
-                        .font(.system(size: 14, weight: .semibold))
-                }
-                .foregroundStyle(AppColors.primaryText)
-                .frame(maxWidth: .infinity)
-                .frame(height: 52)
-                .background(AppColors.surface)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(AppColors.secondaryText.opacity(0.18), lineWidth: 1)
-                }
-            }
         }
     }
     
