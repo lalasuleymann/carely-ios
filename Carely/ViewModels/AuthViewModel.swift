@@ -178,6 +178,19 @@ final class AuthViewModel {
         errorMessage = nil
     }
     
+    func updateCurrentUser(firstName: String,lastName: String,phoneNumber: String?) {
+        guard let currentUser else { return }
+
+        self.currentUser = AuthUserDTO(
+            id: currentUser.id,
+            firstName: firstName,
+            lastName: lastName,
+            email: currentUser.email,
+            phoneNumber: phoneNumber,
+            profileImageUrl: currentUser.profileImageUrl
+        )
+    }
+    
     // MARK: - Logout
     func logout() {
         do {

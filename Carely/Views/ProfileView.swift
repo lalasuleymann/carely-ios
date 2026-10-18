@@ -5,91 +5,298 @@
 //  Created by Lala Suleymanova on 18.10.26.
 //
 
+
 import SwiftUI
+import PhotosUI
+import UIKit
 
 struct ProfileView: View {
+
     @Environment(AuthViewModel.self) private var authViewModel
+
+    @State private var profileViewModel = ProfileViewModel()
+    @State private var selectedPhoto: PhotosPickerItem?
+    @State private var profileImage: UIImage?
+    @State private var showPhotoOptions = false
+    @State private var showDeleteConfirmation = false
+    @State private var showEditProfile = false
+    @State private var photoError: String?
+
+    private let photoFileName = "carely-profile-photo.jpg"
 
     private var user: AuthUserDTO? {
         authViewModel.currentUser
     }
-    
-    private var profileHeader: some View {
-        VStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(AppColors.primary.opacity(0.12))
-                    .frame(width: 100, height: 100)
 
-                Image(systemName: "person.fill")
-                    .font(.system(size: 42))
-                    .foregroundStyle(AppColors.primary)
+    private var firstName: String {
+        profileViewModel.profile?.firstName ?? user?.firstName ?? ""
+    }
+
+    private var lastName: String {
+        profileViewModel.profile?.lastName ?? user?.lastName ?? ""
+    }
+
+    private var email: String {
+        profileViewModel.profile?.email
+            ?? user?.email
+            ?? "No email available"
+    }
+
+    private var phoneNumber: String {
+        profileViewModel.profile?.phoneNumber
+            ?? user?.phoneNumber
+            ?? "Not added"
+    }
+
+    private var fullName: String {
+        let name = "\(firstName) \(lastName)"
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return name.isEmpty ? "Carely User" : name
+    }
+
+    // MARK: - Profile Header
+    private var profileHeader: some View {
+        VStack(spacing: 8) {
+            PhotosPicker(
+                selection: $selectedPhoto,
+                matching: .images,
+                photoLibrary: .shared()
+            ) {
+                ZStack(alignment: .bottomTrailing) {
+                    Group {
+                        if let profileImage {
+                            Image(uiImage: profileImage)
+                                .resizable()
+                                .scaledToFill()
+                        } else {
+                            Circle()
+                                .fill(AppColors.primary.opacity(0.12))
+                                .overlay {
+                                    Image(systemName: "person.fill")
+                                        .font(.system(size: 34))
+                                        .foregroundStyle(AppColors.primary)
+                                }
+                        }
+                    }
+                    .frame(width: 88, height: 88)
+                    .clipShape(Circle())
+
+                    Image(systemName: "camera.fill")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(width: 30, height: 30)
+                        .background(AppColors.primary)
+                        .clipShape(Circle())
+                        .overlay {
+                            Circle()
+                                .stroke(AppColors.surface, lineWidth: 3)
+                        }
+                }
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Change profile photo")
+
+            Button {
+                showPhotoOptions = true
+            } label: {
+                Text(
+                    profileImage == nil
+                        ? "Add Profile Photo"
+                        : "Edit Profile Photo"
+                )
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(AppColors.primary)
+            }
+            .buttonStyle(.plain)
 
             Text(fullName)
-                .font(.system(size: 22, weight: .bold))
+                .font(.system(size: 20, weight: .bold))
                 .foregroundStyle(AppColors.primaryText)
 
-            Text(user?.email ?? "No email available")
-                .font(.system(size: 14))
+            Text(email)
+                .font(.system(size: 13))
                 .foregroundStyle(AppColors.secondaryText)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 24)
+        .padding(.vertical, 16)
         .background(AppColors.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .clipShape(RoundedRectangle(cornerRadius: 18))
     }
 
+    // MARK: - Account Information
     private var accountSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 14) {
             Text("Account Information")
-                .font(.system(size: 18, weight: .semibold))
+                .font(.system(size: 17, weight: .semibold))
                 .foregroundStyle(AppColors.primaryText)
 
             infoRow(
                 title: "First Name",
-                value: user?.firstName ?? "Not available",
+                value: firstName.isEmpty ? "Not available" : firstName,
                 icon: "person"
             )
 
             infoRow(
                 title: "Last Name",
-                value: user?.lastName ?? "Not available",
+                value: lastName.isEmpty ? "Not available" : lastName,
                 icon: "person"
             )
 
             infoRow(
                 title: "Email",
-                value: user?.email ?? "Not available",
+                value: email,
                 icon: "envelope"
             )
 
             infoRow(
                 title: "Phone Number",
-                value: user?.phoneNumber ?? "Not added",
+                value: phoneNumber.isEmpty ? "Not added" : phoneNumber,
                 icon: "phone"
             )
         }
-        .padding(20)
+        .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(AppColors.surface)
-        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .clipShape(RoundedRectangle(cornerRadius: 18))
     }
 
+    // MARK: - Profile Menu
+    private var profileMenu: some View {
+        VStack(spacing: 0) {
+            NavigationLink {
+                PersonalInformationView(
+                    profileViewModel: profileViewModel
+                )
+                .environment(authViewModel)
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "person.crop.circle")
+                        .font(.system(size: 17))
+                        .frame(width: 24)
+                        .foregroundStyle(AppColors.primary)
+
+                    Text("Personal Information")
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(AppColors.primaryText)
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(AppColors.secondaryText)
+                }
+                .frame(minHeight: 50)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
+            menuDivider
+
+            NavigationLink {
+                SettingsView()
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 17))
+                        .frame(width: 24)
+                        .foregroundStyle(AppColors.primary)
+
+                    Text("Settings")
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(AppColors.primaryText)
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(AppColors.secondaryText)
+                }
+                .frame(minHeight: 50)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            
+            menuDivider
+
+            profileMenuRow(
+                title: "Change Password",
+                icon: "lock"
+            ) {
+            }
+
+            menuDivider
+
+            profileMenuRow(
+                title: "Delete Account",
+                icon: "person.crop.circle.badge.xmark",
+                isDestructive: true
+            ) {
+            }
+
+            menuDivider
+
+            profileMenuRow(
+                title: "Log Out",
+                icon: "rectangle.portrait.and.arrow.right",
+                isDestructive: true
+            ) {
+                authViewModel.logout()
+            }
+        }
+        .padding(.horizontal, 16)
+        .background(AppColors.surface)
+        .clipShape(RoundedRectangle(cornerRadius: 18))
+    }
+
+    private var menuDivider: some View {
+        Divider()
+            .padding(.leading, 38)
+    }
+
+    private func profileMenuRow(title: String,icon: String,isDestructive: Bool = false,action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                Image(systemName: icon)
+                    .font(.system(size: 17))
+                    .frame(width: 24)
+                    .foregroundStyle(
+                        isDestructive ? Color.red : AppColors.primary
+                    )
+
+                Text(title)
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundStyle(
+                        isDestructive ? Color.red : AppColors.primaryText
+                    )
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(AppColors.secondaryText)
+            }
+            .frame(minHeight: 50)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - Info Row
     private func infoRow(title: String,value: String,icon: String) -> some View {
         HStack(spacing: 12) {
             Image(systemName: icon)
-                .font(.system(size: 17))
+                .font(.system(size: 16))
                 .foregroundStyle(AppColors.primary)
-                .frame(width: 24)
+                .frame(width: 22)
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(title)
                     .font(.system(size: 12))
                     .foregroundStyle(AppColors.secondaryText)
 
                 Text(value)
-                    .font(.system(size: 15, weight: .medium))
+                    .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(AppColors.primaryText)
                     .textSelection(.enabled)
             }
@@ -98,45 +305,134 @@ struct ProfileView: View {
         }
     }
 
-    private var fullName: String {
-        let firstName = user?.firstName ?? ""
-        let lastName = user?.lastName ?? ""
-        let name = "\(firstName) \(lastName)"
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+    // MARK: - Photo Handling
+    @MainActor
+    private func loadSelectedPhoto(_ item: PhotosPickerItem?) async {
+        guard let item else { return }
 
-        return name.isEmpty ? "Carely User" : name
-    }
-    
-    private var logoutButton: some View {
-        Button(role: .destructive) {
-            authViewModel.logout()
-        } label: {
-            HStack(spacing: 10) {
-                Image(systemName: "rectangle.portrait.and.arrow.right")
-
-                Text("Log Out")
-                    .font(.system(size: 16, weight: .semibold))
+        do {
+            guard
+                let data = try await item.loadTransferable(type: Data.self),
+                let image = UIImage(data: data),
+                let jpegData = image.jpegData(compressionQuality: 0.85)
+            else {
+                photoError = "The selected photo could not be loaded."
+                return
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 54)
-            .background(AppColors.surface)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+
+            try jpegData.write(to: photoFileURL(), options: .atomic)
+
+            profileImage = image
+            selectedPhoto = nil
+        } catch {
+            photoError = "Could not save the selected photo. Please try again."
         }
-        .buttonStyle(.plain)
+    }
+
+    private func loadSavedPhoto() {
+        guard
+            let data = try? Data(contentsOf: photoFileURL()),
+            let image = UIImage(data: data)
+        else {
+            return
+        }
+
+        profileImage = image
+    }
+
+    private func removeProfilePhoto() {
+        do {
+            let url = photoFileURL()
+
+            if FileManager.default.fileExists(atPath: url.path) {
+                try FileManager.default.removeItem(at: url)
+            }
+
+            profileImage = nil
+            selectedPhoto = nil
+        } catch {
+            photoError = "Could not remove the profile photo."
+        }
+    }
+
+    private func photoFileURL() -> URL {
+        let documentsDirectory = FileManager.default.urls(
+            for: .documentDirectory,
+            in: .userDomainMask
+        )[0]
+
+        return documentsDirectory.appendingPathComponent(photoFileName)
     }
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 24) {
+            VStack(spacing: 16) {
                 profileHeader
-                accountSection
-                logoutButton
+                profileMenu
             }
-            .padding(20)
+            .padding(16)
         }
         .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
+        .task {
+            await profileViewModel.loadProfile()
+        }
+        .confirmationDialog(
+            "Profile Photo",
+            isPresented: $showPhotoOptions,
+            titleVisibility: .visible
+        ) {
+            Button("Choose Photo") {
+                photoError = "Tap the profile picture to choose a photo."
+            }
+
+            if profileImage != nil {
+                Button("Remove Photo", role: .destructive) {
+                    showDeleteConfirmation = true
+                }
+            }
+
+            Button("Cancel", role: .cancel) {}
+        }
+        .confirmationDialog(
+            "Remove your profile photo?",
+            isPresented: $showDeleteConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button("Remove Photo", role: .destructive) {
+                removeProfilePhoto()
+            }
+
+            Button("Cancel", role: .cancel) {}
+        }
+        .onChange(of: selectedPhoto) { _, newPhoto in
+            Task {
+                await loadSelectedPhoto(newPhoto)
+            }
+        }
+        .onAppear {
+            loadSavedPhoto()
+        }
+        .alert(
+            "Profile Photo",
+            isPresented: Binding(
+                get: { photoError != nil },
+                set: { if !$0 { photoError = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {
+                photoError = nil
+            }
+        } message: {
+            Text(photoError ?? "")
+        }
+        .sheet(isPresented: $showEditProfile) {
+            NavigationStack {
+                EditProfileView(viewModel: profileViewModel)
+                    .environment(authViewModel)
+            }
+        }
     }
 }
 
