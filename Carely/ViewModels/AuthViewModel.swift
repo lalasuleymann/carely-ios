@@ -177,6 +177,18 @@ final class AuthViewModel {
     func clearError() {
         errorMessage = nil
     }
+    
+    // MARK: - Logout
+    func logout() {
+        do {
+            try KeychainService.deleteToken()
+            currentUser = nil
+            isAuthenticated = false
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
 
     // MARK: - Validation
     private func validateEmail(_ email: String) -> Bool {

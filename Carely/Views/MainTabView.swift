@@ -46,7 +46,7 @@ struct MainTabView: View {
             .tag(3)
 
             NavigationStack {
-                Text("Profile")
+                ProfileView()
             }
             .tabItem {
                 Label("Profile", systemImage: "person")
