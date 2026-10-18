@@ -28,7 +28,7 @@ struct SpecialtyCard: View {
                 .font(AppTypography.caption)
                 .foregroundStyle(AppColors.primaryText)
                 .multilineTextAlignment(.center)
-                .lineLimit(2)
+                .lineLimit(1)
         }
         .frame(width: 96, height: 100)
         .background(AppColors.surface)

@@ -1,5 +1,5 @@
 //
-//  RegisterRequestDTO.swift
+//  AuthUserDTO.swift
 //  Carely
 //
 //  Created by Lala Suleymanova on 17.10.26.
@@ -7,9 +7,11 @@
 
 import Foundation
 
-struct RegisterRequestDTO: Encodable {
+struct AuthUserDTO: Decodable {
+    let id: Int
     let firstName: String
     let lastName: String
     let email: String
-    let password: String
+    let phoneNumber: String?
+    let profileImageUrl: String?
 }

@@ -35,15 +35,15 @@ struct UpcomingAppointmentCard: View {
 
             Spacer()
 
-            Text(appointmentType)
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(AppColors.primary)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(
-                    AppColors.onPrimary.opacity(0.9)
-                )
-                .clipShape(Capsule())
+//            Text(appointmentType)
+//                .font(.system(size: 12, weight: .semibold))
+//                .foregroundStyle(AppColors.primary)
+//                .padding(.horizontal, 12)
+//                .padding(.vertical, 8)
+//                .background(
+//                    AppColors.onPrimary.opacity(0.9)
+//                )
+//                .clipShape(Capsule())
         }
     }
 

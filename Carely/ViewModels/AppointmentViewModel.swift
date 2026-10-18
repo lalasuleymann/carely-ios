@@ -30,6 +30,17 @@ final class AppointmentViewModel {
 
     func configure(context: ModelContext) {
         modelContext = context
+
+        do {
+            let descriptor = FetchDescriptor<Appointment>(
+                sortBy: [SortDescriptor(\.date)]
+            )
+
+            appointments = try context.fetch(descriptor)
+            updateState()
+        } catch {
+            print("Failed to load cached appointments: \(error)")
+        }
     }
 
     // MARK: - Filtering
@@ -50,12 +61,31 @@ final class AppointmentViewModel {
     }
 
     func fetchAppointments() async {
-        state = .loading
+        if let modelContext {
+            do {
+                let descriptor = FetchDescriptor<Appointment>(
+                    sortBy: [SortDescriptor(\.date)]
+                )
+
+                appointments = try modelContext.fetch(descriptor)
+                updateState()
+            } catch {
+                print("Failed to load cached appointments: \(error)")
+            }
+        }
+
+        if appointments.isEmpty {
+            state = .loading
+        }
 
         do {
             guard let token = try KeychainService.readToken(),
                   !token.isEmpty else {
-                state = .error("Please log in again to view your appointments.")
+                if appointments.isEmpty {
+                    state = .error(
+                        "Please log in again to view your appointments."
+                    )
+                }
                 return
             }
 
@@ -68,17 +98,39 @@ final class AppointmentViewModel {
                 try makeAppointment(from: $0)
             }
 
+            if let modelContext {
+                let descriptor = FetchDescriptor<Appointment>()
+                let cachedAppointments = try modelContext.fetch(descriptor)
+
+                for cached in cachedAppointments {
+                    modelContext.delete(cached)
+                }
+
+                for appointment in fetchedAppointments {
+                    modelContext.insert(appointment)
+                }
+
+                try modelContext.save()
+            }
+
             appointments = fetchedAppointments.sorted {
                 $0.date < $1.date
             }
 
             updateState()
+
         } catch {
-            state = .error(
-                "Failed to load appointments: \(error.localizedDescription)"
-            )
+            if appointments.isEmpty {
+                state = .error(
+                    "Failed to load appointments: \(error.localizedDescription)"
+                )
+            } else {
+                updateState()
+                print("Appointment refresh failed: \(error.localizedDescription)")
+            }
         }
     }
+
 
     private func makeAppointment(from dto: AppointmentDTO) throws -> Appointment {
         let startAt = try parseDate(dto.startAt)

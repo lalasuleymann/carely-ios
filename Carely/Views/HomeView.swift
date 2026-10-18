@@ -1,3 +1,5 @@
+
+
 //
 //  HomeView.swift
 //  Carely
@@ -10,115 +12,239 @@ import SwiftUI
 struct HomeView: View {
     @State private var viewModel = HomeViewModel()
 
+    @Environment(AuthViewModel.self) private var authViewModel
+    @Environment(AppointmentViewModel.self) private var appointmentViewModel
+    @Environment(\.selectedTab) private var selectedTab
+    
+    @State private var showProfile = false
+    @State private var selectedAppointment: Appointment?
+    @State private var showAppointmentDetail = false
+    
+    // MARK: - User Information
+    private var userFullName: String {
+        let firstName = authViewModel.currentUser?.firstName
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        let lastName = authViewModel.currentUser?.lastName
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        let fullName = "\(firstName) \(lastName)"
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return fullName.isEmpty ? "there" : fullName
+    }
+
+    // MARK: - Profile Placeholder
+    private var profilePlaceholder: some View {
+        Image(systemName: "person.crop.circle.fill")
+            .resizable()
+            .scaledToFit()
+            .foregroundStyle(AppColors.onPrimary)
+            .frame(width: 44, height: 44)
+    }
+
+    // MARK: - Profile Image
+    private var profileImage: some View {
+        Group {
+            if let imageURL = authViewModel.currentUser?.profileImageUrl,
+               !imageURL.isEmpty,
+               let url = URL(string: imageURL),
+               let scheme = url.scheme,
+               scheme == "https" || scheme == "http" {
+
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+
+                    case .failure(let error):
+                        profilePlaceholder
+
+                    case .empty:
+                        ProgressView()
+                            .tint(AppColors.onPrimary)
+                            .frame(width: 44, height: 44)
+
+                    @unknown default:
+                        profilePlaceholder
+                    }
+                }
+            } else {
+                profilePlaceholder
+            }
+        }
+        .frame(width: 44, height: 44)
+        .clipShape(Circle())
+    }
+
     // MARK: - Header
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 24) {
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Good morning")
+                    Text("\(viewModel.greeting()),")
                         .font(AppTypography.body)
                         .foregroundStyle(
                             AppColors.onPrimary.opacity(0.8)
                         )
 
-                    Text("Alex Johnson")
+                    Text(userFullName)
                         .font(AppTypography.title)
                         .foregroundStyle(AppColors.onPrimary)
                 }
 
                 Spacer()
 
-                HStack(spacing: 12) {
-                    notificationButton
-
-                    Image(systemName: "person.crop.circle.fill")
-                        .font(.system(size: 44))
-                        .foregroundStyle(AppColors.onPrimary)
+                Button {
+                    selectedTab.wrappedValue = 4
+                } label: {
+                    profileImage
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Open profile")
             }
+            
+            ZStack {
+                SearchBar(
+                    text: $viewModel.searchText,
+                    placeholder: "Search doctors, specialties..."
+                )
+                .allowsHitTesting(false)
 
-            SearchBar(
-                text: $viewModel.searchText,
-                placeholder: "Search doctors, specialties..."
-            )
+                Rectangle()
+                    .fill(.clear)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        selectedTab.wrappedValue = 1
+                    }
+            }
+            .frame(height: 50)
+
         }
         .padding(.horizontal, 16)
         .padding(.top, 60)
         .padding(.bottom, 28)
         .background(AppColors.primary)
     }
-
-    // MARK: - Notification Button
-    private var notificationButton: some View {
-        ZStack(alignment: .topTrailing) {
-            Image(systemName: "bell")
-                .font(.system(size: 20, weight: .medium))
-                .foregroundStyle(AppColors.onPrimary)
-                .frame(width: 48, height: 48)
-                .background(
-                    AppColors.onPrimary.opacity(0.15)
-                )
-                .clipShape(Circle())
-
-            Circle()
-                .fill(AppColors.error)
-                .frame(width: 9, height: 9)
-                .overlay {
-                    Circle()
-                        .stroke(
-                            AppColors.primary,
-                            lineWidth: 2
-                        )
-                }
-                .offset(x: -4, y: 4)
-        }
-    }
     
     // MARK: - Upcoming Appointment
     private var upcomingAppointmentSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Upcoming Appointments")
+            Text("Upcoming Appointment")
                 .font(AppTypography.headline)
                 .foregroundStyle(AppColors.primaryText)
 
-            UpcomingAppointmentCard(
-                doctorName: "Dr. Sarah Mitchell",
-                specialty: "Cardiologist",
-                date: "Thu, Sep 25, 2026",
-                time: "10:00 AM",
-                appointmentType: "In-Person"
-            ) {
-                print("Appointment tapped")
+            switch appointmentViewModel.state {
+            case .idle, .loading:
+                ProgressView("Loading appointment...")
+                    .tint(AppColors.primary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 30)
+                    .background(AppColors.surface)
+                    .clipShape(
+                        RoundedRectangle(cornerRadius: 16)
+                    )
+
+            case .loaded, .empty:
+                if let appointment = viewModel.nextAppointment(
+                    from: appointmentViewModel.appointments
+                ) {
+                    UpcomingAppointmentCard(
+                        doctorName: appointment.doctorName,
+                        specialty: appointment.specialty,
+                        date: appointment.date.formatted(
+                            .dateTime
+                                .weekday(.abbreviated)
+                                .month(.abbreviated)
+                                .day()
+                                .year()
+                        ),
+                        time: appointment.time,
+                        appointmentType: "In-Person"
+                    ) {
+                        selectedAppointment = appointment
+                        showAppointmentDetail = true
+                    }
+                    .buttonStyle(.plain)
+                } else {
+                    emptyUpcomingAppointment
+                }
+
+            case .error(let message):
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Could not load appointments")
+                        .font(AppTypography.body)
+                        .foregroundStyle(AppColors.primaryText)
+
+                    Text(message)
+                        .font(AppTypography.caption)
+                        .foregroundStyle(.secondary)
+
+                    Button("Try Again") {
+                        Task {
+                            await appointmentViewModel.fetchAppointments()
+                        }
+                    }
+                    .font(AppTypography.body)
+                    .foregroundStyle(AppColors.primary)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(16)
+                .background(AppColors.surface)
+                .clipShape(
+                    RoundedRectangle(cornerRadius: 16)
+                )
             }
         }
+    }
+
+    // MARK: - Empty Upcoming Appointment
+    private var emptyUpcomingAppointment: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Image(systemName: "calendar")
+                .font(.system(size: 24))
+                .foregroundStyle(AppColors.primary)
+
+            Text("No upcoming appointment")
+                .font(AppTypography.body)
+                .foregroundStyle(AppColors.primaryText)
+
+            Text("Your next appointment will appear here.")
+                .font(AppTypography.caption)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(AppColors.surface)
+        .clipShape(
+            RoundedRectangle(cornerRadius: 16)
+        )
     }
 
     // MARK: - Specialties
     private var specialtiesSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            sectionHeader(title: "Specialties", showSeeAll: false)
+            sectionHeader(
+                title: "Specialties",
+                showSeeAll: false
+            )
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    SpecialtyCard(
-                        title: "Cardiology",
-                        icon: "heart.text.square"
-                    )
-
-                    SpecialtyCard(
-                        title: "Neurology",
-                        icon: "brain.head.profile"
-                    )
-
-                    SpecialtyCard(
-                        title: "Dermatology",
-                        icon: "person.crop.circle"
-                    )
-
-                    SpecialtyCard(
-                        title: "Dentistry",
-                        icon: "mouth"
-                    )
+            if viewModel.specialties.isEmpty {
+                Text("No specialties available.")
+                    .font(AppTypography.body)
+                    .foregroundStyle(.secondary)
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(viewModel.specialties, id: \.id) { specialty in
+                            SpecialtyCard(
+                                title: specialty.name,
+                                icon: SpecialtyIconProvider.icon(for: specialty.name)
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -127,17 +253,30 @@ struct HomeView: View {
     // MARK: - Top Doctors
     private var topDoctorsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            sectionHeader(title: "Top Doctors", showSeeAll: true)
+            sectionHeader(
+                title: "Top Doctors",
+                showSeeAll: false
+            )
 
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(viewModel.doctors) { doctor in
-                        NavigationLink {
-                            DoctorDetailView(doctor: doctor)
-                        } label: {
-                            TopDoctorCard(doctor: doctor)
+            if viewModel.doctors.isEmpty {
+                Text("No doctors available right now.")
+                    .font(AppTypography.body)
+                    .foregroundStyle(.secondary)
+                    .frame(
+                        maxWidth: .infinity,
+                        alignment: .leading
+                    )
+            } else {
+                ScrollView(.horizontal,showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(viewModel.doctors) { doctor in
+                            NavigationLink {
+                                DoctorDetailView(doctor: doctor)
+                            } label: {
+                                TopDoctorCard(doctor: doctor)
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .buttonStyle(.plain)
                     }
                 }
             }
@@ -146,7 +285,25 @@ struct HomeView: View {
 
     // MARK: - Your Health
     private var healthSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        let appointments = appointmentViewModel.appointments
+
+        let totalAppointments = viewModel.appointmentCount(
+            from: appointments
+        )
+
+        let completedAppointments = viewModel.completedAppointmentCount(
+            from: appointments
+        )
+
+        let nextVisit = viewModel.formattedNextVisit(
+            from: appointments
+        )
+
+        let cancelledAppointments = viewModel.cancelledAppointmentCount(
+            from: appointments
+        )
+
+        return VStack(alignment: .leading, spacing: 12) {
             Text("Your Health")
                 .font(AppTypography.headline)
                 .foregroundStyle(AppColors.primaryText)
@@ -160,30 +317,30 @@ struct HomeView: View {
             ) {
                 HealthStatCard(
                     title: "Appointments",
-                    value: "12",
+                    value: "\(totalAppointments)",
                     icon: "calendar",
                     iconColor: AppColors.primary
                 )
 
                 HealthStatCard(
                     title: "Doctors Seen",
-                    value: "5",
+                    value: "\(completedAppointments)",
                     icon: "stethoscope",
                     iconColor: .blue
                 )
 
                 HealthStatCard(
                     title: "Next Visit",
-                    value: "Sep 25",
+                    value: nextVisit,
                     icon: "clock",
                     iconColor: AppColors.warning
                 )
 
                 HealthStatCard(
-                    title: "Prescriptions",
-                    value: "2",
-                    icon: "pills",
-                    iconColor: AppColors.success
+                    title: "Missed",
+                    value: "\(cancelledAppointments)",
+                    icon: "calendar.badge.exclamationmark",
+                    iconColor: AppColors.error
                 )
             }
         }
@@ -200,14 +357,13 @@ struct HomeView: View {
 
             if showSeeAll {
                 Button("See all") {
-                    print("See all \(title)")
                 }
                 .font(AppTypography.caption)
                 .foregroundStyle(AppColors.primary)
             }
         }
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             headerSection
@@ -229,6 +385,30 @@ struct HomeView: View {
         }
         .background(AppColors.primary)
         .ignoresSafeArea(edges: .top)
+        .navigationDestination(isPresented: $showAppointmentDetail) {
+            if let appointment = selectedAppointment {
+                AppointmentDetailView(
+                    appointment: appointment,
+                    viewModel: appointmentViewModel
+                )
+            }
+        }
+        .task {
+            async let appointmentsTask: Void =
+                appointmentViewModel.fetchAppointments()
+
+            async let doctorsTask: Void =
+                viewModel.loadDoctors()
+
+            async let specialtiesTask: Void =
+                viewModel.loadSpecialties()
+
+            _ = await (
+                appointmentsTask,
+                doctorsTask,
+                specialtiesTask
+            )
+        }
     }
 }
 

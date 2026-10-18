@@ -16,7 +16,7 @@ struct NearbyView: View {
     @Environment(\.modelContext)
     private var modelContext
     
-    @State private var viewModel = NearbyViewModel()
+    @State private var viewModel: NearbyViewModel
     @State private var selectedLocationID: String?
     @State private var didFitAllLocations = false
     @State private var showingDoctorsFor: NearbyPlace?
@@ -24,6 +24,15 @@ struct NearbyView: View {
     @State private var isClinicCardVisible = true
     @State private var showDirectionsOptions = false
     @Environment(\.selectedTab) private var selectedTab
+    
+    
+    init(networkService: any NetworkService = DefaultNetworkService()) {
+        _viewModel = State(
+            initialValue: NearbyViewModel(
+                networkService: networkService
+            )
+        )
+    }
     
     // MARK: - Location Groups
     private var locationGroups: [NearbyLocationGroup] {
@@ -111,6 +120,7 @@ struct NearbyView: View {
     }
     
     private var isSearching: Bool {
+        viewModel.hasSearched &&
         !viewModel.searchText
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .isEmpty
@@ -140,6 +150,11 @@ struct NearbyView: View {
             .textInputAutocapitalization(.words)
             .autocorrectionDisabled()
             .submitLabel(.search)
+            .onSubmit {
+                Task {
+                    await viewModel.search()
+                }
+            }
             
             if !viewModel.searchText.isEmpty {
                 Button {
@@ -192,16 +207,32 @@ struct NearbyView: View {
     private var searchResultsList: some View {
         Group {
             if isSearching && viewModel.selectedDoctor == nil {
-                if viewModel.searchResults.isEmpty {
+
+                if viewModel.isSearching {
+                    ProgressView("Searching doctors...")
+                        .frame(maxWidth: .infinity)
+                        .padding(16)
+                        .background(AppColors.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+
+                } else if let error = viewModel.searchError {
+                    Text(error)
+                        .font(AppTypography.body)
+                        .foregroundStyle(.red)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(16)
+                        .background(AppColors.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+
+                } else if viewModel.searchResults.isEmpty {
                     Text("No doctors found")
                         .font(AppTypography.body)
                         .foregroundStyle(AppColors.secondaryText)
-                        .frame(maxWidth: .infinity,alignment: .leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(16)
                         .background(AppColors.surface)
-                        .clipShape(
-                            RoundedRectangle(cornerRadius: 16)
-                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+
                 } else {
                     ScrollView {
                         VStack(spacing: 0) {
@@ -210,42 +241,42 @@ struct NearbyView: View {
                                     selectDoctor(doctor)
                                 } label: {
                                     HStack(spacing: 12) {
-                                        Image(systemName: SpecialtyIconProvider.icon(for: doctor.specialty))
-                                            .font(.title3)
-                                            .foregroundStyle(AppColors.primary)
-                                            .frame(width: 42,height: 42)
-                                            .background(
-                                                AppColors.primary.opacity(0.10)
+                                        Image(
+                                            systemName: SpecialtyIconProvider.icon(
+                                                for: doctor.specialty
                                             )
-                                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                                        
-                                        VStack(alignment: .leading,spacing: 4) {
+                                        )
+                                        .font(.title3)
+                                        .foregroundStyle(AppColors.primary)
+                                        .frame(width: 42, height: 42)
+                                        .background(
+                                            AppColors.primary.opacity(0.10)
+                                        )
+                                        .clipShape(
+                                            RoundedRectangle(cornerRadius: 12)
+                                        )
+
+                                        VStack(alignment: .leading, spacing: 4) {
                                             Text(doctor.name)
                                                 .font(.subheadline.weight(.semibold))
-                                                .foregroundStyle(
-                                                    AppColors.primaryText
-                                                )
-                                            
+                                                .foregroundStyle(AppColors.primaryText)
+
                                             Text(doctor.specialty)
                                                 .font(.caption)
-                                                .foregroundStyle(
-                                                    AppColors.secondaryText
-                                                )
+                                                .foregroundStyle(AppColors.secondaryText)
                                         }
-                                        
+
                                         Spacer()
-                                        
+
                                         Image(systemName: "arrow.up.left")
                                             .font(.caption)
-                                            .foregroundStyle(
-                                                AppColors.secondaryText
-                                            )
+                                            .foregroundStyle(AppColors.secondaryText)
                                     }
                                     .padding(12)
                                     .contentShape(Rectangle())
                                 }
                                 .buttonStyle(.plain)
-                                
+
                                 if doctor.id != viewModel.searchResults.last?.id {
                                     Divider()
                                         .padding(.leading, 66)
@@ -253,16 +284,14 @@ struct NearbyView: View {
                             }
                         }
                     }
-                    .frame(height: min(CGFloat(viewModel.searchResults.count) * 68,220))
+                    .frame(
+                        height: min(
+                            CGFloat(viewModel.searchResults.count) * 68,
+                            220
+                        )
+                    )
                     .background(AppColors.surface)
-                    .clipShape(
-                        RoundedRectangle(cornerRadius: 16)
-                    )
-                    .shadow(
-                        color: .black.opacity(0.06),
-                        radius: 8,
-                        y: 3
-                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
             }
         }
@@ -901,12 +930,4 @@ struct NearbyView: View {
             }
         }
     }
-}
-
-#Preview {
-    NavigationStack {
-        NearbyView()
-    }
-    .environment(AppointmentViewModel())
-    .modelContainer(for: Appointment.self)
 }

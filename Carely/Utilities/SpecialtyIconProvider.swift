@@ -45,7 +45,7 @@ struct SpecialtyIconProvider {
         "obstetrics": "cross.case.fill",
 
         "urology": "cross.vial.fill",
-        "gastroenterology": "stomach.fill",
+        "gastroenterology": "stethoscope",
 
         "pulmonology": "lungs.fill",
         "respiratory": "lungs.fill",

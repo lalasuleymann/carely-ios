@@ -1,3 +1,9 @@
+//
+//  NearbyViewModel.swift
+//  Carely
+//
+//  Created by Lala Suleymanova on 13.10.26.
+//
 
 import SwiftUI
 import MapKit
@@ -6,19 +12,17 @@ import CoreLocation
 @MainActor
 @Observable
 final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
-
-    // MARK: - Location
-
     var location: CLLocation?
     var authorizationStatus: CLAuthorizationStatus = .notDetermined
     var locationError: String?
-
-    // MARK: - Search
-
+    private let networkService: any NetworkService
+    
     var searchText = ""
+    var searchResults: [Doctor] = []
     var selectedDoctor: Doctor?
-
-    // MARK: - Nearby Places
+    var hasSearched = false
+    var isSearching = false
+    var searchError: String?
 
     var selectedCategory: NearbyPlaceCategory = .all
     var nearbyPlaces: [NearbyPlace] = []
@@ -29,7 +33,6 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
 
     // MARK: - Default Map Region
-
     static var defaultMapRegion: MKCoordinateRegion {
         MKCoordinateRegion(
             center: CLLocationCoordinate2D(
@@ -46,12 +49,14 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
     var placesSearchRegion = NearbyViewModel.defaultMapRegion
 
     // MARK: - Map
-
     var cameraPosition: MapCameraPosition = .region(
         NearbyViewModel.defaultMapRegion
     )
 
-    override init() {
+    // MARK: - Initialization
+    init(networkService: any NetworkService = DefaultNetworkService()) {
+        self.networkService = networkService
+
         super.init()
 
         locationManager.delegate = self
@@ -59,25 +64,42 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
         authorizationStatus = locationManager.authorizationStatus
     }
 
-    // MARK: - Doctor Search Results
-
-    var searchResults: [Doctor] {
+    // MARK: - Doctor Search
+    func search() async {
         let query = searchText.trimmingCharacters(
             in: .whitespacesAndNewlines
         )
 
         guard !query.isEmpty else {
-            return []
+            searchResults = []
+            hasSearched = false
+            searchError = nil
+            return
         }
 
-        return MockDoctorData.doctors.filter { doctor in
-            doctor.name.localizedCaseInsensitiveContains(query)
-                || doctor.specialty.localizedCaseInsensitiveContains(query)
+        isSearching = true
+        hasSearched = true
+        searchError = nil
+
+        defer {
+            isSearching = false
+        }
+
+        do {
+            let doctors: [DoctorDTO] = try await networkService.request(
+                DoctorEndpoint.all(search: query),
+                token: nil
+            )
+
+            searchResults = doctors.map(\.toDoctor)
+        } catch {
+            searchResults = []
+            searchError = error.localizedDescription
         }
     }
 
-    // MARK: - Nearby Places Search
 
+    // MARK: - Nearby Places Search
     func searchNearbyPlaces(in region: MKCoordinateRegion) async {
         placesSearchRegion = region
         placesViewState = .loading
@@ -96,13 +118,10 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
             placesViewState = .error(
                 "Yaxınlıqdakı məkanları yükləmək mümkün olmadı."
             )
-
-            print("Nearby places error: \(error.localizedDescription)")
         }
     }
 
     // MARK: - Location Permissions
-
     func requestLocation() {
         switch locationManager.authorizationStatus {
         case .notDetermined:
@@ -120,9 +139,7 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
         }
     }
 
-    func locationManagerDidChangeAuthorization(
-        _ manager: CLLocationManager
-    ) {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         authorizationStatus = manager.authorizationStatus
 
         if manager.authorizationStatus == .authorizedWhenInUse
@@ -136,10 +153,7 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
         }
     }
 
-    func locationManager(
-        _ manager: CLLocationManager,
-        didUpdateLocations locations: [CLLocation]
-    ) {
+    func locationManager(_ manager: CLLocationManager,didUpdateLocations locations: [CLLocation]) {
         guard let currentLocation = locations.last else {
             return
         }
@@ -151,7 +165,6 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
             return
         }
 
-        // İlkin mərkəz yalnız real location alındıqda dəyişir.
         cameraPosition = .region(
             MKCoordinateRegion(
                 center: currentLocation.coordinate,
@@ -163,16 +176,12 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
         )
     }
 
-    func locationManager(
-        _ manager: CLLocationManager,
-        didFailWithError error: Error
-    ) {
+    func locationManager(_ manager: CLLocationManager,didFailWithError error: Error) {
         locationError = error.localizedDescription
         print("Location error: \(error.localizedDescription)")
     }
 
     // MARK: - Search Actions
-
     func selectDoctor(_ doctor: Doctor) {
         selectedDoctor = doctor
         searchText = doctor.name
@@ -194,11 +203,14 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
 
     func clearSearch() {
         searchText = ""
+        searchResults = []
         selectedDoctor = nil
+        hasSearched = false
+        searchError = nil
+        isSearching = false
     }
 
     // MARK: - User Location
-
     func showUserLocation() {
         guard let location else {
             requestLocation()
@@ -219,10 +231,9 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
     }
 
     // MARK: - Reset Map
-
     func resetMap() {
-        searchText = ""
-        selectedDoctor = nil
+        clearSearch()
+
         selectedPlace = nil
         selectedCategory = .all
 

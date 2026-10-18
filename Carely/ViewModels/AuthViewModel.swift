@@ -27,6 +27,45 @@ final class AuthViewModel {
         self.authService = authService
         self.networkService = networkService
     }
+    
+    func updateCurrentUser(from profile: ProfileDTO) {
+        currentUser = AuthUserDTO(
+            id: profile.id,
+            firstName: profile.firstName,
+            lastName: profile.lastName,
+            email: profile.email,
+            phoneNumber: profile.phoneNumber,
+            profileImageUrl: profile.profileImageUrl
+        )
+    }
+    
+    func restoreCurrentUser() async {
+        do {
+            guard let token = try KeychainService.readToken(),
+                  !token.isEmpty else {
+                currentUser = nil
+                isAuthenticated = false
+                return
+            }
+
+            let profile: ProfileDTO = try await networkService.request(
+                ProfileEndpoint.getProfile,
+                token: token
+            )
+            currentUser = AuthUserDTO(
+                id: profile.id,
+                firstName: profile.firstName,
+                lastName: profile.lastName,
+                email: profile.email,
+                phoneNumber: profile.phoneNumber,
+                profileImageUrl: profile.profileImageUrl
+            )
+
+            isAuthenticated = true
+        } catch {
+            print("User restoration error: \(error.localizedDescription)")
+        }
+    }
 
     // MARK: - Email Login
     func login(email: String, password: String) async -> Bool {
