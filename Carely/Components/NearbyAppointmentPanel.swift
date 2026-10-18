@@ -14,7 +14,6 @@ struct NearbyAppointmentPanel: View {
     let appointmentViewModel: AppointmentViewModel
     let onClose: () -> Void
 
-    @State private var showDirectionsOptions = false
 
     // MARK: - Doctor IDs
     private var doctorIDs: [Int] {
@@ -78,20 +77,9 @@ struct NearbyAppointmentPanel: View {
                 if doctorID == doctorIDs.first {
                     HStack(spacing: 12) {
                         Button {
-                            showDirectionsOptions = true
+                            onClose()
                         } label: {
-                            Image(
-                                systemName: "arrow.triangle.turn.up.right.diamond.fill"
-                            )
-                            .font(.title3)
-                            .foregroundStyle(AppColors.primary)
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel("Get Directions")
-
-                        Button(action: onClose) {
                             Image(systemName: "xmark.circle.fill")
-                                .font(.title3)
                                 .foregroundStyle(AppColors.secondaryText)
                         }
                         .buttonStyle(.plain)
@@ -184,21 +172,6 @@ struct NearbyAppointmentPanel: View {
                 }
             }
             .padding(14)
-        }
-        .confirmationDialog(
-            "Select an action",
-            isPresented: $showDirectionsOptions,
-            titleVisibility: .visible
-        ) {
-            Button("Open in Maps") {
-                openAppleMaps()
-            }
-
-            Button("Open in Google Maps") {
-                openGoogleMaps()
-            }
-
-            Button("Cancel", role: .cancel) {}
         }
         .frame(height: contentHeight)
         .background(AppColors.surface)

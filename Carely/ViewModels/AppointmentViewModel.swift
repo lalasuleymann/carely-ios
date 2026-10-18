@@ -96,13 +96,14 @@ final class AppointmentViewModel {
             doctorID: dto.doctorId,
             doctorName: dto.doctorName,
             specialty: dto.specialty,
+            facilityName: dto.facilityName,
             date: startAt,
             time: time,
             consultationFee: dto.consultationFee,
             status: status
         )
     }
-    
+
     private func parseDate(_ value: String) throws -> Date {
         let formatter = ISO8601DateFormatter()
 

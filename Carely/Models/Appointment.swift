@@ -10,15 +10,14 @@ import SwiftData
 
 @Model
 final class Appointment {
-    // Local identifier used by the existing SwiftUI views.
     var id: UUID
-
-    // Backend appointment identifier.
     var serverID: Int?
 
     var doctorID: Int
     var doctorName: String
     var specialty: String
+    var facilityName: String
+
     var date: Date
     var time: String
     var consultationFee: Double
@@ -39,6 +38,7 @@ final class Appointment {
         doctorID: Int,
         doctorName: String,
         specialty: String,
+        facilityName: String = "",
         date: Date,
         time: String,
         consultationFee: Double,
@@ -49,6 +49,7 @@ final class Appointment {
         self.doctorID = doctorID
         self.doctorName = doctorName
         self.specialty = specialty
+        self.facilityName = facilityName
         self.date = date
         self.time = time
         self.consultationFee = consultationFee
