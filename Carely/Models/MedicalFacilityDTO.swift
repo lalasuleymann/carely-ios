@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import CoreLocation
 
-struct MedicalFacilityDTO: Decodable {
+struct MedicalFacilityDTO: Decodable, Identifiable {
     let id: Int
     let name: String
     let type: Int
@@ -17,4 +18,11 @@ struct MedicalFacilityDTO: Decodable {
     let phoneNumber: String?
     let website: String?
     let imageUrl: String?
+
+    var coordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(
+            latitude: latitude,
+            longitude: longitude
+        )
+    }
 }

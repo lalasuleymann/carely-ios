@@ -30,15 +30,11 @@ struct PersonalInformationView: View {
     }
 
     private var email: String {
-        profileViewModel.profile?.email
-            ?? user?.email
-            ?? "Not available"
+        profileViewModel.profile?.email ?? user?.email ?? "Not available"
     }
 
     private var phoneNumber: String {
-        profileViewModel.profile?.phoneNumber
-            ?? user?.phoneNumber
-            ?? "Not added"
+        profileViewModel.profile?.phoneNumber ?? user?.phoneNumber ?? "Not added"
     }
 
     private var informationCard: some View {

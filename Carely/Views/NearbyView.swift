@@ -809,6 +809,7 @@ struct NearbyView: View {
                 }
             }
         }
+        
         .onAppear {
             appointmentViewModel.configure(context: modelContext)
             appointmentViewModel.loadAppointments()
@@ -817,8 +818,15 @@ struct NearbyView: View {
                 viewModel.requestLocation()
             }
 
+            Task {
+                await viewModel.searchNearbyPlaces(
+                    in: viewModel.placesSearchRegion
+                )
+            }
+
             fitAllLocationsIfNeeded()
         }
+
         .onDisappear {
             viewModel.selectedPlace = nil
             selectedLocationID = nil

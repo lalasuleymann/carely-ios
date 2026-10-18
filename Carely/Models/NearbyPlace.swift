@@ -9,34 +9,34 @@ import Foundation
 import MapKit
 
 struct NearbyPlace: Identifiable {
-    let id = UUID()
-    let mapItem: MKMapItem
+    let id: Int
+    let name: String
+    let coordinate: CLLocationCoordinate2D
+    let address: String
+    let phoneNumber: String?
+    let website: URL?
+    let imageURL: URL?
+    let type: String
 
-    var name: String {
-        mapItem.name ?? "Unknown Place"
+    init(dto: MedicalFacilityDTO) {
+        self.id = dto.id
+        self.name = dto.name
+        self.coordinate = dto.coordinate
+        self.address = dto.address
+        self.phoneNumber = dto.phoneNumber
+        self.website = dto.website.flatMap(URL.init(string:))
+        self.imageURL = dto.imageUrl.flatMap(URL.init(string:))
+        self.type = String(dto.type)
     }
 
-    var coordinate: CLLocationCoordinate2D {
-        mapItem.placemark.coordinate
-    }
-
-    var address: String {
-        let placemark = mapItem.placemark
-
-        return [
-            placemark.thoroughfare,
-            placemark.subThoroughfare,
-            placemark.locality
-        ]
-        .compactMap { $0 }
-        .joined(separator: ", ")
-    }
-
-    var phoneNumber: String? {
-        mapItem.phoneNumber
-    }
-
-    var website: URL? {
-        mapItem.url
+    var mapItem: MKMapItem {
+        let placemark = MKPlacemark(
+            coordinate: coordinate
+        )
+        let item = MKMapItem(placemark: placemark)
+        item.name = name
+        item.phoneNumber = phoneNumber
+        item.url = website
+        return item
     }
 }

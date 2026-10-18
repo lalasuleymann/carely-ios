@@ -5,54 +5,50 @@
 //  Created by Lala Suleymanova on 15.10.26.
 //
 
-
 import Foundation
 import MapKit
 
 struct NearbyPlacesService {
+    private let networkService: NetworkService
+
+    init(networkService: NetworkService = DefaultNetworkService()) {
+        self.networkService = networkService
+    }
 
     func search(category: NearbyPlaceCategory,region: MKCoordinateRegion) async throws -> [NearbyPlace] {
 
-        let queries: [String]
-
-        if category == .all {
-            queries = [
-                "medical clinics",
-                "hospitals",
-                "pharmacies",
-                "medical laboratories"
-            ]
-        } else {
-            queries = [category.searchQuery]
-        }
-
-        var places: [NearbyPlace] = []
-
-        for query in queries {
-            let request = MKLocalSearch.Request()
-            request.naturalLanguageQuery = query
-            request.region = region
-
-            let search = MKLocalSearch(request: request)
-            let response = try await search.start()
-
-            places.append(
-                contentsOf: response.mapItems.map {
-                    NearbyPlace(mapItem: $0)
-                }
+        let response: [MedicalFacilityDTO] =
+            try await networkService.request(
+                MedicalFacilityEndpoint.getAll(
+                    type: category.backendType,
+                    search: nil
+                ),
+                token: nil
             )
-        }
 
-        var seen = Set<String>()
+        let center = CLLocation(
+            latitude: region.center.latitude,
+            longitude: region.center.longitude
+        )
 
-        return places.filter { place in
-            let key = [
-                place.name.lowercased(),
-                String(format: "%.5f", place.coordinate.latitude),
-                String(format: "%.5f", place.coordinate.longitude)
-            ].joined(separator: "|")
+        return response
+            .filter { facility in
+                category.matches(String(facility.type))
+            }
+            .map(NearbyPlace.init(dto:))
+            .sorted { first, second in
+                let firstLocation = CLLocation(
+                    latitude: first.coordinate.latitude,
+                    longitude: first.coordinate.longitude
+                )
 
-            return seen.insert(key).inserted
-        }
+                let secondLocation = CLLocation(
+                    latitude: second.coordinate.latitude,
+                    longitude: second.coordinate.longitude
+                )
+
+                return firstLocation.distance(from: center)
+                    < secondLocation.distance(from: center)
+            }
     }
 }

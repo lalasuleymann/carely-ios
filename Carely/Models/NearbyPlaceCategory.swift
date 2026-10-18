@@ -16,26 +16,9 @@ enum NearbyPlaceCategory: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var searchQuery: String {
-        switch self {
-        case .all:
-            return "medical clinics hospitals pharmacies laboratories"
-        case .clinics:
-            return "medical clinics"
-        case .hospitals:
-            return "hospitals"
-        case .pharmacies:
-            return "pharmacies"
-        case .laboratories:
-            return "medical laboratories"
-        }
-    }
-
     var icon: String {
         switch self {
-        case .all:
-            return "cross.case"
-        case .clinics:
+        case .all, .clinics:
             return "cross.case"
         case .hospitals:
             return "building.2"
@@ -43,6 +26,38 @@ enum NearbyPlaceCategory: String, CaseIterable, Identifiable {
             return "pills"
         case .laboratories:
             return "testtube.2"
+        }
+    }
+
+    var backendType: String? {
+        switch self {
+        case .all:
+            return nil
+        case .clinics:
+            return "Clinic"
+        case .hospitals:
+            return "Hospital"
+        case .pharmacies:
+            return "Pharmacy"
+        case .laboratories:
+            return "Laboratory"
+        }
+    }
+
+    func matches(_ type: String) -> Bool {
+        guard self != .all else { return true }
+
+        switch self {
+        case .all:
+            return true
+        case .clinics:
+            return type == "0"
+        case .hospitals:
+            return type == "1"
+        case .pharmacies:
+            return type == "2"
+        case .laboratories:
+            return type == "3"
         }
     }
 }
