@@ -22,6 +22,7 @@ struct ProfileView: View {
     @State private var showEditProfile = false
     @State private var photoError: String?
     @State private var showChangePassword = false
+    @State private var showSetPassword = false
 
     private let photoFileName = "carely-profile-photo.jpg"
 
@@ -220,11 +221,28 @@ struct ProfileView: View {
             
             menuDivider
 
-            profileMenuRow(
-                title: "Change Password",
-                icon: "lock"
-            ) {
-                showChangePassword = true
+            profileMenuRow(title: "Change Password", icon: "lock") {
+                if let profile = profileViewModel.profile {
+                    if profile.hasPassword {
+                        showChangePassword = true
+                    } else {
+                        showSetPassword = true
+                    }
+                } else {
+                    Task {
+                        await profileViewModel.loadProfile()
+
+                        guard let profile = profileViewModel.profile else {
+                            return
+                        }
+
+                        if profile.hasPassword {
+                            showChangePassword = true
+                        } else {
+                            showSetPassword = true
+                        }
+                    }
+                }
             }
 
             menuDivider
@@ -365,7 +383,7 @@ struct ProfileView: View {
 
         return documentsDirectory.appendingPathComponent(photoFileName)
     }
-
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
@@ -379,6 +397,10 @@ struct ProfileView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationDestination(isPresented: $showChangePassword) {
             ChangePasswordView()
+                .environment(authViewModel)
+        }
+        .navigationDestination(isPresented: $showSetPassword) {
+            SetPasswordView(profileViewModel: profileViewModel)
                 .environment(authViewModel)
         }
         .task {
@@ -424,7 +446,11 @@ struct ProfileView: View {
             "Profile Photo",
             isPresented: Binding(
                 get: { photoError != nil },
-                set: { if !$0 { photoError = nil } }
+                set: {
+                    if !$0 {
+                        photoError = nil
+                    }
+                }
             )
         ) {
             Button("OK", role: .cancel) {
@@ -440,6 +466,7 @@ struct ProfileView: View {
             }
         }
     }
+
 }
 
 #Preview {

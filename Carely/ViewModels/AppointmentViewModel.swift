@@ -17,18 +17,23 @@ final class AppointmentViewModel {
     private(set) var state: AppointmentsViewState = .idle
     private(set) var selectedStatus: AppointmentStatus = .upcoming
 
+    private let networkService: NetworkService
+    private var modelContext: ModelContext?
+
+    init(networkService: NetworkService = DefaultNetworkService()) {
+        self.networkService = networkService
+    }
+
     var upcomingAppointments: [Appointment] {
         appointments.filter { $0.status == .upcoming }
     }
-    
-    private var modelContext: ModelContext?
 
-    // MARK: - Configuration
     func configure(context: ModelContext) {
         modelContext = context
     }
 
     // MARK: - Filtering
+
     func selectStatus(_ status: AppointmentStatus) {
         selectedStatus = status
         updateState()
@@ -38,24 +43,37 @@ final class AppointmentViewModel {
         appointments.filter { $0.status == selectedStatus }
     }
 
-    // MARK: - Loading
-    func loadAppointments() {
-        guard let modelContext else {
-            state = .error("Appointment storage is not configured.")
-            return
-        }
+    // MARK: - Loading from backend
 
+    func loadAppointments() {
+        Task {
+            await fetchAppointments()
+        }
+    }
+
+    func fetchAppointments() async {
         state = .loading
 
         do {
-            let descriptor = FetchDescriptor<Appointment>(
-                sortBy: [
-                    SortDescriptor(\.date, order: .forward)
-                ]
+            guard let token = try KeychainService.readToken(),
+                  !token.isEmpty else {
+                state = .error("Please log in again to view your appointments.")
+                return
+            }
+
+            let response: [AppointmentDTO] = try await networkService.request(
+                AppointmentEndpoint.getAppointments,
+                token: token
             )
 
-            appointments = try modelContext.fetch(descriptor)
-            updateCompletedAppointments()
+            let fetchedAppointments = try response.map {
+                try makeAppointment(from: $0)
+            }
+
+            appointments = fetchedAppointments.sorted {
+                $0.date < $1.date
+            }
+
             updateState()
         } catch {
             state = .error(
@@ -64,70 +82,91 @@ final class AppointmentViewModel {
         }
     }
 
-    private func updateCompletedAppointments() {
-        guard let modelContext else { return }
+    private func makeAppointment(from dto: AppointmentDTO) throws -> Appointment {
+        let startAt = try parseDate(dto.startAt)
+        let status = parseStatus(dto.status)
 
-        let now = Date()
-        var hasChanges = false
-
-        for appointment in appointments {
-            guard appointment.status == .upcoming,
-                  let appointmentDateTime = scheduledDateTime(
-                      for: appointment
-                  ),
-                  appointmentDateTime <= now
-            else {
-                continue
-            }
-
-            appointment.status = .completed
-            hasChanges = true
-        }
-
-        guard hasChanges else { return }
-
-        do {
-            try modelContext.save()
-        } catch {
-            modelContext.rollback()
-            loadAppointments()
-            state = .error(
-                "Failed to update completed appointments: \(error.localizedDescription)"
-            )
-        }
-    }
-
-    private func scheduledDateTime(for appointment: Appointment) -> Date? {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(identifier: "Asia/Baku")
         formatter.dateFormat = "h:mm a"
 
-        guard let parsedTime = formatter.date(
-            from: appointment.time.uppercased()
-        ) else {
-            return nil
-        }
+        let time = formatter.string(from: startAt)
 
-        let calendar = Calendar.current
-        let timeComponents = calendar.dateComponents(
-            [.hour, .minute],
-            from: parsedTime
-        )
-
-        return calendar.date(
-            bySettingHour: timeComponents.hour ?? 0,
-            minute: timeComponents.minute ?? 0,
-            second: 0,
-            of: appointment.date
+        return Appointment(
+            serverID: dto.id,
+            doctorID: dto.doctorId,
+            doctorName: dto.doctorName,
+            specialty: dto.specialty,
+            date: startAt,
+            time: time,
+            consultationFee: dto.consultationFee,
+            status: status
         )
     }
+
+
     
+    private func parseDate(_ value: String) throws -> Date {
+        let formatter = ISO8601DateFormatter()
+
+        formatter.formatOptions = [
+            .withInternetDateTime,
+            .withFractionalSeconds
+        ]
+
+        if let date = formatter.date(from: value) {
+            return date
+        }
+
+        formatter.formatOptions = [.withInternetDateTime]
+
+        if let date = formatter.date(from: value) {
+            return date
+        }
+
+        // Fallback for timestamps without timezone information.
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+
+        if let date = dateFormatter.date(from: value) {
+            return date
+        }
+
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+
+        if let date = dateFormatter.date(from: value) {
+            return date
+        }
+
+        print("❌ Could not parse appointment date: \(value)")
+        throw NetworkError.decodingError
+    }
+
+
+    private func parseStatus(_ value: String) -> AppointmentStatus {
+        switch value.lowercased() {
+        case "upcoming":
+            return .upcoming
+        case "completed":
+            return .completed
+        case "cancelled":
+            return .cancelled
+        default:
+            return .upcoming
+        }
+    }
+
     // MARK: - State
+
     private func updateState() {
         state = filteredAppointments.isEmpty ? .empty : .loaded
     }
 
     // MARK: - Appointment Information
+
     func statusTitle(for appointment: Appointment) -> String {
         switch appointment.status {
         case .upcoming:
@@ -164,48 +203,21 @@ final class AppointmentViewModel {
         appointment.status == .upcoming
     }
 
-    // MARK: - Booking
-    func bookAppointment(doctor: Doctor,date: Date,time: String) {
-        guard let modelContext else {
-            state = .error("Appointment storage is not configured.")
-            return
-        }
+    // MARK: - Booking (not connected yet)
 
-        let appointment = Appointment(
-            doctorID: doctor.id,
-            doctorName: doctor.name,
-            specialty: doctor.specialty,
-            date: date,
-            time: time,
-            consultationFee: doctor.consultationFee
+    func bookAppointment(
+        doctor: Doctor,
+        date: Date,
+        time: String
+    ) {
+        state = .error(
+            "Online booking has not been connected yet."
         )
-
-        modelContext.insert(appointment)
-
-        do {
-            try modelContext.save()
-
-            let descriptor = FetchDescriptor<Appointment>(
-                sortBy: [
-                    SortDescriptor(\.date, order: .forward)
-                ]
-            )
-
-            appointments = try modelContext.fetch(descriptor)
-            updateState()
-        } catch {
-            modelContext.rollback()
-            state = .error(
-                "Failed to book appointment: \(error.localizedDescription)"
-            )
-        }
     }
 
-    // MARK: - Cancellation
+    // MARK: - Cancellation (not connected yet)
     func cancelAppointment(id: UUID) {
-        guard let modelContext,
-              let appointment = appointments.first(where: { $0.id == id })
-        else {
+        guard let appointment = appointments.first(where: { $0.id == id }) else {
             return
         }
 
@@ -213,41 +225,43 @@ final class AppointmentViewModel {
             return
         }
 
-        appointment.status = .cancelled
+        guard let serverID = appointment.serverID else {
+            state = .error("This appointment is not linked to the server.")
+            return
+        }
 
+        Task {
+            await cancelAppointmentOnServer(serverID: serverID)
+        }
+    }
+
+    private func cancelAppointmentOnServer(serverID: Int) async {
         do {
-            try modelContext.save()
-            updateState()
+            guard let token = try KeychainService.readToken(),
+                  !token.isEmpty else {
+                state = .error("Please log in again to cancel this appointment.")
+                return
+            }
+
+            let _: CancelAppointmentResponseDTO = try await networkService.request(
+                AppointmentEndpoint.cancelAppointment(id: serverID),
+                token: token
+            )
+
+            await fetchAppointments()
         } catch {
-            modelContext.rollback()
-            loadAppointments()
             state = .error(
                 "Failed to cancel appointment: \(error.localizedDescription)"
             )
         }
     }
-    
-    // MARK: - Completion
+
+
+    // MARK: - Completion (server-managed)
+
     func completeAppointment(id: UUID) {
-        guard let modelContext,
-              let appointment = appointments.first(where: { $0.id == id })
-        else { return }
-
-        guard appointment.status == .upcoming else { return }
-
-        appointment.status = .completed
-
-        do {
-            try modelContext.save()
-
-            selectedStatus = .completed
-            updateState()
-        } catch {
-            modelContext.rollback()
-            loadAppointments()
-            state = .error(
-                "Failed to complete appointment: \(error.localizedDescription)"
-            )
-        }
+        state = .error(
+            "Appointment completion is managed by the server."
+        )
     }
 }

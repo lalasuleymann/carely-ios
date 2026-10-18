@@ -5,13 +5,17 @@
 //  Created by Lala Suleymanova on 09.10.26.
 //
 
-
 import Foundation
 import SwiftData
 
 @Model
 final class Appointment {
+    // Local identifier used by the existing SwiftUI views.
     var id: UUID
+
+    // Backend appointment identifier.
+    var serverID: Int?
+
     var doctorID: Int
     var doctorName: String
     var specialty: String
@@ -31,6 +35,7 @@ final class Appointment {
 
     init(
         id: UUID = UUID(),
+        serverID: Int? = nil,
         doctorID: Int,
         doctorName: String,
         specialty: String,
@@ -40,6 +45,7 @@ final class Appointment {
         status: AppointmentStatus = .upcoming
     ) {
         self.id = id
+        self.serverID = serverID
         self.doctorID = doctorID
         self.doctorName = doctorName
         self.specialty = specialty

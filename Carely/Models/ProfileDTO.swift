@@ -15,4 +15,5 @@ struct ProfileDTO: Decodable {
     let phoneNumber: String?
     let profileImageUrl: String?
     let createdAt: String?
+    let hasPassword: Bool
 }

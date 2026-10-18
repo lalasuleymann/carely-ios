@@ -52,6 +52,10 @@ nonisolated final class DefaultNetworkService: NetworkService {
             do {
                 return try JSONDecoder().decode(T.self, from: data)
             } catch {
+                print("❌ DECODING ERROR:", error)
+                print("❌ RESPONSE JSON:")
+                print(String(data: data, encoding: .utf8) ?? "Invalid UTF-8")
+
                 throw NetworkError.decodingError
             }
         } catch let error as NetworkError {
@@ -64,7 +68,7 @@ nonisolated final class DefaultNetworkService: NetworkService {
 
             throw NetworkError.unknown(error)
         } catch {
-            throw NetworkError.unknown(error)
+            throw NetworkError .unknown(error)
         }
     }
 }

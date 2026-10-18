@@ -248,6 +248,52 @@ final class AuthViewModel {
         }
     }
 
+    // MARK: - Set Password
+    func setPassword(newPassword: String, confirmPassword: String) async -> Bool {
+        guard newPassword.count >= 8 else {
+            errorMessage = "Password must contain at least 8 characters."
+            return false
+        }
+
+        guard newPassword.count <= 100 else {
+            errorMessage = "Password cannot exceed 100 characters."
+            return false
+        }
+
+        guard newPassword == confirmPassword else {
+            errorMessage = "Passwords do not match."
+            return false
+        }
+
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
+
+        do {
+            guard let token = try KeychainService.readToken(),
+                  !token.isEmpty else {
+                errorMessage = "Please log in again."
+                return false
+            }
+
+            let request = SetPasswordRequestDTO(
+                newPassword: newPassword
+            )
+
+            let _: SetPasswordResponseDTO =
+                try await networkService.request(
+                    SetPasswordEndpoint.setPassword(request),
+                    token: token
+                )
+
+            return true
+        } catch {
+            errorMessage = error.localizedDescription
+            print("Set password error: \(error)")
+            return false
+        }
+    }
+
     // MARK: - Logout
     func logout() {
         do {
