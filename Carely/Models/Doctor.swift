@@ -4,7 +4,6 @@
 //
 //  Created by Lala Suleymanova on 07.10.26.
 //
-
 import Foundation
 
 struct Doctor: Identifiable, Codable, Hashable {
@@ -20,6 +19,6 @@ struct Doctor: Identifiable, Codable, Hashable {
     let longitude: Double
     let consultationFee: Double
     let isAvailable: Bool
-    
     var facilityIDs: [Int]? = nil
+    var facilityType: String = ""
 }

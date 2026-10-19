@@ -42,7 +42,7 @@ struct NearbyView: View {
     // MARK: - Location Groups
     private var locationGroups: [NearbyLocationGroup] {
         let doctorsByID = Dictionary(
-            uniqueKeysWithValues: MockDoctorData.doctors.map {
+            uniqueKeysWithValues: viewModel.doctors.map {
                 ($0.id, $0)
             }
         )
@@ -53,6 +53,7 @@ struct NearbyView: View {
                 coordinate: CLLocationCoordinate2D,
                 appointment: Appointment
             )? in
+
                 guard let doctor = doctorsByID[appointment.doctorID] else {
                     return nil
                 }
@@ -62,11 +63,7 @@ struct NearbyView: View {
                     longitude: doctor.longitude
                 )
 
-                let key = String(
-                    format: "%.5f,%.5f",
-                    coordinate.latitude,
-                    coordinate.longitude
-                )
+                let key = "\(doctor.latitude),\(doctor.longitude)"
 
                 return (
                     key: key,
@@ -84,11 +81,9 @@ struct NearbyView: View {
             NearbyLocationGroup(
                 id: key,
                 coordinate: items[0].coordinate,
-                appointments: items.map(\.appointment).sorted {
-                    $0.date == $1.date
-                        ? $0.time < $1.time
-                        : $0.date < $1.date
-                }
+                appointments: items
+                    .map(\.appointment)
+                    .sorted { $0.date < $1.date }
             )
         }
         .sorted { $0.id < $1.id }
@@ -304,13 +299,18 @@ struct NearbyView: View {
     
     // MARK: - Fit All Locations
     private func fitAllLocations() {
-        let coordinates = locationGroups.map(\.coordinate) + (viewModel.location.map { [$0.coordinate] } ?? [])
-        
-        guard !coordinates.isEmpty else { return }
-        
+        let coordinates =
+            locationGroups.map(\.coordinate)
+            + (viewModel.location.map { [$0.coordinate] } ?? [])
+
+        guard !coordinates.isEmpty else {
+            viewModel.showUserLocation()
+            return
+        }
+
         let latitudes = coordinates.map(\.latitude)
         let longitudes = coordinates.map(\.longitude)
-        
+
         guard
             let minLatitude = latitudes.min(),
             let maxLatitude = latitudes.max(),
@@ -319,28 +319,18 @@ struct NearbyView: View {
         else {
             return
         }
-        
+
         let center = CLLocationCoordinate2D(
             latitude: (minLatitude + maxLatitude) / 2,
             longitude: (minLongitude + maxLongitude) / 2
         )
-        
-        let latitudeDelta = max(
-            (maxLatitude - minLatitude) * 1.5,
-            0.01
-        )
-        
-        let longitudeDelta = max(
-            (maxLongitude - minLongitude) * 1.5,
-            0.01
-        )
-        
+
         viewModel.cameraPosition = .region(
             MKCoordinateRegion(
                 center: center,
                 span: MKCoordinateSpan(
-                    latitudeDelta: latitudeDelta,
-                    longitudeDelta: longitudeDelta
+                    latitudeDelta: max((maxLatitude - minLatitude) * 1.5, 0.01),
+                    longitudeDelta: max((maxLongitude - minLongitude) * 1.5, 0.01)
                 )
             )
         )
@@ -370,17 +360,28 @@ struct NearbyView: View {
 
     private func resetMap() {
         selectedLocationID = nil
-        didFitAllLocations = true
 
         viewModel.searchText = ""
         viewModel.selectedDoctor = nil
         viewModel.selectedPlace = nil
+        viewModel.clearSearch()
 
+        isDoctorCardVisible = true
+        isClinicCardVisible = true
+        showDirectionsOptions = false
+
+        viewModel.selectedCategory = .all
         viewModel.nearbyPlaces = []
         viewModel.placesViewState = .idle
-        viewModel.selectedCategory = .all
 
-        fitAllLocations()
+        Task {
+            await viewModel.searchNearbyPlaces(
+                in: viewModel.placesSearchRegion
+            )
+
+            fitAllLocations()
+            didFitAllLocations = true
+        }
     }
 
     private func fitAllLocationsIfNeeded() {
@@ -577,52 +578,66 @@ struct NearbyView: View {
                 }
             }
 
-            ForEach(viewModel.nearbyPlaces) { place in
-                Annotation(
-                    place.name,
-                    coordinate: place.coordinate,
-                    anchor: .bottom
-                ) {
-                    
-                    Button {
-                        selectedLocationID = nil
-                            viewModel.selectedDoctor = nil
-                            viewModel.searchText = ""
-
-                            isDoctorCardVisible = true
-                            isClinicCardVisible = true
-                            showDirectionsOptions = false
-
-                            viewModel.selectedPlace = place
-                    } label: {
-                        ZStack(alignment: .topTrailing) {
-                            Image(systemName: "mappin.circle.fill")
-                                .font(.system(size: 30))
-                                .foregroundStyle(.red)
-                                .background(.white, in: Circle())
-                                .shadow(
-                                    color: .black.opacity(0.18),
-                                    radius: 3,
-                                    y: 2
-                                )
-
-                            let count = appointments(for: place).count
-
-                            if count > 0 {
-                                Text("\(count)")
-                                    .font(.system(size: 10, weight: .bold))
-                                    .foregroundStyle(.white)
-                                    .frame(width: 18, height: 18)
-                                    .background(AppColors.primary, in: Circle())
-                                    .offset(x: 7, y: -5)
+                if !isSearching {
+                    ForEach(locationGroups.filter { group in
+                        viewModel.selectedCategory == .all ||
+                        group.appointments.contains { appointment in
+                            guard let doctor = viewModel.doctors.first(where: {
+                                $0.id == appointment.doctorID
+                            }) else {
+                                return false
                             }
+
+                            return viewModel.selectedCategory.matches(
+                                doctor.facilityType
+                            )
+                        }
+                    }) { group in
+                        Annotation(
+                            "Appointments nearby",
+                            coordinate: group.coordinate,
+                            anchor: .bottom
+                        ) {
+                            Button {
+                                selectedLocationID = group.id
+                                viewModel.selectedDoctor = nil
+                                viewModel.searchText = ""
+
+                                if let matchingPlace = viewModel.nearbyPlaces.first(where: {
+                                    $0.name.localizedCaseInsensitiveCompare(
+                                        group.appointments.first?.facilityName ?? ""
+                                    ) == .orderedSame
+                                }) {
+                                    viewModel.selectedPlace = matchingPlace
+                                    isDoctorCardVisible = true
+                                    isClinicCardVisible = true
+                                }
+                            } label: {
+                                ZStack(alignment: .topTrailing) {
+                                    Image(systemName: "mappin.circle.fill")
+                                        .font(.system(size: 27))
+                                        .foregroundStyle(.red)
+                                        .background(.white, in: Circle())
+                                        .shadow(
+                                            color: .black.opacity(0.18),
+                                            radius: 3,
+                                            y: 2
+                                        )
+
+                                    if group.appointments.count > 1 {
+                                        Text("\(group.appointments.count)")
+                                            .font(.system(size: 10, weight: .bold))
+                                            .foregroundStyle(.white)
+                                            .frame(width: 17, height: 17)
+                                            .background(.black, in: Circle())
+                                            .offset(x: 7, y: -5)
+                                    }
+                                }
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(place.name)
-
                 }
-            }
         }
         .mapControls {
             MapCompass()
@@ -899,6 +914,14 @@ struct NearbyView: View {
                 }
             }
         }
+        .task {
+            async let doctorsTask: Void = viewModel.loadDoctors()
+            async let appointmentsTask: Void = appointmentViewModel.fetchAppointments()
+
+            _ = await (doctorsTask, appointmentsTask)
+
+            fitAllLocationsIfNeeded()
+        }
         .onAppear {
             appointmentViewModel.configure(context: modelContext)
             appointmentViewModel.loadAppointments()
@@ -914,24 +937,14 @@ struct NearbyView: View {
                 fitAllLocationsIfNeeded()
             }
         }
-
         .onDisappear {
             viewModel.selectedPlace = nil
             selectedLocationID = nil
         }
-
-        .onChange(
-            of: appointmentViewModel.upcomingAppointments.map(\.id)
-        ) { _, _ in
-            guard let selectedLocationID else {
-                return
-            }
-
-            if !locationGroups.contains(where: {
-                $0.id == selectedLocationID
-            }) {
-                self.selectedLocationID = nil
-                viewModel.showUserLocation()
+        .onChange(of: appointmentViewModel.upcomingAppointments.map(\.id)) { _, _ in
+            if !locationGroups.isEmpty {
+                fitAllLocations()
+                didFitAllLocations = true
             }
         }
     }

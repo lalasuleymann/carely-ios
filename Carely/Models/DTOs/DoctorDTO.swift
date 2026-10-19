@@ -34,7 +34,8 @@ struct DoctorDTO: Decodable {
             longitude: medicalFacility.longitude,
             consultationFee: consultationFee,
             isAvailable: false,
-            facilityIDs: [medicalFacility.id]
+            facilityIDs: [medicalFacility.id],
+            facilityType: String(medicalFacility.type)
         )
     }
 }

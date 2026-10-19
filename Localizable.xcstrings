@@ -53,6 +53,7 @@
       }
     },
     "%@ %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "az-AZ" : {
           "stringUnit" : {
@@ -146,6 +147,9 @@
           }
         }
       }
+    },
+    "%lld appointments" : {
+
     },
     "$%lld" : {
       "localizations" : {
@@ -603,6 +607,7 @@
       "extractionState" : "manual"
     },
     "Are you sure you want to cancel your appointment with %@?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "az-AZ" : {
           "stringUnit" : {
@@ -943,6 +948,7 @@
       }
     },
     "Choose a Date" : {
+      "extractionState" : "stale",
       "localizations" : {
         "az-AZ" : {
           "stringUnit" : {
@@ -965,6 +971,7 @@
       }
     },
     "Choose a Suitable Time" : {
+      "extractionState" : "stale",
       "localizations" : {
         "az-AZ" : {
           "stringUnit" : {
@@ -1346,6 +1353,7 @@
       }
     },
     "Create Schedule" : {
+      "extractionState" : "stale",
       "localizations" : {
         "az-AZ" : {
           "stringUnit" : {
@@ -1593,6 +1601,7 @@
       }
     },
     "Easily plan your appointment at a time" : {
+      "extractionState" : "stale",
       "localizations" : {
         "az-AZ" : {
           "stringUnit" : {
@@ -2133,6 +2142,7 @@
       }
     },
     "Keep Appointment" : {
+      "extractionState" : "stale",
       "localizations" : {
         "az-AZ" : {
           "stringUnit" : {
@@ -2338,6 +2348,7 @@
       }
     },
     "Loading available times..." : {
+      "extractionState" : "stale",
       "localizations" : {
         "az-AZ" : {
           "stringUnit" : {
@@ -3001,6 +3012,7 @@
       }
     },
     "Not Available on Weekends" : {
+      "extractionState" : "stale",
       "localizations" : {
         "az-AZ" : {
           "stringUnit" : {
@@ -4215,6 +4227,7 @@
       }
     },
     "Sure to Cancel?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "az-AZ" : {
           "stringUnit" : {
@@ -4237,6 +4250,7 @@
       }
     },
     "Swipe to see more times" : {
+      "extractionState" : "stale",
       "localizations" : {
         "az-AZ" : {
           "stringUnit" : {
@@ -4327,6 +4341,7 @@
       }
     },
     "This doctor is not available on Saturdays and Sundays. Please choose a weekday." : {
+      "extractionState" : "stale",
       "localizations" : {
         "az-AZ" : {
           "stringUnit" : {
@@ -4558,6 +4573,7 @@
       }
     },
     "Yes, Cancel" : {
+      "extractionState" : "stale",
       "localizations" : {
         "az-AZ" : {
           "stringUnit" : {

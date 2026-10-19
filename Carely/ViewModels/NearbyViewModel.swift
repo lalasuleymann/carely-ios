@@ -28,7 +28,11 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
     var nearbyPlaces: [NearbyPlace] = []
     var placesViewState: NearbyPlacesViewState = .idle
     var selectedPlace: NearbyPlace?
+    var hasSetInitialLocation = false
 
+    var doctors: [Doctor] = []
+    var doctorsState: NearbyPlacesViewState = .idle
+    
     private let placesService = NearbyPlacesService()
     private let locationManager = CLLocationManager()
 
@@ -98,6 +102,38 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
         }
     }
 
+    func loadDoctors() async {
+        doctorsState = .loading
+
+        do {
+            let response: [DoctorDTO] = try await networkService.request(
+                DoctorEndpoint.all(search: nil),
+                token: nil
+            )
+
+            doctors = response
+                .map(\.toDoctor)
+                .filter {
+                    CLLocationCoordinate2DIsValid(
+                        CLLocationCoordinate2D(
+                            latitude: $0.latitude,
+                            longitude: $0.longitude
+                        )
+                    )
+                    && $0.latitude != 0
+                    && $0.longitude != 0
+                }
+
+            doctorsState = doctors.isEmpty ? .empty : .loaded
+        } catch {
+            doctors = []
+            doctorsState = .error(
+                "Həkimləri backend-dən yükləmək mümkün olmadı."
+            )
+            print("Doctor loading error:", error)
+        }
+    }
+    
 
     // MARK: - Nearby Places Search
     func searchNearbyPlaces(in region: MKCoordinateRegion) async {
@@ -218,6 +254,7 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
         }
 
         selectedDoctor = nil
+        hasSetInitialLocation = true
 
         cameraPosition = .region(
             MKCoordinateRegion(
