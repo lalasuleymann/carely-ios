@@ -3,9 +3,11 @@ name: Carely Tests
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   test:
@@ -19,13 +21,15 @@ jobs:
         run: |
           sudo xcode-select --switch /Applications/Xcode_16.4.app/Contents/Developer
           xcodebuild -version
-          xcrun simctl list > /dev/null
+
+      - name: List available simulators
+        run: |
           xcrun simctl list devices available
 
-        - name: Run tests
-          run: |
-            xcodebuild test \
-              -project Carely.xcodeproj \
-              -scheme Carely \
-              -destination 'platform=iOS Simulator,name=iPhone 16e,OS=18.6' \
-              CODE_SIGNING_ALLOWED=NO
+      - name: Run tests
+        run: |
+          xcodebuild test \
+            -project Carely.xcodeproj \
+            -scheme Carely \
+            -destination 'platform=iOS Simulator,name=iPhone 16e,OS=18.6' \
+            CODE_SIGNING_ALLOWED=NO
