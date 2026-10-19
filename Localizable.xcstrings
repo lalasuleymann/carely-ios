@@ -148,9 +148,6 @@
         }
       }
     },
-    "%lld appointments" : {
-
-    },
     "$%lld" : {
       "localizations" : {
         "az-AZ" : {
@@ -628,6 +625,9 @@
           }
         }
       }
+    },
+    "Are you sure you want to delete your account? This action cannot be undone." : {
+
     },
     "At least 8 characters" : {
       "extractionState" : "manual",
@@ -1465,6 +1465,9 @@
           }
         }
       }
+    },
+    "Delete" : {
+
     },
     "Delete Account" : {
       "extractionState" : "manual",
