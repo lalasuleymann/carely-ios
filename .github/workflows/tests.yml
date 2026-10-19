@@ -20,10 +20,31 @@ jobs:
       - name: List available simulators
         run: xcrun simctl list devices available
 
+      - name: Select iOS Simulator
+        id: simulator
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          data = json.load(sys.stdin)
+          devices = [
+              device
+              for runtime, items in data["devices"].items()
+              if "iOS" in runtime
+              for device in items
+              if device["isAvailable"]
+              and device["name"].startswith("iPhone")
+          ]
+          if not devices:
+              sys.exit("No available iPhone simulator found")
+          print(devices[0]["udid"])
+          ')
+          echo "device_id=$DEVICE_ID" >> "$GITHUB_OUTPUT"
+          echo "Selected simulator: $DEVICE_ID"
+
       - name: Run tests
         run: |
           xcodebuild test \
             -project Carely.xcodeproj \
             -scheme Carely \
-            -destination 'generic/platform=iOS Simulator' \
+            -destination 'platform=iOS Simulator,id=${{ steps.simulator.outputs.device_id }}' \
             CODE_SIGNING_ALLOWED=NO
