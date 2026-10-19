@@ -68,9 +68,9 @@ final class AuthViewModel {
     }
 
     // MARK: - Email Login
-    func login(email: String, password: String) async -> Bool {
+    func login(email: String, password: String, locale: Locale) async -> Bool {
         guard validateEmail(email), !password.isEmpty else {
-            errorMessage = "Please enter a valid email and password."
+            errorMessage = LocalizationManager.localized("Please enter a valid email and password.", locale: locale)
             return false
         }
 
@@ -231,29 +231,29 @@ final class AuthViewModel {
     }
     
     // MARK: - Change Password
-    func changePassword(currentPassword: String,newPassword: String,confirmPassword: String) async -> Bool {
+    func changePassword(currentPassword: String,newPassword: String,confirmPassword: String,locale: Locale) async -> Bool {
         guard !currentPassword.isEmpty else {
-            errorMessage = "Please enter your current password."
+            errorMessage = LocalizationManager.localized("Please enter your current password.", locale: locale)
             return false
         }
 
         guard newPassword.count >= 8 else {
-            errorMessage = "New password must contain at least 8 characters."
+            errorMessage = LocalizationManager.localized("New password must contain at least 8 characters.", locale: locale)
             return false
         }
 
         guard newPassword.count <= 100 else {
-            errorMessage = "New password cannot exceed 100 characters."
+            errorMessage = LocalizationManager.localized("New password cannot exceed 100 characters.", locale: locale)
             return false
         }
 
         guard newPassword == confirmPassword else {
-            errorMessage = "New passwords do not match."
+            errorMessage = LocalizationManager.localized("New passwords do not match.", locale: locale)
             return false
         }
 
         guard currentPassword != newPassword else {
-            errorMessage = "New password must be different from the current password."
+            errorMessage = LocalizationManager.localized("New password must be different from the current password.", locale: locale)
             return false
         }
 

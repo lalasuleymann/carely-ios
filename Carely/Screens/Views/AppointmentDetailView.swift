@@ -13,6 +13,14 @@ struct AppointmentDetailView: View {
 
     @Environment(\.dismiss) private var dismiss
 
+    @Environment(\.locale)
+    private var locale
+    
+    // MARK: - Localization
+    private func localize(_ key: String) -> String {
+        LocalizationManager.localized(key, locale: locale)
+    }
+    
     // MARK: - Doctor Section
     private var doctorSection: some View {
         VStack(spacing: 12) {
@@ -30,15 +38,20 @@ struct AppointmentDetailView: View {
                 .font(AppTypography.body)
                 .foregroundStyle(AppColors.secondaryText)
 
-            Text(viewModel.statusTitle(for: appointment))
-                .font(AppTypography.caption)
-                .foregroundStyle(viewModel.statusColor(for: appointment))
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
-                .background(
-                    viewModel.statusColor(for: appointment).opacity(0.12)
+            Text(
+                LocalizationManager.localized(
+                    viewModel.statusTitle(for: appointment),
+                    locale: locale
                 )
-                .clipShape(Capsule())
+            )
+            .font(AppTypography.caption)
+            .foregroundStyle(viewModel.statusColor(for: appointment))
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(
+                viewModel.statusColor(for: appointment).opacity(0.12)
+            )
+            .clipShape(Capsule())
         }
         .frame(maxWidth: .infinity)
         .padding(24)
@@ -55,19 +68,19 @@ struct AppointmentDetailView: View {
 
             infoRow(
                 icon: "calendar",
-                title: "Date",
-                value: viewModel.formattedDate(for: appointment)
+                title: localize("Date"),
+                value: viewModel.formattedDate(for: appointment, locale: locale)
             )
 
             infoRow(
                 icon: "clock",
-                title: "Time",
+                title: localize("Time"),
                 value: appointment.time
             )
 
             infoRow(
                 icon: "number",
-                title: "Appointment ID",
+                title: localize("Appointment ID"),
                 value: String(appointment.id.uuidString.prefix(8))
             )
         }

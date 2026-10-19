@@ -9,16 +9,33 @@ import SwiftUI
 
 struct SettingsView: View {
 
-    @AppStorage("carely_notifications_enabled")
-    private var notificationsEnabled = true
-
     @AppStorage("carely_appearance")
     private var appearance = "System"
+    
+    @AppStorage("carely_language")
+    private var selectedLanguage = "English"
 
-    @State private var selectedLanguage = "English"
     @State private var showLanguageOptions = false
-    @State private var showPrivacyInfo = false
     @State private var showAbout = false
+    @Environment(\.locale) private var locale
+
+    private var selectedLocale: Locale {
+        switch selectedLanguage {
+        case "Russian":
+            return Locale(identifier: "ru")
+        case "Azərbaycan dili":
+            return Locale(identifier: "az-AZ")
+        case "Türkçe":
+            return Locale(identifier: "tr")
+        default:
+            return Locale(identifier: "en")
+        }
+    }
+    // MARK: - Localization
+    private func localized(_ key: String) -> String {
+        LocalizationManager.localized(key, locale: locale)
+    }
+
 
     private func settingsRow(title: String,subtitle: String,icon: String) -> some View {
         HStack(spacing: 12) {
@@ -66,7 +83,7 @@ struct SettingsView: View {
                     showLanguageOptions = true
                 } label: {
                     settingsRow(
-                        title: "Language",
+                        title: localized("Language"),
                         subtitle: selectedLanguage,
                         icon: "globe"
                     )
@@ -78,8 +95,8 @@ struct SettingsView: View {
                     showAbout = true
                 } label: {
                     settingsRow(
-                        title: "About Carely",
-                        subtitle: "App information",
+                        title: localized("About Carely"),
+                        subtitle: localized("App information"),
                         icon: "heart.text.square"
                     )
                 }
@@ -98,8 +115,8 @@ struct SettingsView: View {
             Button("English") {
                 selectedLanguage = "English"
             }
-            
-            Button("Russian") {
+
+            Button("Русский") {
                 selectedLanguage = "Russian"
             }
 

@@ -9,10 +9,12 @@
 /* Begin PBXBuildFile section */
 		D3F7960130840755009526AE /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = D3F7960030840755009526AE /* GoogleSignIn */; };
 		D3F7960330840755009526AE /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D3F7960230840755009526AE /* GoogleSignInSwift */; };
+		D3F7964C30856237009526AE /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D3F7964B30856237009526AE /* Localizable.xcstrings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		D3F79491307CD178009526AE /* Carely.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Carely.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3F7964B30856237009526AE /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -52,6 +54,7 @@
 		D34A00A630737D06008AC20D = {
 			isa = PBXGroup;
 			children = (
+				D3F7964B30856237009526AE /* Localizable.xcstrings */,
 				D34A00D630737D62008AC20D /* Carely */,
 				D3F79491307CD178009526AE /* Carely.app */,
 			);
@@ -105,6 +108,9 @@
 			knownRegions = (
 				en,
 				Base,
+				tr,
+				ru,
+				"az-AZ",
 			);
 			mainGroup = D34A00A630737D06008AC20D;
 			minimizedProjectReferenceProxies = 1;
@@ -126,6 +132,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3F7964C30856237009526AE /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,6 +208,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -257,6 +265,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

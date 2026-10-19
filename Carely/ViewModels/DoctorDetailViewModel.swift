@@ -5,13 +5,15 @@
 //  Created by Lala Suleymanova on 09.10.26.
 //
 
-
 import Foundation
 import Observation
-import SwiftUI
 
 @Observable
+@MainActor
 final class DoctorDetailViewModel {
+
+    // MARK: - Date Selection
+
     var selectedDate = Calendar.current.startOfDay(for: .now)
     var selectedTime: String?
 
@@ -20,45 +22,105 @@ final class DoctorDetailViewModel {
     var displayedYear = Calendar.current.component(.year, from: .now)
     var showingMonthYearPicker = false
 
+    // MARK: - Availability
+
     private(set) var timeSlots: [String] = []
     var isLoadingAvailability = false
     var availabilityError: String?
-
-    let weekdays = [
-        "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
-    ]
-
-    let months = Calendar.current.monthSymbols
 
     private let networkService: NetworkService
 
     init(networkService: NetworkService = DefaultNetworkService()) {
         self.networkService = networkService
     }
-    
+
+    // MARK: - Calendar Localization
+
+    func localizedWeekdays(locale: Locale) -> [String] {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.firstWeekday = 2
+
+        let formatter = DateFormatter()
+        formatter.locale = locale
+        formatter.calendar = calendar
+        formatter.timeZone = TimeZone(identifier: "Asia/Baku")
+        formatter.dateFormat = "EEE"
+
+        guard let monday = calendar.date(
+            from: DateComponents(year: 2024, month: 1, day: 1)
+        ) else {
+            return []
+        }
+
+        return (0..<7).compactMap { offset in
+            guard let date = calendar.date(
+                byAdding: .day,
+                value: offset,
+                to: monday
+            ) else {
+                return nil
+            }
+
+            return formatter.string(from: date)
+        }
+    }
+
+    func localizedMonths(locale: Locale) -> [String] {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.firstWeekday = 2
+
+        let formatter = DateFormatter()
+        formatter.locale = locale
+        formatter.calendar = calendar
+        formatter.timeZone = TimeZone(identifier: "Asia/Baku")
+        formatter.dateFormat = "LLLL"
+
+        return (1...12).compactMap { month in
+            guard let date = calendar.date(
+                from: DateComponents(
+                    year: 2024,
+                    month: month,
+                    day: 1
+                )
+            ) else {
+                return nil
+            }
+
+            return formatter.string(from: date)
+        }
+    }
+
+    // MARK: - Working Time Slots
+
     var allWorkingTimeSlots: [String] {
         (9..<17).flatMap { hour in
-            ["\(String(format: "%02d", hour)):00",
-             "\(String(format: "%02d", hour)):30"]
+            [
+                "\(String(format: "%02d", hour)):00",
+                "\(String(format: "%02d", hour)):30"
+            ]
         }
     }
 
     var slotPages: [[String]] {
         let slots = allWorkingTimeSlots
+
         return stride(from: 0, to: slots.count, by: 6).map { start in
             Array(slots[start..<min(start + 6, slots.count)])
         }
     }
-    
-    func isWeekend(_ date: Date) -> Bool {
-        let weekday = Calendar.current.component(.weekday, from: date)
-        return weekday == 1 || weekday == 7
-    }
+
+    // MARK: - Calendar
 
     private var calendar: Calendar {
         var value = Calendar(identifier: .gregorian)
         value.firstWeekday = 2
+        value.timeZone = TimeZone(identifier: "Asia/Baku") ?? .current
         return value
+    }
+
+    func isWeekend(_ date: Date) -> Bool {
+        let weekday = calendar.component(.weekday, from: date)
+        return weekday == 1 || weekday == 7
     }
 
     var availableDates: [Date] {
@@ -73,7 +135,7 @@ final class DoctorDetailViewModel {
 
     var availableYears: [Int] {
         let currentYear = calendar.component(.year, from: .now)
-        return Array(currentYear...currentYear + 10)
+        return Array(currentYear...(currentYear + 10))
     }
 
     var daysInMonth: [Date?] {
@@ -118,7 +180,9 @@ final class DoctorDetailViewModel {
 
         return days
     }
-    
+
+    // MARK: - Load Availability
+
     func loadAvailability(for doctorId: Int) async {
         isLoadingAvailability = true
         availabilityError = nil
@@ -150,16 +214,23 @@ final class DoctorDetailViewModel {
         } catch {
             timeSlots = []
             availabilityError = error.localizedDescription
-            print("Failed to load availability: \(error.localizedDescription)")
+
+            print(
+                "Failed to load availability: \(error.localizedDescription)"
+            )
         }
     }
-    
+
+    // MARK: - Open Calendar
+
     func openCalendar() {
         draftDate = selectedDate
         displayedMonth = calendar.component(.month, from: draftDate)
         displayedYear = calendar.component(.year, from: draftDate)
         showingMonthYearPicker = false
     }
+
+    // MARK: - Date Selection
 
     func selectDate(_ date: Date) {
         selectedDate = calendar.startOfDay(for: date)
@@ -170,10 +241,23 @@ final class DoctorDetailViewModel {
         selectDate(draftDate)
     }
 
+    func selectCalendarDay(_ date: Date) {
+        guard !isPastDate(date) else {
+            return
+        }
+
+        draftDate = calendar.startOfDay(for: date)
+    }
+
+    func isSelectedCalendarDay(_ date: Date) -> Bool {
+        calendar.isDate(date, inSameDayAs: draftDate)
+    }
+
+    // MARK: - Time Selection
+
     func isPastTime(_ time: String, on date: Date) -> Bool {
-        guard Calendar.current.isDateInToday(date),
-              let slotDate = dateForTime(time, on: date)
-        else {
+        guard calendar.isDateInToday(date),
+              let slotDate = dateForTime(time, on: date) else {
             return false
         }
 
@@ -182,8 +266,7 @@ final class DoctorDetailViewModel {
 
     func canBook(date: Date, time: String) -> Bool {
         guard !isPastDate(date),
-              !isPastTime(time, on: date)
-        else {
+              !isPastTime(time, on: date) else {
             return false
         }
 
@@ -221,19 +304,14 @@ final class DoctorDetailViewModel {
         )
     }
 
-    func selectCalendarDay(_ date: Date) {
-        guard !isPastDate(date) else { return }
-        draftDate = calendar.startOfDay(for: date)
-    }
+    // MARK: - Past Date Validation
 
     func isPastDate(_ date: Date) -> Bool {
         calendar.startOfDay(for: date) <
             calendar.startOfDay(for: .now)
     }
 
-    func isSelectedCalendarDay(_ date: Date) -> Bool {
-        calendar.isDate(date, inSameDayAs: draftDate)
-    }
+    // MARK: - Month and Year Selection
 
     func changeDisplayedMonth(_ month: Int) {
         displayedMonth = month

@@ -18,6 +18,14 @@ struct EditProfileView: View {
     @State private var firstName = ""
     @State private var lastName = ""
     @State private var phoneNumber = ""
+    
+    @Environment(\.locale) private var locale
+    
+    // MARK: - Localization
+    private func localize(_ key: String) -> String {
+        LocalizationManager.localized(key, locale: locale)
+    }
+    
 
     private func loadCurrentUser() {
         guard let user = authViewModel.currentUser else { return }
@@ -32,7 +40,8 @@ struct EditProfileView: View {
         await viewModel.updateProfile(
             firstName: firstName,
             lastName: lastName,
-            phoneNumber: phoneNumber
+            phoneNumber: phoneNumber,
+            locale: locale
         )
 
         guard viewModel.errorMessage == nil,
@@ -68,7 +77,7 @@ struct EditProfileView: View {
             Section("Account") {
                 LabeledContent(
                     "Email",
-                    value: authViewModel.currentUser?.email ?? "Not available"
+                    value: authViewModel.currentUser?.email ?? localize("Not available")
                 )
             }
 

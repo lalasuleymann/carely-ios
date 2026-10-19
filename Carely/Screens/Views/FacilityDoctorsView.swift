@@ -47,11 +47,7 @@ struct FacilityDoctorsView: View {
                 $0.toDoctor(facility: facility)
             }
         } catch {
-            print(
-                "❌ Failed to load facility doctors:",
                 error.localizedDescription
-            )
-
             errorMessage = "Could not load doctors for this facility. Please try again."
         }
     }

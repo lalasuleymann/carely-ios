@@ -233,9 +233,10 @@ final class AppointmentViewModel {
         }
     }
 
-    func formattedDate(for appointment: Appointment) -> String {
+    func formattedDate(for appointment: Appointment, locale: Locale) -> String {
         appointment.date.formatted(
             .dateTime.month(.abbreviated).day().year()
+            .locale(locale)
         )
     }
 

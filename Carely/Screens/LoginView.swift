@@ -12,7 +12,8 @@ import AuthenticationServices
 
 struct LoginView: View {
     @Bindable var viewModel: AuthViewModel
-
+    
+    @Environment(\.locale) private var locale
     @State private var email = ""
     @State private var password = ""
     @State private var isPasswordVisible = false
@@ -259,7 +260,8 @@ struct LoginView: View {
                             Task {
                                 await viewModel.login(
                                     email: email,
-                                    password: password
+                                    password: password,
+                                    locale: locale
                                 )
                             }
                         } label: {

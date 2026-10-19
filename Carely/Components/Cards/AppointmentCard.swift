@@ -14,6 +14,13 @@ struct AppointmentCard: View {
     var onCancel: (() -> Void)? = nil
     @State private var showCancelConfirmation = false
 
+    @Environment(\.locale)
+    private var locale
+    
+    // MARK: - Localization
+    private func localize(_ key: String) -> String {
+        LocalizationManager.localized(key, locale: locale)
+    }
     // MARK: - Doctor Information
     private var doctorSection: some View {
         HStack(spacing: 12) {
@@ -43,7 +50,10 @@ struct AppointmentCard: View {
     private var statusBadge: some View {
         let color = viewModel.statusColor(for: appointment)
 
-        return Text(viewModel.statusTitle(for: appointment))
+        return Text(LocalizationManager.localized(
+                viewModel.statusTitle(for: appointment),
+                locale: locale
+            ))
             .font(AppTypography.caption)
             .foregroundStyle(color)
             .padding(.horizontal, 10)
@@ -56,7 +66,7 @@ struct AppointmentCard: View {
     private var dateTimeSection: some View {
         HStack(spacing: 8) {
             Label {
-                Text(viewModel.formattedDate(for: appointment))
+                Text(viewModel.formattedDate(for: appointment, locale: locale))
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
             } icon: {

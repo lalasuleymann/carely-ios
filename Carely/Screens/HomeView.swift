@@ -1,5 +1,3 @@
-
-
 //
 //  HomeView.swift
 //  Carely
@@ -10,16 +8,29 @@
 import SwiftUI
 
 struct HomeView: View {
+
     @State private var viewModel = HomeViewModel()
 
-    @Environment(AuthViewModel.self) private var authViewModel
-    @Environment(AppointmentViewModel.self) private var appointmentViewModel
-    @Environment(\.selectedTab) private var selectedTab
-    
-    @State private var showProfile = false
+    @Environment(AuthViewModel.self)
+    private var authViewModel
+
+    @Environment(AppointmentViewModel.self)
+    private var appointmentViewModel
+
+    @Environment(\.selectedTab)
+    private var selectedTab
+
+    @Environment(\.locale)
+    private var locale
+
     @State private var selectedAppointment: Appointment?
     @State private var showAppointmentDetail = false
-    
+
+    // MARK: - Localization
+    private func localize(_ key: String) -> String {
+        LocalizationManager.localized(key, locale: locale)
+    }
+
     // MARK: - User Information
     private var userFullName: String {
         let firstName = authViewModel.currentUser?.firstName
@@ -28,10 +39,8 @@ struct HomeView: View {
         let lastName = authViewModel.currentUser?.lastName
             .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
-        let fullName = "\(firstName) \(lastName)"
+        return "\(firstName) \(lastName)"
             .trimmingCharacters(in: .whitespacesAndNewlines)
-
-        return fullName.isEmpty ? "there" : fullName
     }
 
     // MARK: - Profile Placeholder
@@ -59,7 +68,7 @@ struct HomeView: View {
                             .resizable()
                             .scaledToFill()
 
-                    case .failure(let error):
+                    case .failure:
                         profilePlaceholder
 
                     case .empty:
@@ -84,7 +93,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 24) {
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("\(viewModel.greeting()),")
+                    Text(localize(viewModel.greeting()))
                         .font(AppTypography.body)
                         .foregroundStyle(
                             AppColors.onPrimary.opacity(0.8)
@@ -103,13 +112,13 @@ struct HomeView: View {
                     profileImage
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("Open profile")
+                .accessibilityLabel(Text(localize("Open profile")))
             }
-            
+
             ZStack {
                 SearchBar(
                     text: $viewModel.searchText,
-                    placeholder: "Search doctors, specialties..."
+                    placeholder: localize("Search doctors, specialties...")
                 )
                 .allowsHitTesting(false)
 
@@ -121,24 +130,23 @@ struct HomeView: View {
                     }
             }
             .frame(height: 50)
-
         }
         .padding(.horizontal, 16)
         .padding(.top, 60)
         .padding(.bottom, 28)
         .background(AppColors.primary)
     }
-    
+
     // MARK: - Upcoming Appointment
     private var upcomingAppointmentSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Upcoming Appointment")
+            Text(localize("Upcoming Appointment"))
                 .font(AppTypography.headline)
                 .foregroundStyle(AppColors.primaryText)
 
             switch appointmentViewModel.state {
             case .idle, .loading:
-                ProgressView("Loading appointment...")
+                ProgressView(localize("Loading appointment..."))
                     .tint(AppColors.primary)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 30)
@@ -153,16 +161,17 @@ struct HomeView: View {
                 ) {
                     UpcomingAppointmentCard(
                         doctorName: appointment.doctorName,
-                        specialty: appointment.specialty,
+                        specialty: localize(appointment.specialty),
                         date: appointment.date.formatted(
                             .dateTime
                                 .weekday(.abbreviated)
                                 .month(.abbreviated)
                                 .day()
                                 .year()
+                                .locale(locale)
                         ),
                         time: appointment.time,
-                        appointmentType: "In-Person"
+                        appointmentType: localize("In-Person")
                     ) {
                         selectedAppointment = appointment
                         showAppointmentDetail = true
@@ -174,7 +183,7 @@ struct HomeView: View {
 
             case .error(let message):
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Could not load appointments")
+                    Text(localize("Could not load appointments"))
                         .font(AppTypography.body)
                         .foregroundStyle(AppColors.primaryText)
 
@@ -182,7 +191,7 @@ struct HomeView: View {
                         .font(AppTypography.caption)
                         .foregroundStyle(.secondary)
 
-                    Button("Try Again") {
+                    Button(localize("Try Again")) {
                         Task {
                             await appointmentViewModel.fetchAppointments()
                         }
@@ -190,7 +199,10 @@ struct HomeView: View {
                     .font(AppTypography.body)
                     .foregroundStyle(AppColors.primary)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(
+                    maxWidth: .infinity,
+                    alignment: .leading
+                )
                 .padding(16)
                 .background(AppColors.surface)
                 .clipShape(
@@ -207,15 +219,18 @@ struct HomeView: View {
                 .font(.system(size: 24))
                 .foregroundStyle(AppColors.primary)
 
-            Text("No upcoming appointment")
+            Text(localize("No upcoming appointment"))
                 .font(AppTypography.body)
                 .foregroundStyle(AppColors.primaryText)
 
-            Text("Your next appointment will appear here.")
+            Text(localize("Your next appointment will appear here."))
                 .font(AppTypography.caption)
                 .foregroundStyle(.secondary)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(
+            maxWidth: .infinity,
+            alignment: .leading
+        )
         .padding(16)
         .background(AppColors.surface)
         .clipShape(
@@ -232,16 +247,24 @@ struct HomeView: View {
             )
 
             if viewModel.specialties.isEmpty {
-                Text("No specialties available.")
+                Text(localize("No specialties available."))
                     .font(AppTypography.body)
                     .foregroundStyle(.secondary)
             } else {
-                ScrollView(.horizontal, showsIndicators: false) {
+                ScrollView(
+                    .horizontal,
+                    showsIndicators: false
+                ) {
                     HStack(spacing: 12) {
-                        ForEach(viewModel.specialties, id: \.id) { specialty in
+                        ForEach(
+                            viewModel.specialties,
+                            id: \.id
+                        ) { specialty in
                             SpecialtyCard(
-                                title: specialty.name,
-                                icon: SpecialtyIconProvider.icon(for: specialty.name)
+                                title: localize(specialty.name),
+                                icon: SpecialtyIconProvider.icon(
+                                    for: specialty.name
+                                )
                             )
                         }
                     }
@@ -259,7 +282,7 @@ struct HomeView: View {
             )
 
             if viewModel.doctors.isEmpty {
-                Text("No doctors available right now.")
+                Text(localize("No doctors available right now."))
                     .font(AppTypography.body)
                     .foregroundStyle(.secondary)
                     .frame(
@@ -267,7 +290,10 @@ struct HomeView: View {
                         alignment: .leading
                     )
             } else {
-                ScrollView(.horizontal,showsIndicators: false) {
+                ScrollView(
+                    .horizontal,
+                    showsIndicators: false
+                ) {
                     HStack(spacing: 12) {
                         ForEach(viewModel.doctors) { doctor in
                             NavigationLink {
@@ -291,20 +317,22 @@ struct HomeView: View {
             from: appointments
         )
 
-        let completedAppointments = viewModel.completedAppointmentCount(
-            from: appointments
-        )
+        let completedAppointments =
+            viewModel.completedAppointmentCount(
+                from: appointments
+            )
 
         let nextVisit = viewModel.formattedNextVisit(
             from: appointments
         )
 
-        let cancelledAppointments = viewModel.cancelledAppointmentCount(
-            from: appointments
-        )
+        let cancelledAppointments =
+            viewModel.cancelledAppointmentCount(
+                from: appointments
+            )
 
         return VStack(alignment: .leading, spacing: 12) {
-            Text("Your Health")
+            Text(localize("Your Health"))
                 .font(AppTypography.headline)
                 .foregroundStyle(AppColors.primaryText)
 
@@ -316,28 +344,28 @@ struct HomeView: View {
                 spacing: 12
             ) {
                 HealthStatCard(
-                    title: "Appointments",
+                    title: localize("Appointments"),
                     value: "\(totalAppointments)",
                     icon: "calendar",
                     iconColor: AppColors.primary
                 )
 
                 HealthStatCard(
-                    title: "Doctors Seen",
+                    title: localize("Doctors Seen"),
                     value: "\(completedAppointments)",
                     icon: "stethoscope",
                     iconColor: .blue
                 )
 
                 HealthStatCard(
-                    title: "Next Visit",
+                    title: localize("Next Visit"),
                     value: nextVisit,
                     icon: "clock",
                     iconColor: AppColors.warning
                 )
 
                 HealthStatCard(
-                    title: "Missed",
+                    title: localize("Missed"),
                     value: "\(cancelledAppointments)",
                     icon: "calendar.badge.exclamationmark",
                     iconColor: AppColors.error
@@ -349,14 +377,15 @@ struct HomeView: View {
     // MARK: - Section Header
     private func sectionHeader(title: String,showSeeAll: Bool) -> some View {
         HStack {
-            Text(title)
+            Text(localize(title))
                 .font(AppTypography.headline)
                 .foregroundStyle(AppColors.primaryText)
 
             Spacer()
 
             if showSeeAll {
-                Button("See all") {
+                Button(localize("See all")) {
+                    // Add navigation if needed.
                 }
                 .font(AppTypography.caption)
                 .foregroundStyle(AppColors.primary)
@@ -369,13 +398,13 @@ struct HomeView: View {
             headerSection
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 28) {
+                VStack(
+                    alignment: .leading,
+                    spacing: 28
+                ) {
                     upcomingAppointmentSection
-
                     specialtiesSection
-
                     topDoctorsSection
-
                     healthSection
                 }
                 .padding(.horizontal, 16)
@@ -385,7 +414,9 @@ struct HomeView: View {
         }
         .background(AppColors.primary)
         .ignoresSafeArea(edges: .top)
-        .navigationDestination(isPresented: $showAppointmentDetail) {
+        .navigationDestination(
+            isPresented: $showAppointmentDetail
+        ) {
             if let appointment = selectedAppointment {
                 AppointmentDetailView(
                     appointment: appointment,
@@ -413,5 +444,7 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    NavigationStack {
+        HomeView()
+    }
 }

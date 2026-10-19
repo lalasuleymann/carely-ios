@@ -23,9 +23,17 @@ struct ProfileView: View {
     @State private var photoError: String?
     @State private var showChangePassword = false
     @State private var showSetPassword = false
-
+    
+    @Environment(\.locale) private var locale
+    
     private let photoFileName = "carely-profile-photo.jpg"
 
+    
+    // MARK: - Localization
+    private func localize(_ key: String) -> String {
+        LocalizationManager.localized(key, locale: locale)
+    }
+    
     private var user: AuthUserDTO? {
         authViewModel.currentUser
     }
@@ -41,13 +49,13 @@ struct ProfileView: View {
     private var email: String {
         profileViewModel.profile?.email
             ?? user?.email
-            ?? "No email available"
+            ?? localize("No email available")
     }
 
     private var phoneNumber: String {
         profileViewModel.profile?.phoneNumber
             ?? user?.phoneNumber
-            ?? "Not added"
+            ?? localize("Not added")
     }
 
     private var fullName: String {
@@ -134,26 +142,26 @@ struct ProfileView: View {
                 .foregroundStyle(AppColors.primaryText)
 
             infoRow(
-                title: "First Name",
-                value: firstName.isEmpty ? "Not available" : firstName,
+                title: localize("First Name"),
+                value: firstName.isEmpty ? localize("Not available") : firstName,
                 icon: "person"
             )
 
             infoRow(
-                title: "Last Name",
-                value: lastName.isEmpty ? "Not available" : lastName,
+                title: localize("Last Name"),
+                value: lastName.isEmpty ? localize("Not available") : lastName,
                 icon: "person"
             )
 
             infoRow(
-                title: "Email",
+                title: localize("Email"),
                 value: email,
                 icon: "envelope"
             )
 
             infoRow(
-                title: "Phone Number",
-                value: phoneNumber.isEmpty ? "Not added" : phoneNumber,
+                title: localize("Phone Number"),
+                value: phoneNumber.isEmpty ? localize("Not added") : phoneNumber,
                 icon: "phone"
             )
         }
@@ -221,7 +229,7 @@ struct ProfileView: View {
             
             menuDivider
 
-            profileMenuRow(title: "Change Password", icon: "lock") {
+            profileMenuRow(title: localize("Change Password"), icon: "lock") {
                 if let profile = profileViewModel.profile {
                     if profile.hasPassword {
                         showChangePassword = true
@@ -230,7 +238,7 @@ struct ProfileView: View {
                     }
                 } else {
                     Task {
-                        await profileViewModel.loadProfile()
+                        await profileViewModel.loadProfile(locale: locale)
 
                         guard let profile = profileViewModel.profile else {
                             return
@@ -248,7 +256,7 @@ struct ProfileView: View {
             menuDivider
 
             profileMenuRow(
-                title: "Delete Account",
+                title: localize("Delete Account"),
                 icon: "person.crop.circle.badge.xmark",
                 isDestructive: true
             ) {
@@ -257,7 +265,7 @@ struct ProfileView: View {
             menuDivider
 
             profileMenuRow(
-                title: "Log Out",
+                title: localize("Log Out"),
                 icon: "rectangle.portrait.and.arrow.right",
                 isDestructive: true
             ) {
@@ -336,7 +344,7 @@ struct ProfileView: View {
                 let image = UIImage(data: data),
                 let jpegData = image.jpegData(compressionQuality: 0.85)
             else {
-                photoError = "The selected photo could not be loaded."
+                photoError = localize("The selected photo could not be loaded.")
                 return
             }
 
@@ -345,7 +353,7 @@ struct ProfileView: View {
             profileImage = image
             selectedPhoto = nil
         } catch {
-            photoError = "Could not save the selected photo. Please try again."
+            photoError = localize("Could not save the selected photo. Please try again.")
         }
     }
 
@@ -371,7 +379,7 @@ struct ProfileView: View {
             profileImage = nil
             selectedPhoto = nil
         } catch {
-            photoError = "Could not remove the profile photo."
+            photoError = localize("Could not remove the profile photo.")
         }
     }
 
@@ -404,7 +412,7 @@ struct ProfileView: View {
                 .environment(authViewModel)
         }
         .task {
-            await profileViewModel.loadProfile()
+            await profileViewModel.loadProfile(locale: locale)
         }
         .confirmationDialog(
             "Profile Photo",
@@ -412,7 +420,7 @@ struct ProfileView: View {
             titleVisibility: .visible
         ) {
             Button("Choose Photo") {
-                photoError = "Tap the profile picture to choose a photo."
+                photoError = localize("Tap the profile picture to choose a photo.")
             }
 
             if profileImage != nil {

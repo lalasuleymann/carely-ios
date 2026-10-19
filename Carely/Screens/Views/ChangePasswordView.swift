@@ -19,6 +19,13 @@ struct ChangePasswordView: View {
     @State private var showConfirmPassword = false
     @State private var successMessage: String?
     @State private var showSuccessAlert = false
+    
+    @Environment(\.locale) private var locale
+    
+    // MARK: - Localization
+    private func localize(_ key: String) -> String {
+        LocalizationManager.localized(key, locale: locale)
+    }
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -78,22 +85,22 @@ struct ChangePasswordView: View {
 
                 VStack(alignment: .leading, spacing: 18) {
                     passwordField(
-                        title: "Current Password",
-                        placeholder: "Enter current password",
+                        title: localize("Current Password"),
+                        placeholder: localize("Enter current password"),
                         text: $currentPassword,
                         isVisible: $showCurrentPassword
                     )
 
                     passwordField(
-                        title: "New Password",
-                        placeholder: "Enter new password",
+                        title: localize("New Password"),
+                        placeholder: localize("Enter new password"),
                         text: $newPassword,
                         isVisible: $showNewPassword
                     )
 
                     passwordField(
-                        title: "Confirm New Password",
-                        placeholder: "Re-enter new password",
+                        title: localize("Confirm New Password"),
+                        placeholder: localize("Re-enter new password"),
                         text: $confirmPassword,
                         isVisible: $showConfirmPassword
                     )
@@ -113,11 +120,12 @@ struct ChangePasswordView: View {
                             let success = await authViewModel.changePassword(
                                 currentPassword: currentPassword,
                                 newPassword: newPassword,
-                                confirmPassword: confirmPassword
+                                confirmPassword: confirmPassword,
+                                locale: locale
                             )
 
                             if success {
-                                successMessage = "Your password has been changed successfully."
+                                successMessage = localize("Your password has been changed successfully.")
                                 showSuccessAlert = true
                             }
                         }
@@ -129,8 +137,8 @@ struct ChangePasswordView: View {
                             }
 
                             Text(authViewModel.isLoading
-                                 ? "Changing Password..."
-                                 : "Change Password")
+                                 ? localize("Changing Password...")
+                                 : localize("Change Password"))
                                 .fontWeight(.semibold)
                         }
                         .frame(maxWidth: .infinity)
@@ -153,12 +161,12 @@ struct ChangePasswordView: View {
         .onAppear {
             authViewModel.clearError()
         }
-        .alert("Password Changed", isPresented: $showSuccessAlert) {
+        .alert(localize("Password Changed"), isPresented: $showSuccessAlert) {
             Button("OK") {
                 dismiss()
             }
         } message: {
-            Text(successMessage ?? "Your password has been changed successfully.")
+            Text(successMessage ?? localize("Your password has been changed successfully."))
         }
     }
 }

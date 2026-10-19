@@ -12,6 +12,14 @@ struct PersonalInformationView: View {
     @Environment(AuthViewModel.self) private var authViewModel
     @State private var profileViewModel: ProfileViewModel
     @State private var showEditProfile = false
+    
+    @Environment(\.locale) private var locale
+    
+    // MARK: - Localization
+    private func localize(_ key: String) -> String {
+        LocalizationManager.localized(key, locale: locale)
+    }
+    
 
     init(profileViewModel: ProfileViewModel) {
         _profileViewModel = State(initialValue: profileViewModel)
@@ -30,11 +38,11 @@ struct PersonalInformationView: View {
     }
 
     private var email: String {
-        profileViewModel.profile?.email ?? user?.email ?? "Not available"
+        profileViewModel.profile?.email ?? user?.email ?? localize("Not available")
     }
 
     private var phoneNumber: String {
-        profileViewModel.profile?.phoneNumber ?? user?.phoneNumber ?? "Not added"
+        profileViewModel.profile?.phoneNumber ?? user?.phoneNumber ?? localize("Not added")
     }
 
     private var informationCard: some View {
@@ -44,26 +52,26 @@ struct PersonalInformationView: View {
                 .foregroundStyle(AppColors.primaryText)
 
             infoRow(
-                title: "First Name",
-                value: firstName.isEmpty ? "Not available" : firstName,
+                title: localize("First Name"),
+                value: firstName.isEmpty ? localize("Not available") : firstName,
                 icon: "person"
             )
 
             infoRow(
-                title: "Last Name",
-                value: lastName.isEmpty ? "Not available" : lastName,
+                title: localize("Last Name"),
+                value: lastName.isEmpty ? localize("Not available") : lastName,
                 icon: "person"
             )
 
             infoRow(
-                title: "Email",
+                title: localize("Email"),
                 value: email,
                 icon: "envelope"
             )
 
             infoRow(
-                title: "Phone Number",
-                value: phoneNumber.isEmpty ? "Not added" : phoneNumber,
+                title: localize("Phone Number"),
+                value: phoneNumber.isEmpty ? localize("Not added") : phoneNumber,
                 icon: "phone"
             )
         }
@@ -124,7 +132,7 @@ struct PersonalInformationView: View {
         .navigationTitle("Personal Information")
         .navigationBarTitleDisplayMode(.inline)
         .task {
-            await profileViewModel.loadProfile()
+            await profileViewModel.loadProfile(locale: locale)
         }
         .sheet(isPresented: $showEditProfile) {
             NavigationStack {

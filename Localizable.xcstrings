@@ -1,0 +1,4779 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "(%lld)" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%lld)"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%lld)"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(%lld)"
+          }
+        }
+      }
+    },
+    "%@ %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ %lld" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$lld"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$lld"
+          }
+        }
+      }
+    },
+    "%@ üçün %@, saat %@ rezervasiya edildi." : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ üçün %@, saat %@ rezervasiya edildi."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@ for %1$@ has been reserved for %3$@."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%$2@ за %1$@, %3$@ часов зарезервировано."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "%1$@ için %2$@, saat %3$@ rezervasyon yapıldı."
+          }
+        }
+      }
+    },
+    "%@," : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@,"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@,"
+          }
+        }
+      }
+    },
+    "%lld" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld"
+          }
+        }
+      }
+    },
+    "$%lld" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "$%lld"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "$%lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "$%lld"
+          }
+        }
+      }
+    },
+    "₼%lld" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "₼%lld"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "₼%lld"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "₼%lld"
+          }
+        }
+      }
+    },
+    "₼100" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "₼100"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "₼100"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "₼100"
+          }
+        }
+      }
+    },
+    "About" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haqqında"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "О компании"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hakkında"
+          }
+        }
+      }
+    },
+    "About Carely" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carely haqda"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "О Carely"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carely hakkında"
+          }
+        }
+      }
+    },
+    "Account" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesab"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Аккаунт"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesap"
+          }
+        }
+      }
+    },
+    "Account Information" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesab Məlumatı"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Информация об aккаунтa"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesap Bilgileri"
+          }
+        }
+      }
+    },
+    "Add Profile Photo" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil şəkili əlavə et"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добавить фото профиля"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil Fotoğrafı Ekle"
+          }
+        }
+      }
+    },
+    "Add to Favorites" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sevimlilərə əlavə et"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добавить в избранное"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorilere Ekle"
+          }
+        }
+      }
+    },
+    "All" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hamısı"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Все"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hepsi"
+          }
+        }
+      }
+    },
+    "Already have an account?" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artık hesabın var?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "У вас уже есть аккаунт?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zaten bir hesabınız var mı?"
+          }
+        }
+      }
+    },
+    "Any" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hər hansi"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Любой"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herhangi"
+          }
+        }
+      }
+    },
+    "App information" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tətbiq məlumatı"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Информация о приложении"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygulama Bilgileri"
+          }
+        }
+      }
+    },
+    "Appearance" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görünüş"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вид"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görünüş"
+          }
+        }
+      }
+    },
+    "Apply" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tətbiq et"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Применять"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygula"
+          }
+        }
+      }
+    },
+    "Appointment Booked" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüş təyin edildi"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запись оформлена"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Randevu Oluşturuldu"
+          }
+        }
+      }
+    },
+    "Appointment Details" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüş təfərrüatları"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Информация о записи"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Randevu detayları"
+          }
+        }
+      }
+    },
+    "Appointment ID" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüş İD"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Встреча ID"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Randevu ID"
+          }
+        }
+      }
+    },
+    "Appointment Information" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüş məlumatı"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Информация о записи"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Randevu bilgileri"
+          }
+        }
+      }
+    },
+    "Appointments" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüşlər"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Записи"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Randevular"
+          }
+        }
+      }
+    },
+    "Are you sure you want to cancel your appointment with %@?" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ilə olan görüşünüzü ləğv etmək istədiyinizə əminsinizmi?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вы уверены, что хотите отменить запись к %@?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ile olan randevunuzu iptal etmek istediğinizden emin misiniz?"
+          }
+        }
+      }
+    },
+    "At least 8 characters" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ən azı 8 simvol"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не менее 8 символов"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En az 8 karakter"
+          }
+        }
+      }
+    },
+    "Availability" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uyğunluq"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Доступность"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Müsaitlik"
+          }
+        }
+      }
+    },
+    "Available today" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün uyğundur"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Доступно сегодня"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bugün müsait"
+          }
+        }
+      }
+    },
+    "Azərbaycan dili" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azərbaycan dili"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Azerbaijani"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Азербайджанский язык"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Azerbaycan dili"
+          }
+        }
+      }
+    },
+    "Back" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geri"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Назад"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geriye"
+          }
+        }
+      }
+    },
+    "Book Appointment" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüş təyin et"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Записаться на приём"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Randevu Al"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ləğv et"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отмена"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İptal et"
+          }
+        }
+      }
+    },
+    "Cancel Appointment" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüşü ləğv et"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отменить запись"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Randevuyu iptal et"
+          }
+        }
+      }
+    },
+    "Cancelled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ləğv edildi"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отменено"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İptal edilmiş"
+          }
+        }
+      }
+    },
+    "Carely" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carely"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carely"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carely"
+          }
+        }
+      }
+    },
+    "Carely helps you discover healthcare services and manage appointments." : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carely səhiyyə xidmətlərini kəşf etməyə və görüşləri idarə etməyə kömək edir."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carely помогает находить медицинские услуги и записываться на приём."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carely, sağlık hizmetlerini keşfetmenize ve randevularınızı yönetmenize yardımcı olur."
+          }
+        }
+      }
+    },
+    "Change Password" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrəni dəyiş"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изменить пароль"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parolayı değiştir"
+          }
+        }
+      }
+    },
+    "Change profile photo" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil fotosunu dəyiş"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изменить фото профиля"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil fotoğrafını değiştir"
+          }
+        }
+      }
+    },
+    "Changing Password..." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrə dəyişir…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Смена пароля..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parola değiştiriliyor..."
+          }
+        }
+      }
+    },
+    "Choose a Date" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarix seç"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите дату"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir Tarih Seçin"
+          }
+        }
+      }
+    },
+    "Choose a Suitable Time" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygun vaxt seç"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите подходящее время"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uygun Bir Zaman Seçin"
+          }
+        }
+      }
+    },
+    "Choose Language" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dil seç"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите язык"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dil seçin"
+          }
+        }
+      }
+    },
+    "Choose Photo" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Foto seç"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите фото"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fotoğraf seç"
+          }
+        }
+      }
+    },
+    "Clear search" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Axtarışı təmizlə"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Очистить поиск"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aramayı temizle"
+          }
+        }
+      }
+    },
+    "Clinics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klinikalar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Клиники"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klinikler"
+          }
+        }
+      }
+    },
+    "Close appointments" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüşləri bağla"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Завершить встречи"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Randevuları kapat"
+          }
+        }
+      }
+    },
+    "Close clinic card" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klinika kartını bağla"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Закрыть медицинскую карту"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klinik kartını kapat"
+          }
+        }
+      }
+    },
+    "Completed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamamlanıb"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Завершеннo"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamamlanmış"
+          }
+        }
+      }
+    },
+    "Confirm New Password" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni şifrəni təsdiqləyin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подтвердите новый пароль"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Şifreyi Onayla"
+          }
+        }
+      }
+    },
+    "Confirm password" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrəni təsdiqləyin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подтвердите пароль"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parolayı onayla"
+          }
+        }
+      }
+    },
+    "Consultation Fee" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konsultasiya məbləği"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Плата за консультацию"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danışma Ücreti"
+          }
+        }
+      }
+    },
+    "Continue with Google" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google ilə davam et"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Продолжить через Google"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google ile devam et"
+          }
+        }
+      }
+    },
+    "Could not load appointments" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüşləri yükləmək mümkün olmadı"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось загрузить записи"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Randevular yüklenemedi"
+          }
+        }
+      }
+    },
+    "Could not remove the profile photo." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil şəklini silmək mümkün olmadı."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось удалить фотографию профиля."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil fotoğrafı kaldırılamadı."
+          }
+        }
+      }
+    },
+    "Could not save the selected photo. Please try again." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seçilmiş şəkli yadda saxlamaq mümkün olmadı. Zəhmət olmasa, yenidən cəhd edin."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось сохранить выбранное фото. Пожалуйста, попробуйте ещё раз."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seçilen fotoğraf kaydedilemedi. Lütfen tekrar deneyin."
+          }
+        }
+      }
+    },
+    "Create a password to use email and password sign-in for your account." : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesabınıza e-poçt və şifrə vasitəsilə daxil olmaq üçün şifrə yaradın."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создайте пароль, чтобы использовать вход в учетную запись с помощью электронной почты и пароля."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesabınız için e-posta ve şifre ile oturum açma yöntemini kullanmak üzere bir şifre oluşturun."
+          }
+        }
+      }
+    },
+    "Create account" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesab yaradın"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Зарегистрироваться"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesap oluşturun"
+          }
+        }
+      }
+    },
+    "Create Schedule" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cədvəl yaradın"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создать расписание"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Program oluşturun"
+          }
+        }
+      }
+    },
+    "Creating account..." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesab yaradılır…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Создание аккаунт…"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesap oluşturuluyor…"
+          }
+        }
+      }
+    },
+    "Current Password" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cari şifrə"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Текущий пароль"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mevcut Şifre"
+          }
+        }
+      }
+    },
+    "Dark" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tünd"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Темный"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Karanlık"
+          }
+        }
+      }
+    },
+    "Date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarix"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Дата"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarih"
+          }
+        }
+      }
+    },
+    "Delete Account" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesabı sil"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удалить аккаунт"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesabı Sil"
+          }
+        }
+      }
+    },
+    "Doctor Details" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "həkim haqqında məlumat"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Информация о враче"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doktor Bilgileri"
+          }
+        }
+      }
+    },
+    "Doctors" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Həkimlər"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Врачи"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doktorlar"
+          }
+        }
+      }
+    },
+    "Doctors at %@" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@-dakı həkimlər"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Врачи в %@"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@de Doktorlar"
+          }
+        }
+      }
+    },
+    "Doctors Seen" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qəbulunda olunan həkimlər"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Посещенныи врачи"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görülen Doktorlar"
+          }
+        }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamam"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сделанный"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamam"
+          }
+        }
+      }
+    },
+    "Easily plan your appointment at a time" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüşünüzü istədiyiniz vaxta asanlıqla planlaşdırın"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "С легкостью запланируйте визит на удобное для вас время"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Randevunuzu dilediğiniz bir zamana kolayca planlayın"
+          }
+        }
+      }
+    },
+    "Edit Information" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Məlumatı redaktə et"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Редактировать информацию"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilgileri Düzenle"
+          }
+        }
+      }
+    },
+    "Edit Profile" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profili redaktə et"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Редактировать профиль"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profili Düzenle"
+          }
+        }
+      }
+    },
+    "Edit Profile Photo" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profili fotosunu redaktə et"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изменить фото профиля"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil fotoğrafını düzenle"
+          }
+        }
+      }
+    },
+    "Email" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-poçt"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Электронная почта"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-posta"
+          }
+        }
+      }
+    },
+    "Email address" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-poçt ünvanı"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Адрес электронной почты"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-posta adresi"
+          }
+        }
+      }
+    },
+    "English" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İngilis"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Английский"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İngilizce"
+          }
+        }
+      }
+    },
+    "Enter current password" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cari şifrəni daxil edin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите текущий пароль"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mevcut şifreyi girin"
+          }
+        }
+      }
+    },
+    "Enter new password" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni şifrəni daxil edin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите новый пароль"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni şifreyi girin"
+          }
+        }
+      }
+    },
+    "Enter your current password, then choose a new one." : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cari şifrənizi daxil edin, sonra isə yeni bir şifrə seçin."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите текущий пароль, затем выберите новый."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mevcut şifrenizi girin, ardından yeni bir şifre belirleyin."
+          }
+        }
+      }
+    },
+    "Enter your email" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-poçtunuzu daxil edin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите адрес электронной почты"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-postanızı girin"
+          }
+        }
+      }
+    },
+    "Enter your password" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrənizi daxil edin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите пароль"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parolanızı girin"
+          }
+        }
+      }
+    },
+    "Experience" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Təcrübə"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Опыт"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deneyim"
+          }
+        }
+      }
+    },
+    "Filters" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filterlər"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Фильтры"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtreler"
+          }
+        }
+      }
+    },
+    "First Name" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ad"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Имя"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ad"
+          }
+        }
+      }
+    },
+    "First name must contain at least 2 characters." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ad ən azı 2 simvoldan ibarət olmalıdır."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Имя должно содержать не менее 2 символов."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İsim en az 2 karakterden oluşmalıdır."
+          }
+        }
+      }
+    },
+    "G" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "G"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "G"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "G"
+          }
+        }
+      }
+    },
+    "Get Directions" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İstiqamət al"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проложить маршрут"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yol tarifi al"
+          }
+        }
+      }
+    },
+    "Good afternoon" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günortanız xeyir"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ключ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İyi günler"
+          }
+        }
+      }
+    },
+    "Good evening" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Akşamınız xeyir"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Добрый вечер"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İyi akşamlar"
+          }
+        }
+      }
+    },
+    "Good morning" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sabahınız xeyir"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Доброе утро"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Günaydın"
+          }
+        }
+      }
+    },
+    "Good night" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gecəniz xeyir"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Спокойной ночи"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İyi geceler"
+          }
+        }
+      }
+    },
+    "Home" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ana Səhifə"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Главная страница"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ana Sayfa"
+          }
+        }
+      }
+    },
+    "Hospitals" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xəstəxanalar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Больницы"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hastaneler"
+          }
+        }
+      }
+    },
+    "Keep Appointment" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüşə gəlin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Прийти на встречу"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Randevuya Gidin"
+          }
+        }
+      }
+    },
+    "Keep your account secure" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesabınızı təhlükəsiz saxlayın"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обеспечьте безопасность своей учетной записи"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hesabınızı güvende tutun"
+          }
+        }
+      }
+    },
+    "Key" : {
+      "extractionState" : "manual"
+    },
+    "Key 1" : {
+      "extractionState" : "manual"
+    },
+    "Labaratories" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Labaratoriyalar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Лаборатории"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laboratuvarlar"
+          }
+        }
+      }
+    },
+    "Language" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dil"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Язык"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dil"
+          }
+        }
+      }
+    },
+    "Last Name" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soyad"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Фамилия"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soyad"
+          }
+        }
+      }
+    },
+    "Last name must contain at least 2 characters." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soyad ən azı 2 simvoldan ibarət olmalıdır."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Фамилия должна содержать не менее 2 символов."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soyadı en az 2 karakterden oluşmalıdır."
+          }
+        }
+      }
+    },
+    "Light" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açıq"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Свет"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açık"
+          }
+        }
+      }
+    },
+    "Loading appointment..." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüş yüklənir..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Загрузка записи..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Randevu yükleniyor..."
+          }
+        }
+      }
+    },
+    "Loading appointments..." : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Görüşlər yüklənir..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Загрузка записи..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Randevular yükleniyor..."
+          }
+        }
+      }
+    },
+    "Loading available times..." : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mövcud vaxtlar yüklənir..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Загрузка доступного времени..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Müsait zamanlar yükleniyor..."
+          }
+        }
+      }
+    },
+    "Loading doctors..." : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Həkimlər yüklənir..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Загрузка списка врачей..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doktorlar yükleniyor…"
+          }
+        }
+      }
+    },
+    "Log Out" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çıxış et"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выйти"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çıkış yap"
+          }
+        }
+      }
+    },
+    "Mark as Completed" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamamlanmış kimi işarələ"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отметить как выполненное"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamamlandı olarak işaretle"
+          }
+        }
+      }
+    },
+    "Minimum consultation fee" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimum məsləhət haqqı"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Минимальная стоимость консультации"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asgari danışma ücreti"
+          }
+        }
+      }
+    },
+    "Minimum Consultation Fee" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimum məsləhət haqqı"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Минимальная стоимость консультации"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asgari danışma ücreti"
+          }
+        }
+      }
+    },
+    "Minimum Rating" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimum reytinq"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Минимальный рейтинг"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minimum Puan"
+          }
+        }
+      }
+    },
+    "Missed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buraxılmış görüşlər"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Missed"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пропущенные встречи"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kaçırılan Randevular"
+          }
+        }
+      }
+    },
+    "Month" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ay"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Месяц"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ay"
+          }
+        }
+      }
+    },
+    "Nearby" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yaxınlıqda"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Рядом"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yakınında"
+          }
+        }
+      }
+    },
+    "New Password" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni şifrə"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Новый пароль"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni Şifre"
+          }
+        }
+      }
+    },
+    "New password cannot exceed 100 characters." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni şifrə 100 simvoldan çox ola bilməz."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Новый пароль не может превышать 100 символов."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni parola 100 karakteri aşamaz."
+          }
+        }
+      }
+    },
+    "New password must be different from the current password." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni şifrə cari şifrədən fərqli olmalıdır."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Новый пароль должен отличаться от текущего пароля."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni şifre, mevcut şifreden farklı olmalıdır."
+          }
+        }
+      }
+    },
+    "New password must contain at least 8 characters." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni şifrə ən azı 8 simvoldan ibarət olmalıdır."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Новый пароль должен содержать не менее 8 символов."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni şifre en az 8 karakter içermelidir."
+          }
+        }
+      }
+    },
+    "New passwords do not match." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni şifrələr üst-üstə düşmür."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Новые пароли не совпадают."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni şifreler eşleşmiyor."
+          }
+        }
+      }
+    },
+    "New to Carely?" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carely-də yenisiniz?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Впервые в Carely?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carely'de yeni misiniz?"
+          }
+        }
+      }
+    },
+    "Next Visit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Növbəti səfər"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Следующий визит"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sonraki Ziyaret"
+          }
+        }
+      }
+    },
+    "No Cancelled Appointments" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ləğv edilmiş görüş yoxdur"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Записи не отменяются"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İptal Edilen Randevu Yok"
+          }
+        }
+      }
+    },
+    "No Completed Appointments" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamamlanmış görüş yoxdur"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Завершенных приемов нет"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamamlanmış Randevu Yok"
+          }
+        }
+      }
+    },
+    "No doctors available right now." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hazırda həkim yoxdur."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "В данный момент врачей нет."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şu anda müsait doktor yok."
+          }
+        }
+      }
+    },
+    "No doctors found" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Həkim tapılmadı"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Врачи не найдены"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doktor bulunamadı"
+          }
+        }
+      }
+    },
+    "No email available" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-poçt mövcud deyil"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Адрес электронной почты отсутствует"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-posta adresi bulunmuyor"
+          }
+        }
+      }
+    },
+    "No Places Found" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heç bir yer tapılmadı"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Места не найдены"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiçbir yer bulunamadı"
+          }
+        }
+      }
+    },
+    "No places matching this category were found nearby." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yaxınlıqda bu kateqoriyaya uyğun heç bir yer tapılmadı."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поблизости не найдено мест, соответствующих этой категории."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yakınlarda bu kategoriyle eşleşen hiçbir yer bulunamadı."
+          }
+        }
+      }
+    },
+    "No specialties available." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heç bir ixtisas mövcud deyil."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Специализации отсутствуют."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzmanlık alanı bulunmuyor."
+          }
+        }
+      }
+    },
+    "No upcoming appointment" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qarşıda heç bir görüş yoxdur"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Предстоящих встреч нет"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yaklaşan randevu yok"
+          }
+        }
+      }
+    },
+    "No Upcoming Appointments" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qarşıdan gələn görüş yoxdur"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Предстоящих встреч нет"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yaklaşan Randevu Yok"
+          }
+        }
+      }
+    },
+    "Not added" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Əlavə edilməyib"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не добавлено"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eklenmedi"
+          }
+        }
+      }
+    },
+    "Not available" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mövcud deyil"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hедоступно"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mevcut değil"
+          }
+        }
+      }
+    },
+    "Not Available on Weekends" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Həftəsonları mövcud deyil"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "По выходным недоступно"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hafta sonları mevcut değil"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamam"
+          }
+        }
+      }
+    },
+    "Open in Google Maps" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google Xəritələrdə açın"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Открыть в Google Картах"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google Haritalarda Aç"
+          }
+        }
+      }
+    },
+    "Open in Maps" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xəritədə açın"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Открыть в Картах"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haritalarda Aç"
+          }
+        }
+      }
+    },
+    "Open profile" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profili aç"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Откройте профиль"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil aç"
+          }
+        }
+      }
+    },
+    "Open website" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veb-saytı açın"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Откройте сайт"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web sitesi aç"
+          }
+        }
+      }
+    },
+    "OR CONTINUE WITH" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YA DA DAVAM EDİN"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ИЛИ ПРОДОЛЖАЙТЕ"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "YA DA DEVAM ET"
+          }
+        }
+      }
+    },
+    "Password" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrə"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пароль"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parola"
+          }
+        }
+      }
+    },
+    "Password Changed" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrə dəyişdirildi"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пароль изменён"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifre Değiştirildi"
+          }
+        }
+      }
+    },
+    "Password must contain 8–100 characters." : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrə 8–100 simvoldan ibarət olmalıdır."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пароль должен содержать от 8 до 100 символов."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifre 8–100 karakter içermelidir."
+          }
+        }
+      }
+    },
+    "Password must contain at least 8 characters." : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrə ən azı 8 simvoldan ibarət olmalıdır."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пароль должен содержать не менее 8 символов."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifre en az 8 karakter içermelidir."
+          }
+        }
+      }
+    },
+    "Password Set" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrə təyin edildi"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пароль установлен"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifre Ayarlandı"
+          }
+        }
+      }
+    },
+    "Passwords do not match." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrələr uyğun gəlmir."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пароли не совпадают."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifreler uyuşmuyor."
+          }
+        }
+      }
+    },
+    "Patients" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pasiyentlər"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пациенты"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hastalar"
+          }
+        }
+      }
+    },
+    "Personal Information" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şəxsi məlumatlar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Персональная информация"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kişisel Bilgiler"
+          }
+        }
+      }
+    },
+    "Pharmacies" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apteklər"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Аптеки"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eczaneler"
+          }
+        }
+      }
+    },
+    "Phone Number" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Telefon nömrəsi"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Номер телефона"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Telefon numarası"
+          }
+        }
+      }
+    },
+    "Please enter a valid email and password." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zəhmət olmasa, düzgün e-poçt və şifrə daxil edin."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пожалуйста, введите корректные адрес электронной почты и пароль."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lütfen geçerli bir e-posta ve şifre girin."
+          }
+        }
+      }
+    },
+    "Please enter your current password." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zəhmət olmasa, cari şifrənizi daxil edin."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пожалуйста, введите ваш текущий пароль."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lütfen mevcut şifrenizi girin."
+          }
+        }
+      }
+    },
+    "Please log in again." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zəhmət olmasa, yenidən daxil olun."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пожалуйста, войдите в систему снова."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lütfen tekrar giriş yapın."
+          }
+        }
+      }
+    },
+    "Preferences" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seçimlər"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Предпочтения"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tercihler"
+          }
+        }
+      }
+    },
+    "Profile" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Профиль"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil"
+          }
+        }
+      }
+    },
+    "Profile Photo" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil fotosu"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Профильное фото"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil Fotoğrafı"
+          }
+        }
+      }
+    },
+    "Rating" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reytinq"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Рейтинг"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puan"
+          }
+        }
+      }
+    },
+    "Re-enter new password" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni şifrəni yenidən daxil edin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Введите новый пароль еще раз"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeni şifreyi tekrar girin"
+          }
+        }
+      }
+    },
+    "Re-enter password" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrəni yenidən daxil edin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Повторно введите пароль"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrenizi tekrar girin"
+          }
+        }
+      }
+    },
+    "Remove Photo" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şəkli sil"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удалить фото"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fotoğrafı kaldır"
+          }
+        }
+      }
+    },
+    "Remove your profile photo?" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil şəklinizi silmək istəyirsiniz?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Хотите удалить фотографию профиля?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profil fotoğrafınızı kaldırmak mı istiyorsun?"
+          }
+        }
+      }
+    },
+    "Reset" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sıfırla"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сброс"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sıfırla"
+          }
+        }
+      }
+    },
+    "Reset map" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xəritəni sıfırls"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сброс карты"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Haritayı sıfırla"
+          }
+        }
+      }
+    },
+    "Reviews" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rəylər"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отзывы"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Değerlendirmeler"
+          }
+        }
+      }
+    },
+    "Save Changes" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dəyişiklikləri yadda saxla"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сохранение изменений"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Değişiklikleri Kaydet"
+          }
+        }
+      }
+    },
+    "Search" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Axtarış"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arama"
+          }
+        }
+      }
+    },
+    "Search by doctor name or specialty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Həkimin adına və ya ixtisasına görə axtarın"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск по имени врача или специальности"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doktor ismine veya uzmanlık alanına göre arama yapın"
+          }
+        }
+      }
+    },
+    "Search doctors or specialties" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Həkimləri və ya ixtisasları axtarın"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск врачей или специальностей"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doktor veya uzmanlık arayın"
+          }
+        }
+      }
+    },
+    "Search doctors, specialties..." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Həkimləri, ixtisasları axtarın..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск врачей, специальностей..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doctorları, uzmanlıkları ara…"
+          }
+        }
+      }
+    },
+    "Search doctors..." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Həkimləri axtarın..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск врачей..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doktorları ara…"
+          }
+        }
+      }
+    },
+    "Search for a doctor" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Həkim axtar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск врача"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doktor arayın"
+          }
+        }
+      }
+    },
+    "Searching doctors..." : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Həkimlər axtarılır…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск врачей..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doktorları arıyorum..."
+          }
+        }
+      }
+    },
+    "Searching nearby places..." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yaxınlıqdakı yerlər axtarılır..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поиск близлежащих мест..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yakınlarda arama yapmak..."
+          }
+        }
+      }
+    },
+    "See all" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hamısına bax"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Смотреть все"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hepsini gör"
+          }
+        }
+      }
+    },
+    "Select an action" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir əməliyyat seçin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите действие"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir eylem seçin"
+          }
+        }
+      }
+    },
+    "Select Date" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tarix seçin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите дату"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir tarih seçin"
+          }
+        }
+      }
+    },
+    "Select Month & Year" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ay və ili seçin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выберите месяц и год"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ay ve Yıl Seçin"
+          }
+        }
+      }
+    },
+    "Set Password" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrə təyin et"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Установить пароль"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parola Belirle"
+          }
+        }
+      }
+    },
+    "Setting Password..." : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrə təyin edilir..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Установка пароля..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parola Belirleniyor…"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tənzimləmələr"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настройки"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayarlar"
+          }
+        }
+      }
+    },
+    "Share" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paylaş"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Делиться"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paylaş"
+          }
+        }
+      }
+    },
+    "Sign in" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daxil olun"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войти"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giriş yapın"
+          }
+        }
+      }
+    },
+    "Sign In" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daxil olun"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Войти"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giriş yapın"
+          }
+        }
+      }
+    },
+    "Signing In..." : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daxil olunur"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вход..."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giriş yapılıyor…"
+          }
+        }
+      }
+    },
+    "Something went wrong" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nəsə səhv getdi"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Что-то пошло не так"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir şeyler ters gitti"
+          }
+        }
+      }
+    },
+    "Specialties" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İxtisaslar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Специализации"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzmanlıklar"
+          }
+        }
+      }
+    },
+    "Specialty" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İxtisas"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Специальность"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uzmanlık"
+          }
+        }
+      }
+    },
+    "Sure to Cancel?" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ləğv etməyə əminsiniz?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Действительно отменить?"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İptal edeceğinizden emin misiniz?"
+          }
+        }
+      }
+    },
+    "Swipe to see more times" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daha çox vaxta baxmaq üçün sürüşdürün"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проведите пальцем, чтобы увидеть больше вариантов времени"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daha fazla saat görmek için kaydırın"
+          }
+        }
+      }
+    },
+    "System" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Система"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem"
+          }
+        }
+      }
+    },
+    "Tap the profile picture to choose a photo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şəkil seçmək üçün profil şəklinə toxunun"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нажмите на изображение профиля, чтобы выбрать фотографию"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir fotoğraf seçmek için profil resmine dokunun"
+          }
+        }
+      }
+    },
+    "The selected photo could not be loaded." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seçilmiş şəkli yükləmək mümkün olmadı."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось загрузить выбранное фото."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seçilen fotoğraf yüklenemedi."
+          }
+        }
+      }
+    },
+    "This doctor is not available on Saturdays and Sundays. Please choose a weekday." : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu həkim şənbə və bazar günləri qəbul aparmır. Zəhmət olmasa, həftə içi bir gün seçin."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Этот врач не принимает по субботам и воскресеньям. Пожалуйста, выберите будний день."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bu doktor cumartesi ve pazar günleri müsait değildir. Lütfen hafta içinden bir gün seçin."
+          }
+        }
+      }
+    },
+    "Time" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saat"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Время"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saat"
+          }
+        }
+      }
+    },
+    "Top Doctors" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ən Yaxşı Həkimlər"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Лучшие врачи"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öne Çıkan Doktorlar"
+          }
+        }
+      }
+    },
+    "Try Again" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yenidən cəhd edin"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Попробуйте еще раз"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeniden deneyin"
+          }
+        }
+      }
+    },
+    "Try searching with another name or specialty." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başqa bir ad və ya ixtisasla axtarmağa cəhd edin."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Попробуйте выполнить поиск по другому имени или специальности."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başka bir isim veya uzmanlık alanıyla aramayı deneyin."
+          }
+        }
+      }
+    },
+    "Türkçe" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Türkcə"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turkish"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Tурецкий"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Türkçe"
+          }
+        }
+      }
+    },
+    "Upcoming" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qarşıdan gələn"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Предстоящие"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yaklaşan"
+          }
+        }
+      }
+    },
+    "Upcoming Appointment" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qarşıdakı görüş"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Предстоящая встреча"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yaklaşan Randevu"
+          }
+        }
+      }
+    },
+    "View doctors" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Həkimlərə baxın"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Посмотреть врачей"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doktorları görüntüle"
+          }
+        }
+      }
+    },
+    "Year" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İl"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Год"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yıl"
+          }
+        }
+      }
+    },
+    "Yes, Cancel" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bəli, ləğv et"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Да, отменить"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Evet, iptal et"
+          }
+        }
+      }
+    },
+    "Your cancelled appointments will appear here." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ləğv edilmiş görüşləriniz burada görünəcək."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Здесь будут отображаться ваши отменённые записи. Здесь будут отображаться ваши завершённые записи."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "İptal edilen randevularınız burada görünecektir."
+          }
+        }
+      }
+    },
+    "Your completed appointments will appear here." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamamlanmış görüşləriniz burada görünəcək."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Здесь будут отображаться ваши завершённые записи."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tamamlanmış randevularınız burada görünecektir."
+          }
+        }
+      }
+    },
+    "Your Health" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sağlamlığınız"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваше здоровье"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sağlığınız"
+          }
+        }
+      }
+    },
+    "Your location" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yerləşdiyiniz yer"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваше местоположение"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konumunuz"
+          }
+        }
+      }
+    },
+    "Your next appointment will appear here." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Növbəti görüşünüz burada görünəcək."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Здесь появится ваша следующая запись."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bir sonraki randevunuz burada görünecektir."
+          }
+        }
+      }
+    },
+    "Your password has been changed successfully" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrəniz uğurla dəyişdirildi"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш пароль был успешно изменен"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parolanız başarıyla değiştirildi"
+          }
+        }
+      }
+    },
+    "Your password has been set successfully." : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Şifrəniz uğurla təyin edildi."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш пароль успешно установлен."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parolanız başarıyla ayarlandı."
+          }
+        }
+      }
+    },
+    "Your upcoming appointments will appear here." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qarşıdakı görüşləriniz burada görünəcək."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Здесь будут отображаться ваши предстоящие встречи."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yaklaşan randevularınız burada görünecektir."
+          }
+        }
+      }
+    },
+    "Русский" : {
+      "localizations" : {
+        "az-AZ" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rusca"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Russian"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Русский"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Rusca"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.2"
+}

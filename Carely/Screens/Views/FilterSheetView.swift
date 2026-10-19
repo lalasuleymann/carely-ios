@@ -11,7 +11,8 @@ import SwiftUI
 struct FilterSheetView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var viewModel: SearchViewModel
-
+    
+    @Environment(\.locale) private var locale
     // MARK: - Specialty
     private var specialtySection: some View {
         Section("Specialty") {
@@ -80,8 +81,8 @@ struct FilterSheetView: View {
 
     // MARK: - Actions
     private func resetFilters() {
-        viewModel.selectedSpecialty = "All"
-        viewModel.selectedRating = "Any"
+        viewModel.selectedSpecialty = LocalizationManager.localized("All", locale: locale)
+        viewModel.selectedRating = LocalizationManager.localized("Any", locale: locale)
         viewModel.minimumPrice = 0
         viewModel.onlyAvailable = false
 

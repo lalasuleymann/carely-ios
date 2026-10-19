@@ -7,6 +7,7 @@
 
 import Foundation
 import Observation
+import SwiftUI
 
 @MainActor
 @Observable
@@ -20,13 +21,12 @@ final class ProfileViewModel {
 
     var errorMessage: String?
     var successMessage: String?
-
     init(networkService: NetworkService = DefaultNetworkService()) {
         self.networkService = networkService
     }
 
     // MARK: - Load Profile
-    func loadProfile() async {
+    func loadProfile(locale: Locale) async {
         guard !isLoading else { return }
 
         isLoading = true
@@ -39,7 +39,9 @@ final class ProfileViewModel {
         do {
             guard let token = try KeychainService.readToken(),
                   !token.isEmpty else {
-                errorMessage = "Please log in again."
+                errorMessage = LocalizationManager.localized("Please log in again.",
+                                                             locale: locale
+                        )
                 return
             }
 
@@ -51,12 +53,11 @@ final class ProfileViewModel {
             profile = result
         } catch {
             errorMessage = error.localizedDescription
-            print("Profile loading error: \(error)")
         }
     }
 
     // MARK: - Update Profile
-    func updateProfile(firstName: String,lastName: String,phoneNumber: String?) async {
+    func updateProfile(firstName: String,lastName: String,phoneNumber: String?, locale: Locale) async {
         guard !isSaving else { return }
 
         let trimmedFirstName = firstName.trimmingCharacters(
@@ -71,12 +72,16 @@ final class ProfileViewModel {
             .trimmingCharacters(in: .whitespacesAndNewlines)
 
         guard trimmedFirstName.count >= 2 else {
-            errorMessage = "First name must contain at least 2 characters."
+            errorMessage = LocalizationManager.localized("First name must contain at least 2 characters.",
+                        locale: locale
+                    )
             return
         }
 
         guard trimmedLastName.count >= 2 else {
-            errorMessage = "Last name must contain at least 2 characters."
+            errorMessage = LocalizationManager.localized("Last name must contain at least 2 characters.",
+                                                         locale: locale
+            )
             return
         }
 
@@ -91,7 +96,9 @@ final class ProfileViewModel {
         do {
             guard let token = try KeychainService.readToken(),
                   !token.isEmpty else {
-                errorMessage = "Please log in again."
+                errorMessage = LocalizationManager.localized("Please log in again.",
+                                                             locale: locale
+                )
                 return
             }
 
@@ -114,7 +121,6 @@ final class ProfileViewModel {
 
         } catch {
             errorMessage = error.localizedDescription
-            print("Profile update error: \(error)")
         }
     }
 

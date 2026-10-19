@@ -94,8 +94,10 @@ final class HomeViewModel {
             return "Good morning"
         case 12..<17:
             return "Good afternoon"
-        default:
+        case 17..<21:
             return "Good evening"
+        default:
+            return "Good night"
         }
     }
 

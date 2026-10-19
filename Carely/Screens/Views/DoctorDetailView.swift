@@ -23,10 +23,17 @@ struct DoctorDetailView: View {
     @State private var showBookingConfirmation = false
     @State private var viewModel = DoctorDetailViewModel()
     @State private var showDatePicker = false
+    
+    @Environment(\.locale) private var locale
 
     var onBookingConfirmed: (() -> Void)? = nil
     @State private var slotPage = 0
-
+    
+    // MARK: - Localization
+    private func localize(_ key: String) -> String {
+        LocalizationManager.localized(key, locale: locale)
+    }
+    
     // MARK: - Doctor Profile
     private var profileSection: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -65,24 +72,25 @@ struct DoctorDetailView: View {
             HStack(spacing: 0) {
                 statistic(
                     value: "\(doctor.experience)y+",
-                    title: "Experience"
+                    title: localize("Experience")
                 )
 
                 statistic(
                     value: "—",
-                    title: "Patients"
+                    title: localize("Patients")
                 )
 
                 statistic(
                     value: "\(doctor.reviewCount)",
-                    title: "Reviews"
+                    title: localize("Reviews")
+                    
                 )
 
                 statistic(
                     value: doctor.reviewCount > 0
                         ? String(format: "%.1f", doctor.rating)
                         : "—",
-                    title: "Rating"
+                    title: localize("Rating")
                 )
             }
             .padding(.vertical, 22)
@@ -102,6 +110,7 @@ struct DoctorDetailView: View {
             Text(title)
                 .font(AppTypography.caption)
                 .foregroundStyle(AppColors.secondaryText)
+                .lineLimit(1)
         }
         .frame(maxWidth: .infinity)
     }
@@ -109,9 +118,10 @@ struct DoctorDetailView: View {
     // MARK: - Schedule
     private var scheduleSection: some View {
         VStack(alignment: .leading, spacing: 24) {
+
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text("Create Schedule")
+                    Text(localize("Create Schedule"))
                         .font(AppTypography.headline)
                         .foregroundStyle(AppColors.primaryText)
 
@@ -127,7 +137,10 @@ struct DoctorDetailView: View {
 
                             Text(
                                 viewModel.selectedDate.formatted(
-                                    .dateTime.month(.abbreviated).day()
+                                    .dateTime
+                                        .locale(locale)
+                                        .month(.abbreviated)
+                                        .day()
                                 )
                             )
                             .font(AppTypography.bodyMedium)
@@ -141,15 +154,13 @@ struct DoctorDetailView: View {
                     .buttonStyle(.plain)
                 }
 
-                Text("Easily plan your appointment at a time")
+                Text(localize("Easily plan your appointment at a time"))
                     .font(AppTypography.caption)
                     .foregroundStyle(AppColors.secondaryText)
             }
 
-            // MARK: Date Selection
-
             VStack(alignment: .leading, spacing: 14) {
-                Text("Choose a Date")
+                Text(localize("Choose a Date"))
                     .font(AppTypography.headline)
                     .foregroundStyle(AppColors.primaryText)
 
@@ -160,10 +171,8 @@ struct DoctorDetailView: View {
                 }
             }
 
-            // MARK: Available Times
-
             VStack(alignment: .leading, spacing: 14) {
-                Text("Choose a Suitable Time")
+                Text(localize("Choose a Suitable Time"))
                     .font(AppTypography.headline)
                     .foregroundStyle(AppColors.primaryText)
 
@@ -173,20 +182,24 @@ struct DoctorDetailView: View {
                             .font(.system(size: 28))
                             .foregroundStyle(AppColors.secondaryText)
 
-                        Text("Not Available on Weekends")
+                        Text(localize("Not Available on Weekends"))
                             .font(AppTypography.bodyMedium)
                             .foregroundStyle(AppColors.primaryText)
 
-                        Text("This doctor is not available on Saturdays and Sundays. Please choose a weekday.")
-                            .font(AppTypography.caption)
-                            .foregroundStyle(AppColors.secondaryText)
-                            .multilineTextAlignment(.center)
+                        Text(
+                            localize(
+                                "This doctor is not available on Saturdays and Sundays. Please choose a weekday."
+                            )
+                        )
+                        .font(AppTypography.caption)
+                        .foregroundStyle(AppColors.secondaryText)
+                        .multilineTextAlignment(.center)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 20)
 
                 } else if viewModel.isLoadingAvailability {
-                    ProgressView("Loading available times...")
+                    ProgressView(localize("Loading available times..."))
                         .tint(AppColors.primary)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 20)
@@ -198,7 +211,7 @@ struct DoctorDetailView: View {
                             .foregroundStyle(AppColors.secondaryText)
                             .multilineTextAlignment(.center)
 
-                        Button("Try Again") {
+                        Button(localize("Try Again")) {
                             Task {
                                 await viewModel.loadAvailability(for: doctor.id)
                             }
@@ -211,10 +224,13 @@ struct DoctorDetailView: View {
                 } else {
                     VStack(spacing: 12) {
                         TabView(selection: $slotPage) {
-                            ForEach(Array(viewModel.slotPages.enumerated()), id: \.offset) { index, page in
+                            ForEach(Array(viewModel.slotPages.enumerated()),id: \.offset) { index, page in
                                 LazyVGrid(
                                     columns: Array(
-                                        repeating: GridItem(.flexible(), spacing: 10),
+                                        repeating: GridItem(
+                                            .flexible(),
+                                            spacing: 10
+                                        ),
                                         count: 3
                                     ),
                                     spacing: 10
@@ -238,7 +254,7 @@ struct DoctorDetailView: View {
                                 Image(systemName: "arrow.left")
                                     .font(.system(size: 10))
 
-                                Text("Swipe to see more times")
+                                Text(localize("Swipe to see more times"))
                                     .font(.system(size: 11))
 
                                 Image(systemName: "arrow.right")
@@ -247,27 +263,23 @@ struct DoctorDetailView: View {
                             .foregroundStyle(AppColors.secondaryText)
 
                             HStack(spacing: 6) {
-                                ForEach(viewModel.slotPages.indices, id: \.self) { index in
+                                ForEach(viewModel.slotPages.indices,id: \.self) { index in
                                     Capsule()
                                         .fill(
                                             slotPage == index
-                                                ? AppColors.primary
-                                                : AppColors.secondaryText.opacity(0.25)
+                                            ? AppColors.primary
+                                            : AppColors.secondaryText.opacity(0.25)
                                         )
-                                        .frame(
-                                            width: slotPage == index ? 18 : 6,
-                                            height: 6
-                                        )
+                                        .frame(width: slotPage == index ? 18 : 6,height: 6)
                                 }
                             }
                         }
                     }
                 }
             }
-
         }
     }
-
+   
     // MARK: - Calendar Sheet
     private var calendarSheet: some View {
         VStack(spacing: 20) {
@@ -326,7 +338,7 @@ struct DoctorDetailView: View {
             } label: {
                 HStack(spacing: 6) {
                     Text(
-                        "\(viewModel.months[viewModel.displayedMonth - 1]) \(String(viewModel.displayedYear))"
+                        formattedDisplayedMonth
                     )
                     .font(.system(size: 17, weight: .semibold))
 
@@ -339,10 +351,12 @@ struct DoctorDetailView: View {
             .buttonStyle(.plain)
 
             HStack(spacing: 0) {
-                ForEach(viewModel.weekdays, id: \.self) { weekday in
-                    Text(weekday)
+                ForEach(Array(viewModel.localizedWeekdays(locale: locale).enumerated()),id: \.offset) { _, day in
+                    Text(day)
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(AppColors.secondaryText)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                         .frame(maxWidth: .infinity)
                 }
             }
@@ -354,7 +368,7 @@ struct DoctorDetailView: View {
                 ),
                 spacing: 8
             ) {
-                ForEach(viewModel.daysInMonth.indices, id: \.self) { index in
+                ForEach(viewModel.daysInMonth.indices,id: \.self) { index in
                     if let date = viewModel.daysInMonth[index] {
                         calendarDayButton(date)
                     } else {
@@ -366,6 +380,26 @@ struct DoctorDetailView: View {
         }
     }
 
+    private var formattedDisplayedMonth: String {
+        var components = DateComponents()
+        components.year = viewModel.displayedYear
+        components.month = viewModel.displayedMonth
+        components.day = 1
+
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.locale = locale
+
+        let date = calendar.date(from: components) ?? .now
+
+        return date.formatted(
+            .dateTime
+                .locale(locale)
+                .month(.wide)
+                .year()
+        )
+        .capitalized
+    }
+    
     private var monthYearPicker: some View {
         HStack(spacing: 0) {
             Picker(
@@ -375,9 +409,9 @@ struct DoctorDetailView: View {
                     set: { viewModel.changeDisplayedMonth($0) }
                 )
             ) {
-                ForEach(1...12, id: \.self) { month in
-                    Text(viewModel.months[month - 1])
-                        .tag(month)
+                ForEach(Array(viewModel.localizedMonths(locale: locale).enumerated()),id: \.offset) { index, month in
+                    Text(month.capitalized)
+                        .tag(index + 1)
                 }
             }
             .pickerStyle(.wheel)
@@ -411,9 +445,7 @@ struct DoctorDetailView: View {
             Text("\(Calendar.current.component(.day, from: date))")
                 .font(.system(size: 15,weight: isSelected ? .bold : .regular))
                 .foregroundStyle(
-                    isSelected
-                        ? AppColors.onPrimary
-                        : pastDate
+                    isSelected ? AppColors.onPrimary : pastDate
                             ? AppColors.secondaryText.opacity(0.4)
                             : AppColors.primaryText
                 )
@@ -441,6 +473,13 @@ struct DoctorDetailView: View {
 
         let pastDate = viewModel.isPastDate(date)
 
+        let weekdayIndex = (Calendar(identifier: .gregorian)
+                .component(.weekday, from: date) + 5) % 7
+
+        let weekdays = viewModel.localizedWeekdays(locale: locale)
+
+        let weekdayTitle = weekdays.indices.contains(weekdayIndex) ? weekdays[weekdayIndex] : ""
+
         return Button {
             viewModel.selectDate(date)
 
@@ -449,27 +488,23 @@ struct DoctorDetailView: View {
             }
         } label: {
             VStack(spacing: 10) {
-                Text(
-                    date.formatted(.dateTime.weekday(.abbreviated))
-                )
-                .font(AppTypography.caption)
+                Text(weekdayTitle)
+                    .font(AppTypography.caption)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
 
-                Text(date.formatted(.dateTime.day()))
+                Text(date.formatted(.dateTime.locale(locale).day()))
                     .font(.system(size: 18, weight: .semibold))
             }
             .foregroundStyle(
-                pastDate
-                    ? AppColors.secondaryText.opacity(0.4)
-                    : isSelected
+                pastDate ? AppColors.secondaryText.opacity(0.4) : isSelected
                         ? AppColors.primaryText
                         : AppColors.secondaryText
             )
             .frame(maxWidth: .infinity)
             .frame(height: 90)
             .background(
-                isSelected
-                    ? AppColors.primary.opacity(0.12)
-                    : AppColors.background
+                isSelected ? AppColors.primary.opacity(0.12) : AppColors.background
             )
             .clipShape(RoundedRectangle(cornerRadius: 20))
         }
@@ -495,18 +530,14 @@ struct DoctorDetailView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
                 .foregroundStyle(
-                    isDisabled
-                        ? AppColors.secondaryText.opacity(0.4)
-                        : isSelected
+                    isDisabled ? AppColors.secondaryText.opacity(0.4) : isSelected
                             ? AppColors.primaryText
                             : AppColors.secondaryText
                 )
                 .frame(maxWidth: .infinity)
                 .frame(height: 46)
                 .background(
-                    isSelected
-                        ? AppColors.primary.opacity(0.15)
-                        : isDisabled
+                    isSelected ? AppColors.primary.opacity(0.15) : isDisabled
                             ? AppColors.secondaryText.opacity(0.08)
                             : AppColors.background
                 )
@@ -514,9 +545,7 @@ struct DoctorDetailView: View {
                 .overlay {
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(
-                            isSelected
-                                ? AppColors.primary
-                                : Color.clear,
+                            isSelected ? AppColors.primary : Color.clear,
                             lineWidth: 1
                         )
                 }
@@ -545,7 +574,7 @@ struct DoctorDetailView: View {
     private var bookingButton: some View {
         VStack(spacing: 0) {
             PrimaryButton(
-                title: "Book Appointment",
+                title: localize("Book Appointment"),
                 isDisabled: viewModel.selectedTime == nil ||
                     viewModel.isLoadingAvailability ||
                     viewModel.availabilityError != nil
@@ -618,30 +647,7 @@ struct DoctorDetailView: View {
         .task {
             appointmentViewModel.configure(context: modelContext)
             await viewModel.loadAvailability(for: doctor.id)
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Menu {
-                    Button(
-                        "Share",
-                        systemImage: "square.and.arrow.up"
-                    ) {
-                        // Share functionality will be added later.
-                    }
-
-                    Button(
-                        "Add to Favorites",
-                        systemImage: "heart"
-                    ) {
-                        // Favorites functionality will be added later.
-                    }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(AppColors.primaryText)
-                }
-            }
-        }
+        }     
         .sheet(isPresented: $showDatePicker) {
             calendarSheet
                 .presentationDetents([.medium, .large])

@@ -12,6 +12,8 @@ struct SetPasswordView: View {
     @Environment(\.dismiss) private var dismiss
 
     let profileViewModel: ProfileViewModel
+    
+    @Environment(\.locale) private var locale
 
     @State private var newPassword = ""
     @State private var confirmPassword = ""
@@ -60,7 +62,7 @@ struct SetPasswordView: View {
                             )
 
                             if success {
-                                await profileViewModel.loadProfile()
+                                await profileViewModel.loadProfile(locale: locale)
                                 showSuccessAlert = true
                             }
                         }

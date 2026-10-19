@@ -18,6 +18,14 @@ struct RegisterView: View {
     @State private var password = ""
     @State private var confirmPassword = ""
     @State private var isPasswordVisible = false
+    
+    @Environment(\.locale) private var locale
+    
+    // MARK: - Localization
+    private func localized(_ key: String) -> String {
+        LocalizationManager.localized(key, locale: locale)
+    }
+
 
     private var isFormValid: Bool {
         firstName.trimmingCharacters(in: .whitespacesAndNewlines).count >= 2 &&
@@ -147,34 +155,34 @@ struct RegisterView: View {
 
                     VStack(spacing: 14) {
                         nameField(
-                            title: "First name",
-                            placeholder: "First name",
+                            title: localized("First Name"),
+                            placeholder: localized("First Name"),
                             text: $firstName,
                             contentType: .givenName
                         )
 
                         nameField(
-                            title: "Last name",
-                            placeholder: "Last name",
+                            title: localized("Last Name"),
+                            placeholder: localized("Last Name"),
                             text: $lastName,
                             contentType: .familyName
                         )
 
                         emailField
                         passwordField(
-                            title: "Password",
-                            placeholder: "At least 8 characters",
+                            title: localized("Password"),
+                            placeholder: localized("At least 8 characters"),
                             text: $password
                         )
                         passwordField(
-                            title: "Confirm password",
-                            placeholder: "Re-enter password",
+                            title: localized("Confirm password"),
+                            placeholder: localized("Re-enter password"),
                             text: $confirmPassword
                         )
                     }
 
                     if !confirmPassword.isEmpty && password != confirmPassword {
-                        Text("Passwords do not match.")
+                        Text(localized("Passwords do not match."))
                             .font(.system(size: 13))
                             .foregroundStyle(AppColors.error)
                     }
@@ -202,7 +210,7 @@ struct RegisterView: View {
                                     .tint(.white)
                             }
 
-                            Text(viewModel.isLoading ? "Creating account..." : "Create account")
+                            Text(viewModel.isLoading ? localized("Creating account...") : localized("Create account"))
                                 .font(.system(size: 16, weight: .semibold))
 
                             if !viewModel.isLoading {

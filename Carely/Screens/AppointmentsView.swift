@@ -16,6 +16,13 @@ struct AppointmentsView: View {
     
     @Environment(\.modelContext)
     private var modelContext
+    @Environment(\.locale)
+    private var locale
+    
+    // MARK: - Localization
+    private func localize(_ key: String) -> String {
+        LocalizationManager.localized(key, locale: locale)
+    }
     
     // MARK: - Status Filter
     private var statusFilter: some View {
@@ -60,11 +67,11 @@ struct AppointmentsView: View {
     private func statusTitle(for status: AppointmentStatus) -> String {
         switch status {
         case .upcoming:
-            return "Upcoming"
+            return localize("Upcoming")
         case .completed:
-            return "Completed"
+            return localize("Completed")
         case .cancelled:
-            return "Cancelled"
+            return localize("Cancelled")
         }
     }
 
@@ -116,22 +123,22 @@ struct AppointmentsView: View {
     private var emptyTitle: String {
         switch viewModel.selectedStatus {
         case .upcoming:
-            return "No Upcoming Appointments"
+            return localize("No Upcoming Appointments")
         case .completed:
-            return "No Completed Appointments"
+            return localize("No Completed Appointments")
         case .cancelled:
-            return "No Cancelled Appointments"
+            return localize("No Cancelled Appointments")
         }
     }
 
     private var emptyMessage: String {
         switch viewModel.selectedStatus {
         case .upcoming:
-            return "Your upcoming appointments will appear here."
+            return localize("Your upcoming appointments will appear here.")
         case .completed:
-            return "Your completed appointments will appear here."
+            return localize("Your completed appointments will appear here.")
         case .cancelled:
-            return "Your cancelled appointments will appear here."
+            return localize("Your cancelled appointments will appear here.")
         }
     }
 
@@ -156,7 +163,7 @@ struct AppointmentsView: View {
 
         case .error(let message):
             ErrorStateView(
-                title: "Something went wrong",
+                title: localize("Something went wrong"),
                 message: message
             )
         }

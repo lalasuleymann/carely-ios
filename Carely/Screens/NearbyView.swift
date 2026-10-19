@@ -24,7 +24,7 @@ struct NearbyView: View {
     @State private var isClinicCardVisible = true
     @State private var showDirectionsOptions = false
     @Environment(\.selectedTab) private var selectedTab
-    
+    @Environment(\.locale) private var locale
     
     init(networkService: any NetworkService = DefaultNetworkService()) {
         _viewModel = State(
@@ -32,6 +32,11 @@ struct NearbyView: View {
                 networkService: networkService
             )
         )
+    }
+    
+    // MARK: - Localization
+    private func localize(_ key: String) -> String {
+        LocalizationManager.localized(key, locale: locale)
     }
     
     // MARK: - Location Groups
@@ -418,7 +423,7 @@ struct NearbyView: View {
                         .font(AppTypography.bodyMedium)
                         .foregroundStyle(AppColors.primaryText)
 
-                    Text(viewModel.selectedCategory.rawValue)
+                    Text(LocalizationManager.localized(viewModel.selectedCategory.rawValue,locale: locale))
                         .font(AppTypography.caption)
                         .foregroundStyle(AppColors.secondaryText)
                 }
@@ -548,7 +553,7 @@ struct NearbyView: View {
      
             if let location = viewModel.location {
                 Annotation(
-                    "Your location",
+                    localize("Your location"),
                     coordinate: location.coordinate,
                     anchor: .center
                 ) {
@@ -697,7 +702,7 @@ struct NearbyView: View {
                     .controlSize(.small)
                     .tint(AppColors.primary)
 
-                Text("Searching nearby places...")
+                Text(localize("Searching nearby places..."))
                     .font(AppTypography.caption)
                     .foregroundStyle(AppColors.secondaryText)
 
@@ -711,13 +716,13 @@ struct NearbyView: View {
         case .empty:
             EmptyStateView(
                 icon: "mappin.slash",
-                title: "No Places Found",
-                message: "No places matching this category were found nearby."
+                title: localize("No Places Found"),
+                message: localize("No places matching this category were found nearby.")
             )
             
         case .error(let message):
             ErrorStateView(
-                title: "Something Went Wrong",
+                title: localize("Something Went Wrong"),
                 message: message,
                 retryAction: {
                     Task {
@@ -763,7 +768,7 @@ struct NearbyView: View {
                                 }
                             } label: {
                                 Label(
-                                    category.rawValue,
+                                    category.title(locale: locale),
                                     systemImage: category.icon
                                 )
                                 .font(AppTypography.bodyMedium)
