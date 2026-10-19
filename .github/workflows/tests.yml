@@ -15,31 +15,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show Xcode version
+      - name: Select Xcode 16.4
         run: |
+          sudo xcode-select --switch /Applications/Xcode_16.4.app/Contents/Developer
           xcodebuild -version
-          xcrun simctl list runtimes
-
-      - name: Create iOS Simulator
-        id: simulator
-        run: |
-          DEVICE_TYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-16"
-          RUNTIME="com.apple.CoreSimulator.SimRuntime.iOS-18-6"
-
-          DEVICE_ID=$(xcrun simctl create \
-            "Carely Test iPhone" \
-            "$DEVICE_TYPE" \
-            "$RUNTIME")
-
-          xcrun simctl boot "$DEVICE_ID"
-          xcrun simctl bootstatus "$DEVICE_ID" -b
-
-          echo "device_id=$DEVICE_ID" >> "$GITHUB_OUTPUT"
+          xcrun simctl list > /dev/null
+          xcrun simctl list devices available
 
       - name: Run tests
         run: |
           xcodebuild test \
             -project Carely.xcodeproj \
             -scheme Carely \
-            -destination 'platform=iOS Simulator,id=${{ steps.simulator.outputs.device_id }}' \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' \
             CODE_SIGNING_ALLOWED=NO
