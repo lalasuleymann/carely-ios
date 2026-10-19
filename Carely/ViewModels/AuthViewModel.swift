@@ -333,6 +333,41 @@ final class AuthViewModel {
         }
     }
 
+    // MARK: - Delete Account
+    func deleteAccount() async -> Bool {
+        guard let token = try? KeychainService.readToken(),
+              !token.isEmpty else {
+            errorMessage = "Token tapılmadı. Yenidən login et."
+            print("DELETE ACCOUNT ERROR: Token not found")
+            return false
+        }
+
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
+
+        do {
+            let _: DeleteAccountResponseDTO = try await networkService.request(
+                AuthEndpoint.deleteAccount,
+                token: token
+            )
+
+            try KeychainService.deleteToken()
+
+            currentUser = nil
+            isAuthenticated = false
+            errorMessage = nil
+
+            print("DELETE ACCOUNT SUCCESS")
+            return true
+
+        } catch {
+            errorMessage = error.localizedDescription
+            print("DELETE ACCOUNT ERROR: \(error)")
+            return false
+        }
+    }
+    
     // MARK: - Logout
     func logout() {
         do {

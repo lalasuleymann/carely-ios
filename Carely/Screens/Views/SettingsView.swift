@@ -18,6 +18,7 @@ struct SettingsView: View {
     @State private var showLanguageOptions = false
     @State private var showAbout = false
     @Environment(\.locale) private var locale
+    
 
     private var selectedLocale: Locale {
         switch selectedLanguage {

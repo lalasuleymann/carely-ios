@@ -26,6 +26,11 @@ struct ProfileView: View {
     
     @Environment(\.locale) private var locale
     
+    @State private var deleteAccountError: String?
+    
+    @State private var showDeleteAccountAlert = false
+    @State private var isDeletingAccount = false
+    
     private let photoFileName = "carely-profile-photo.jpg"
 
     
@@ -260,6 +265,7 @@ struct ProfileView: View {
                 icon: "person.crop.circle.badge.xmark",
                 isDestructive: true
             ) {
+                showDeleteAccountAlert = true
             }
 
             menuDivider
@@ -413,6 +419,24 @@ struct ProfileView: View {
         }
         .task {
             await profileViewModel.loadProfile(locale: locale)
+        }
+        .alert("Delete Account", isPresented: $showDeleteAccountAlert) {
+            Button("Cancel", role: .cancel) {}
+
+            Button("Delete", role: .destructive) {
+                Task {
+                    let success = await authViewModel.deleteAccount()
+
+                    if success {
+                        showDeleteAccountAlert = false
+                    } else {
+                        showDeleteAccountAlert = false
+                        deleteAccountError = authViewModel.errorMessage
+                    }
+                }
+            }
+        } message: {
+            Text("Are you sure you want to delete your account? This action cannot be undone.")
         }
         .confirmationDialog(
             "Profile Photo",
