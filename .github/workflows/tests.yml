@@ -22,10 +22,10 @@ jobs:
           xcrun simctl list > /dev/null
           xcrun simctl list devices available
 
-      - name: Run tests
-        run: |
-          xcodebuild test \
-            -project Carely.xcodeproj \
-            -scheme Carely \
-            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' \
-            CODE_SIGNING_ALLOWED=NO
+        - name: Run tests
+          run: |
+            xcodebuild test \
+              -project Carely.xcodeproj \
+              -scheme Carely \
+              -destination 'platform=iOS Simulator,name=iPhone 16e,OS=18.6' \
+              CODE_SIGNING_ALLOWED=NO
