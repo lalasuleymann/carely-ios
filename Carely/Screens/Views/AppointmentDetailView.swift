@@ -12,7 +12,7 @@ struct AppointmentDetailView: View {
     let viewModel: AppointmentViewModel
 
     @Environment(\.dismiss) private var dismiss
-
+    var shouldScrollToRating = false
     @Environment(\.locale)
     private var locale
     
@@ -136,45 +136,72 @@ struct AppointmentDetailView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                doctorSection
-                appointmentInfoSection
-                consultationFeeSection
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(spacing: 24) {
+                    doctorSection
+                    appointmentInfoSection
+                    consultationFeeSection
 
-                if viewModel.canCancel(appointment) {
-                    VStack(spacing: 12) {
-                        Button {
-                            viewModel.completeAppointment(id: appointment.id)
-                            dismiss()
-                        } label: {
-                            Text("Mark as Completed")
-                                .font(AppTypography.bodyMedium)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 16)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(AppColors.success)
+                    if appointment.status == .completed {
+                        AppointmentRatingView(
+                            appointment: appointment,
+                            viewModel: viewModel
+                        )
+                        .frame(maxWidth: .infinity)
+                        .id("appointment-rating")
+                    }
 
-                        Button(role: .destructive) {
-                            viewModel.cancelAppointment(id: appointment.id)
-                            dismiss()
-                        } label: {
-                            Text("Cancel Appointment")
-                                .font(AppTypography.bodyMedium)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 16)
+                    if viewModel.canCancel(appointment) {
+                        VStack(spacing: 12) {
+                            Button {
+                                viewModel.completeAppointment(
+                                    id: appointment.id
+                                )
+                                dismiss()
+                            } label: {
+                                Text("Mark as Completed")
+                                    .font(AppTypography.bodyMedium)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 16)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(AppColors.success)
+
+                            Button(role: .destructive) {
+                                viewModel.cancelAppointment(
+                                    id: appointment.id
+                                )
+                                dismiss()
+                            } label: {
+                                Text("Cancel Appointment")
+                                    .font(AppTypography.bodyMedium)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 16)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(AppColors.error)
                         }
-                        .buttonStyle(.bordered)
-                        .tint(AppColors.error)
+                    }
+                }
+                .padding(20)
+            }
+            .background(AppColors.background)
+            .navigationTitle("Appointment Details")
+            .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                if shouldScrollToRating {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        withAnimation {
+                            proxy.scrollTo(
+                                "appointment-rating",
+                                anchor: .center
+                            )
+                        }
                     }
                 }
             }
-            .padding(20)
         }
-        .background(AppColors.background)
-        .navigationTitle("Appointment Details")
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

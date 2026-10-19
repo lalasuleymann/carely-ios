@@ -21,6 +21,7 @@ struct AppointmentCard: View {
     private func localize(_ key: String) -> String {
         LocalizationManager.localized(key, locale: locale)
     }
+    
     // MARK: - Doctor Information
     private var doctorSection: some View {
         HStack(spacing: 12) {
@@ -90,9 +91,9 @@ struct AppointmentCard: View {
 
     // MARK: - Fee and Actions
     private var footerSection: some View {
-        HStack {
+        HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Consultation Fee")
+                Text(localize("Consultation Fee"))
                     .font(AppTypography.caption)
                     .foregroundStyle(AppColors.secondaryText)
 
@@ -103,12 +104,31 @@ struct AppointmentCard: View {
 
             Spacer()
 
-            if viewModel.canCancel(appointment),
-               let onCancel {
+            if appointment.status == .completed && !appointment.hasReview {
+                NavigationLink {
+                    AppointmentDetailView(
+                        appointment: appointment,
+                        viewModel: viewModel,
+                        shouldScrollToRating: true
+                    )
+                } label: {
+                    Text(localize("Rate"))
+                        .font(AppTypography.bodyMedium)
+                        .foregroundStyle(AppColors.primary)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 10)
+                        .overlay {
+                            Capsule()
+                                .stroke(AppColors.primary, lineWidth: 1)
+                        }
+                }
+                .buttonStyle(.plain)
+            } else if viewModel.canCancel(appointment),
+                      let onCancel {
                 Button {
                     showCancelConfirmation = true
                 } label: {
-                    Text("Cancel")
+                    Text(localize("Cancel"))
                         .font(AppTypography.bodyMedium)
                         .foregroundStyle(AppColors.error)
                         .padding(.horizontal, 16)
@@ -123,18 +143,25 @@ struct AppointmentCard: View {
                 }
                 .buttonStyle(.plain)
                 .alert(
-                    "Sure to Cancel?",
+                    localize("Sure to Cancel?"),
                     isPresented: $showCancelConfirmation
                 ) {
-                    Button("Yes, Cancel", role: .destructive) {
+                    Button(
+                        localize("Yes, Cancel"),
+                        role: .destructive
+                    ) {
                         onCancel()
                     }
-                    
-                    Button("Keep Appointment", role: .cancel) {}
-                    
+
+                    Button(
+                        localize("Keep Appointment"),
+                        role: .cancel
+                    ) {}
                 } message: {
                     Text(
-                        "Are you sure you want to cancel your appointment with \(appointment.doctorName)?"
+                        localize(
+                            "Are you sure you want to cancel your appointment with \(appointment.doctorName)?"
+                        )
                     )
                 }
             }

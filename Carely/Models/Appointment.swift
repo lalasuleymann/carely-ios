@@ -22,7 +22,8 @@ final class Appointment {
     var time: String
     var consultationFee: Double
     var statusRawValue: String
-
+    var hasReview: Bool
+    var myRating: Double?
     var status: AppointmentStatus {
         get {
             AppointmentStatus(rawValue: statusRawValue) ?? .upcoming
@@ -42,7 +43,9 @@ final class Appointment {
         date: Date,
         time: String,
         consultationFee: Double,
-        status: AppointmentStatus = .upcoming
+        status: AppointmentStatus = .upcoming,
+        hasReview: Bool = false,
+        myRating: Double? = nil
     ) {
         self.id = id
         self.serverID = serverID
@@ -54,6 +57,8 @@ final class Appointment {
         self.time = time
         self.consultationFee = consultationFee
         self.statusRawValue = status.rawValue
+        self.hasReview = hasReview
+        self.myRating = myRating
     }
 }
 

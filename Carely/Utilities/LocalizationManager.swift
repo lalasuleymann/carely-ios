@@ -8,11 +8,11 @@
 import SwiftUI
 
 enum LocalizationManager {
-
-    static func localized(_ key: String,locale: Locale) -> String {
+    static func localized(_ key: String, locale: Locale) -> String {
         String(
             localized: String.LocalizationValue(key),
             table: "Localizable",
+            bundle: .main,
             locale: locale
         )
     }

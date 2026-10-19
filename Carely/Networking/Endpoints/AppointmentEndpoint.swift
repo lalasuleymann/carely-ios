@@ -11,6 +11,7 @@ enum AppointmentEndpoint: Endpoint {
     case getAppointments
     case getAppointment(id: Int)
     case cancelAppointment(id: Int)
+    case submitReview(id: Int, rating: Int)
 
     var baseURL: String {
         APIConfig.baseURL
@@ -26,6 +27,9 @@ enum AppointmentEndpoint: Endpoint {
 
         case .cancelAppointment(let id):
             return "/api/appointments/\(id)/cancel"
+
+        case .submitReview(let id, _):
+            return "/api/appointments/\(id)/review"
         }
     }
 
@@ -36,10 +40,29 @@ enum AppointmentEndpoint: Endpoint {
 
         case .cancelAppointment:
             return .patch
+
+        case .submitReview:
+            return .post
         }
     }
 
     var requiresAuthentication: Bool {
         true
     }
+
+    var body: Data? {
+        switch self {
+        case .submitReview(_, let rating):
+            return try? JSONEncoder().encode(
+                SubmitReviewRequest(rating: rating)
+            )
+
+        default:
+            return nil
+        }
+    }
+}
+
+private struct SubmitReviewRequest: Encodable {
+    let rating: Int
 }

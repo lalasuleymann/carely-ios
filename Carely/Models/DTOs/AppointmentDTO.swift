@@ -19,4 +19,6 @@ struct AppointmentDTO: Decodable, Identifiable {
     let status: String
     let notes: String?
     let createdAt: String
+    let hasReview: Bool
+    let myRating: Double?
 }

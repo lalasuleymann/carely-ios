@@ -592,6 +592,16 @@
         }
       }
     },
+    "Are you sure you want to cancel your appointment with" : {
+      "extractionState" : "manual"
+    },
+    "Are you sure you want to cancel your appointment with @" : {
+      "extractionState" : "manual",
+      "generatesSymbol" : false
+    },
+    "Are you sure you want to cancel your appointment with \\(appointment.doctorName)?" : {
+      "extractionState" : "manual"
+    },
     "Are you sure you want to cancel your appointment with %@?" : {
       "localizations" : {
         "az-AZ" : {
@@ -1736,6 +1746,9 @@
         }
       }
     },
+    "Enter at least 3 characters to search" : {
+      "extractionState" : "manual"
+    },
     "Enter current password" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2164,9 +2177,6 @@
       }
     },
     "Key" : {
-      "extractionState" : "manual"
-    },
-    "Key 1" : {
       "extractionState" : "manual"
     },
     "Labaratories" : {
@@ -3504,6 +3514,12 @@
         }
       }
     },
+    "Rate" : {
+      "extractionState" : "manual"
+    },
+    "Rate your appointment" : {
+      "extractionState" : "manual"
+    },
     "Rating" : {
       "localizations" : {
         "az-AZ" : {
@@ -4722,6 +4738,9 @@
           }
         }
       }
+    },
+    "Your rating: %d/5" : {
+      "extractionState" : "manual"
     },
     "Your upcoming appointments will appear here." : {
       "extractionState" : "manual",

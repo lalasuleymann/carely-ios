@@ -26,6 +26,14 @@ struct SearchView: View {
                 placeholder: localized("Search doctors...")
             )
             .onSubmit {
+                let query = viewModel.searchText
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+
+                guard query.count >= 3 else {
+                    viewModel.searchResults = []
+                    return
+                }
+
                 viewModel.search()
             }
 
@@ -57,7 +65,17 @@ struct SearchView: View {
     private var resultsSection: some View {
         switch viewModel.state {
         case .idle:
-            emptySearchView
+            if viewModel.searchText
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .count < 3 {
+                EmptyStateView(
+                    icon: "magnifyingglass",
+                    title: localized("Search for a doctor"),
+                    message: localized("Enter at least 3 characters to search")
+                )
+            } else {
+                emptySearchView
+            }
 
         case .loading:
             ProgressView(localized("Loading doctors..."))

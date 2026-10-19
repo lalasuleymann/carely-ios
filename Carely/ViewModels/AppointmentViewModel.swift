@@ -152,7 +152,9 @@ final class AppointmentViewModel {
             date: startAt,
             time: time,
             consultationFee: dto.consultationFee,
-            status: status
+            status: status,
+            hasReview: dto.hasReview,
+            myRating: dto.myRating
         )
     }
 
@@ -289,6 +291,38 @@ final class AppointmentViewModel {
             minute: timeComponents.minute ?? 0,
             second: 0,
             of: date
+        )
+    }
+    func submitReview(appointment: Appointment,rating: Int) async throws {
+        guard appointment.status == .completed else {
+            throw NetworkError.serverMessage(
+                "Only completed appointments can be rated."
+            )
+        }
+
+        guard (1...5).contains(rating) else {
+            throw NetworkError.serverMessage(
+                "Rating must be between 1 and 5."
+            )
+        }
+
+        guard let serverID = appointment.serverID else {
+            throw NetworkError.serverMessage(
+                "This appointment is not linked to the server."
+            )
+        }
+
+        guard let token = try KeychainService.readToken(),
+              !token.isEmpty else {
+            throw NetworkError.unauthorized
+        }
+
+        let _: SubmitReviewResponse = try await networkService.request(
+            AppointmentEndpoint.submitReview(
+                id: serverID,
+                rating: rating
+            ),
+            token: token
         )
     }
 

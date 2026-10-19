@@ -99,18 +99,18 @@ final class SearchViewModel {
 
     // MARK: - Search
     func search() {
-        hasAttemptedSearch = true
-
         let query = searchText.trimmingCharacters(
             in: .whitespacesAndNewlines
         )
-
-        guard !query.isEmpty || hasActiveFilters else {
+        guard query.count >= 3 || hasActiveFilters else {
+            hasAttemptedSearch = false
             searchResults = []
             errorMessage = nil
             state = .idle
             return
         }
+
+        hasAttemptedSearch = true
 
         if hasLoadedDoctors {
             updateSearchResults()
