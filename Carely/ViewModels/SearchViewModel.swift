@@ -57,7 +57,7 @@ final class SearchViewModel {
         do {
             specialtyList = try await specialtyService.fetchSpecialties()
         } catch {
-            print("Failed to load specialties: \(error.localizedDescription)")
+            error.localizedDescription
         }
     }
     

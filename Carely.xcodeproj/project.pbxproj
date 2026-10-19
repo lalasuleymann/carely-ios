@@ -12,7 +12,26 @@
 		D3F7964C30856237009526AE /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = D3F7964B30856237009526AE /* Localizable.xcstrings */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		D314FFA03085E7290067EB6A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D34A00A730737D06008AC20D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D34A00AE30737D06008AC20D;
+			remoteInfo = Carely;
+		};
+		D314FFAF3085EAAC0067EB6A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D34A00A730737D06008AC20D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D34A00AE30737D06008AC20D;
+			remoteInfo = Carely;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		D314FF9C3085E7290067EB6A /* CarelyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CarelyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D314FFA93085EAAC0067EB6A /* CarelyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CarelyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3F79491307CD178009526AE /* Carely.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Carely.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3F7964B30856237009526AE /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -28,6 +47,16 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		D314FF9D3085E7290067EB6A /* CarelyTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CarelyTests;
+			sourceTree = "<group>";
+		};
+		D314FFAA3085EAAC0067EB6A /* CarelyUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CarelyUITests;
+			sourceTree = "<group>";
+		};
 		D34A00D630737D62008AC20D /* Carely */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -39,6 +68,20 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D314FF993085E7290067EB6A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D314FFA63085EAAC0067EB6A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D34A00AC30737D06008AC20D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -57,12 +100,62 @@
 				D3F7964B30856237009526AE /* Localizable.xcstrings */,
 				D34A00D630737D62008AC20D /* Carely */,
 				D3F79491307CD178009526AE /* Carely.app */,
+				D314FF9C3085E7290067EB6A /* CarelyTests.xctest */,
+				D314FF9D3085E7290067EB6A /* CarelyTests */,
+				D314FFA93085EAAC0067EB6A /* CarelyUITests.xctest */,
+				D314FFAA3085EAAC0067EB6A /* CarelyUITests */,
 			);
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		D314FF9B3085E7290067EB6A /* CarelyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D314FFA23085E7290067EB6A /* Build configuration list for PBXNativeTarget "CarelyTests" */;
+			buildPhases = (
+				D314FF983085E7290067EB6A /* Sources */,
+				D314FF993085E7290067EB6A /* Frameworks */,
+				D314FF9A3085E7290067EB6A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D314FFA13085E7290067EB6A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D314FF9D3085E7290067EB6A /* CarelyTests */,
+			);
+			name = CarelyTests;
+			packageProductDependencies = (
+			);
+			productName = CarelyTests;
+			productReference = D314FF9C3085E7290067EB6A /* CarelyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D314FFA83085EAAC0067EB6A /* CarelyUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D314FFB13085EAAC0067EB6A /* Build configuration list for PBXNativeTarget "CarelyUITests" */;
+			buildPhases = (
+				D314FFA53085EAAC0067EB6A /* Sources */,
+				D314FFA63085EAAC0067EB6A /* Frameworks */,
+				D314FFA73085EAAC0067EB6A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D314FFB03085EAAC0067EB6A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D314FFAA3085EAAC0067EB6A /* CarelyUITests */,
+			);
+			name = CarelyUITests;
+			packageProductDependencies = (
+			);
+			productName = CarelyUITests;
+			productReference = D314FFA93085EAAC0067EB6A /* CarelyUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		D34A00AE30737D06008AC20D /* Carely */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D34A00BA30737D09008AC20D /* Build configuration list for PBXNativeTarget "Carely" */;
@@ -97,6 +190,14 @@
 				LastSwiftUpdateCheck = 2650;
 				LastUpgradeCheck = 2650;
 				TargetAttributes = {
+					D314FF9B3085E7290067EB6A = {
+						CreatedOnToolsVersion = 26.5;
+						TestTargetID = D34A00AE30737D06008AC20D;
+					};
+					D314FFA83085EAAC0067EB6A = {
+						CreatedOnToolsVersion = 26.5;
+						TestTargetID = D34A00AE30737D06008AC20D;
+					};
 					D34A00AE30737D06008AC20D = {
 						CreatedOnToolsVersion = 26.5;
 					};
@@ -123,11 +224,27 @@
 			projectRoot = "";
 			targets = (
 				D34A00AE30737D06008AC20D /* Carely */,
+				D314FF9B3085E7290067EB6A /* CarelyTests */,
+				D314FFA83085EAAC0067EB6A /* CarelyUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		D314FF9A3085E7290067EB6A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D314FFA73085EAAC0067EB6A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D34A00AD30737D06008AC20D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -139,6 +256,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D314FF983085E7290067EB6A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D314FFA53085EAAC0067EB6A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D34A00AB30737D06008AC20D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -148,7 +279,98 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		D314FFA13085E7290067EB6A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D34A00AE30737D06008AC20D /* Carely */;
+			targetProxy = D314FFA03085E7290067EB6A /* PBXContainerItemProxy */;
+		};
+		D314FFB03085EAAC0067EB6A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D34A00AE30737D06008AC20D /* Carely */;
+			targetProxy = D314FFAF3085EAAC0067EB6A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		D314FFA33085E7290067EB6A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lala.CarelyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Carely.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Carely";
+			};
+			name = Debug;
+		};
+		D314FFA43085E7290067EB6A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lala.CarelyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Carely.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Carely";
+			};
+			name = Release;
+		};
+		D314FFB23085EAAC0067EB6A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lala.CarelyUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Carely;
+			};
+			name = Debug;
+		};
+		D314FFB33085EAAC0067EB6A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.lala.CarelyUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Carely;
+			};
+			name = Release;
+		};
 		D34A00B830737D09008AC20D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -343,6 +565,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D314FFA23085E7290067EB6A /* Build configuration list for PBXNativeTarget "CarelyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D314FFA33085E7290067EB6A /* Debug */,
+				D314FFA43085E7290067EB6A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D314FFB13085EAAC0067EB6A /* Build configuration list for PBXNativeTarget "CarelyUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D314FFB23085EAAC0067EB6A /* Debug */,
+				D314FFB33085EAAC0067EB6A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D34A00AA30737D06008AC20D /* Build configuration list for PBXProject "Carely" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -19,9 +19,17 @@ final class AppointmentViewModel {
 
     private let networkService: NetworkService
     private var modelContext: ModelContext?
+    
+    private let tokenProvider: () throws -> String?
 
-    init(networkService: NetworkService = DefaultNetworkService()) {
+    init(
+        networkService: NetworkService = DefaultNetworkService(),
+        tokenProvider: @escaping () throws -> String? = {
+            try KeychainService.readToken()
+        }
+    ) {
         self.networkService = networkService
+        self.tokenProvider = tokenProvider
     }
 
     var upcomingAppointments: [Appointment] {
@@ -39,7 +47,7 @@ final class AppointmentViewModel {
             appointments = try context.fetch(descriptor)
             updateState()
         } catch {
-            print("Failed to load cached appointments: \(error)")
+            error.localizedDescription
         }
     }
 
@@ -70,7 +78,7 @@ final class AppointmentViewModel {
                 appointments = try modelContext.fetch(descriptor)
                 updateState()
             } catch {
-                print("Failed to load cached appointments: \(error)")
+                error.localizedDescription
             }
         }
 
@@ -79,7 +87,7 @@ final class AppointmentViewModel {
         }
 
         do {
-            guard let token = try KeychainService.readToken(),
+            guard let token = try tokenProvider(),
                   !token.isEmpty else {
                 if appointments.isEmpty {
                     state = .error(
@@ -126,7 +134,7 @@ final class AppointmentViewModel {
                 )
             } else {
                 updateState()
-                print("Appointment refresh failed: \(error.localizedDescription)")
+                error.localizedDescription
             }
         }
     }
@@ -312,7 +320,7 @@ final class AppointmentViewModel {
             )
         }
 
-        guard let token = try KeychainService.readToken(),
+        guard let token = try tokenProvider(),
               !token.isEmpty else {
             throw NetworkError.unauthorized
         }
@@ -330,7 +338,7 @@ final class AppointmentViewModel {
         state = .loading
 
         do {
-            guard let token = try KeychainService.readToken(),
+            guard let token = try tokenProvider(),
                   !token.isEmpty else {
                 state = .error("Please log in again to book an appointment.")
                 return
@@ -383,7 +391,7 @@ final class AppointmentViewModel {
 
     private func cancelAppointmentOnServer(serverID: Int) async {
         do {
-            guard let token = try KeychainService.readToken(),
+            guard let token = try tokenProvider(),
                   !token.isEmpty else {
                 state = .error("Please log in again to cancel this appointment.")
                 return
@@ -424,7 +432,7 @@ final class AppointmentViewModel {
 
     private func completeAppointmentOnServer(serverID: Int) async {
         do {
-            guard let token = try KeychainService.readToken(),
+            guard let token = try tokenProvider(),
                   !token.isEmpty else {
                 state = .error("Please log in again to complete this appointment.")
                 return

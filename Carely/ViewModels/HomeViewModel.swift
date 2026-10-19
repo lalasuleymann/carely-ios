@@ -34,7 +34,7 @@ final class HomeViewModel {
 
             specialties = result
         } catch {
-            print("Failed to load specialties:", error.localizedDescription)
+            error.localizedDescription
         }
     }
 
@@ -76,12 +76,10 @@ final class HomeViewModel {
             try Task.checkCancellation()
             doctors = response.map(\.toDoctor)
 
-            print("Doctors loaded successfully: \(doctors.count)")
         } catch is CancellationError {
             print("Doctor request was cancelled.")
         } catch {
             errorMessage = "Failed to load doctors: \(error.localizedDescription)"
-            print("Home doctors error: \(error)")
         }
     }
 

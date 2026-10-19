@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum AppointmentsViewState {
+enum AppointmentsViewState: Equatable {
     case idle
     case loading
     case loaded

@@ -130,7 +130,7 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
             doctorsState = .error(
                 "Həkimləri backend-dən yükləmək mümkün olmadı."
             )
-            print("Doctor loading error:", error)
+            error.localizedDescription
         }
     }
     
@@ -214,7 +214,6 @@ final class NearbyViewModel: NSObject, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager,didFailWithError error: Error) {
         locationError = error.localizedDescription
-        print("Location error: \(error.localizedDescription)")
     }
 
     // MARK: - Search Actions

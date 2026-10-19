@@ -214,10 +214,7 @@ final class DoctorDetailViewModel {
         } catch {
             timeSlots = []
             availabilityError = error.localizedDescription
-
-            print(
-                "Failed to load availability: \(error.localizedDescription)"
-            )
+            error.localizedDescription
         }
     }
 

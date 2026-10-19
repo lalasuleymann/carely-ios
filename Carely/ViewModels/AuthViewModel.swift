@@ -63,7 +63,7 @@ final class AuthViewModel {
 
             isAuthenticated = true
         } catch {
-            print("User restoration error: \(error.localizedDescription)")
+            error.localizedDescription
         }
     }
 
@@ -282,7 +282,7 @@ final class AuthViewModel {
             return true
         } catch {
             errorMessage = error.localizedDescription
-            print("Change password error: \(error)")
+            error.localizedDescription
             return false
         }
     }
@@ -328,7 +328,7 @@ final class AuthViewModel {
             return true
         } catch {
             errorMessage = error.localizedDescription
-            print("Set password error: \(error)")
+            error.localizedDescription
             return false
         }
     }
@@ -338,7 +338,6 @@ final class AuthViewModel {
         guard let token = try? KeychainService.readToken(),
               !token.isEmpty else {
             errorMessage = "Token tapılmadı. Yenidən login et."
-            print("DELETE ACCOUNT ERROR: Token not found")
             return false
         }
 
@@ -358,12 +357,10 @@ final class AuthViewModel {
             isAuthenticated = false
             errorMessage = nil
 
-            print("DELETE ACCOUNT SUCCESS")
             return true
 
         } catch {
             errorMessage = error.localizedDescription
-            print("DELETE ACCOUNT ERROR: \(error)")
             return false
         }
     }

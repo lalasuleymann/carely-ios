@@ -147,7 +147,7 @@ struct LoginView: View {
                         await viewModel.loginWithGoogle(idToken: idToken)
                     } catch {
                         if (error as NSError).code != GIDSignInError.canceled.rawValue {
-                            print("Google Sign-In error: \(error.localizedDescription)")
+                             error.localizedDescription
                         }
                     }
                 }
