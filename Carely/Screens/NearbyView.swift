@@ -40,54 +40,57 @@ struct NearbyView: View {
     }
     
     // MARK: - Location Groups
-    private var locationGroups: [NearbyLocationGroup] {
-        let doctorsByID = Dictionary(
-            uniqueKeysWithValues: viewModel.doctors.map {
-                ($0.id, $0)
-            }
-        )
+   private var locationGroups: [NearbyLocationGroup] {
+       let doctorsByID = Dictionary(
+           uniqueKeysWithValues: viewModel.doctors.map { doctor in
+               (doctor.id, doctor)
+           }
+       )
 
-        let mappedAppointments = appointmentViewModel.upcomingAppointments
-            .compactMap { appointment -> (
-                key: String,
-                coordinate: CLLocationCoordinate2D,
-                appointment: Appointment
-            )? in
+       let mappedAppointments = appointmentViewModel.upcomingAppointments.compactMap { appointment -> (
+           key: String,
+           coordinate: CLLocationCoordinate2D,
+           appointment: Appointment
+       )? in
+           guard let doctor = doctorsByID[appointment.doctorID] else {
+               return nil
+           }
 
-                guard let doctor = doctorsByID[appointment.doctorID] else {
-                    return nil
-                }
+           let coordinate = CLLocationCoordinate2D(
+               latitude: doctor.latitude,
+               longitude: doctor.longitude
+           )
 
-                let coordinate = CLLocationCoordinate2D(
-                    latitude: doctor.latitude,
-                    longitude: doctor.longitude
-                )
+           let key = "\(doctor.latitude),\(doctor.longitude)"
 
-                let key = "\(doctor.latitude),\(doctor.longitude)"
+           return (
+               key: key,
+               coordinate: coordinate,
+               appointment: appointment
+           )
+       }
 
-                return (
-                    key: key,
-                    coordinate: coordinate,
-                    appointment: appointment
-                )
-            }
+       var grouped: [String: [(key: String, coordinate: CLLocationCoordinate2D, appointment: Appointment)]] = [:]
 
-        let grouped = Dictionary(
-            grouping: mappedAppointments,
-            by: \.key
-        )
+       for item in mappedAppointments {
+           grouped[item.key, default: []].append(item)
+       }
 
-        return grouped.map { key, items in
-            NearbyLocationGroup(
-                id: key,
-                coordinate: items[0].coordinate,
-                appointments: items
-                    .map(\.appointment)
-                    .sorted { $0.date < $1.date }
-            )
-        }
-        .sorted { $0.id < $1.id }
-    }
+       return grouped.map { key, items in
+           NearbyLocationGroup(
+               id: key,
+               coordinate: items[0].coordinate,
+               appointments: items
+                   .map { $0.appointment }
+                   .sorted { first, second in
+                       first.date < second.date
+                   }
+           )
+       }
+       .sorted { first, second in
+           first.id < second.id
+       }
+   }
 
     private func appointments(for place: NearbyPlace) -> [Appointment] {
         appointmentViewModel.upcomingAppointments
