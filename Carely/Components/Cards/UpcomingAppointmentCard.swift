@@ -9,6 +9,7 @@ import SwiftUI
 
 struct UpcomingAppointmentCard: View {
     let doctorName: String
+    let doctor: Doctor
     let specialty: String
     let date: String
     let time: String
@@ -86,19 +87,49 @@ struct UpcomingAppointmentCard: View {
             .font(AppTypography.caption)
             .foregroundStyle(AppColors.onPrimary)
     }
-
-    // MARK: - Doctor Image
-    private var doctorImage: some View {
-        Image(systemName: "person.fill")
-            .font(.system(size: 24))
-            .foregroundStyle(AppColors.primary)
-            .frame(width: 56, height: 56)
-            .background(
-                AppColors.onPrimary.opacity(0.9)
-            )
-            .clipShape(Circle())
-    }
     
+    // MARK: - Doctor Image
+   private var doctorImage: some View {
+       Group {
+           if let url = URL(string: doctor.imageURL),
+              !doctor.imageURL.isEmpty,
+              let scheme = url.scheme,
+              scheme == "https" || scheme == "http" {
+
+               AsyncImage(url: url) { phase in
+                   switch phase {
+                   case .success(let image):
+                       image
+                           .resizable()
+                           .scaledToFill()
+
+                   case .empty:
+                       doctorImagePlaceholder
+
+                   case .failure:
+                       doctorImagePlaceholder
+
+                   @unknown default:
+                       doctorImagePlaceholder
+                   }
+               }
+           } else {
+               doctorImagePlaceholder
+           }
+       }
+       .frame(width: 56, height: 56)
+       .clipShape(Circle())
+   }
+
+   private var doctorImagePlaceholder: some View {
+       Image(systemName: "person.fill")
+           .font(.system(size: 24))
+           .foregroundStyle(AppColors.primary)
+           .frame(width: 56, height: 56)
+           .background(AppColors.onPrimary.opacity(0.9))
+           .clipShape(Circle())
+   }
+
     var body: some View {
         Button {
             action()
@@ -128,6 +159,7 @@ struct UpcomingAppointmentCard: View {
 #Preview {
     UpcomingAppointmentCard(
         doctorName: "Dr. Sarah Mitchell",
+        doctor: MockDoctorData.doctors[0],
         specialty: "Cardiologist",
         date: "Thu, Sep 25, 2026",
         time: "10:00 AM",

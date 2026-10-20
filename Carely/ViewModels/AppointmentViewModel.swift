@@ -14,6 +14,7 @@ import SwiftData
 @Observable
 final class AppointmentViewModel {
     private(set) var appointments: [Appointment] = []
+    private(set) var doctors: [Doctor] = []
     private(set) var state: AppointmentsViewState = .idle
     private(set) var selectedStatus: AppointmentStatus = .upcoming
 
@@ -62,6 +63,20 @@ final class AppointmentViewModel {
     }
 
     // MARK: - Loading from backend
+    func fetchCompletedPatientsCount(doctorID: Int) async throws -> Int {
+        guard let token = try tokenProvider(),
+              !token.isEmpty else {
+            throw NetworkError.unauthorized
+        }
+
+        let response: CompletedPatientsCountDTO = try await networkService.request(
+            AppointmentEndpoint.getCompletedPatientsCount(doctorId: doctorID),
+            token: token
+        )
+
+        return response.patientsCount
+    }
+
     func loadAppointments() {
         Task {
             await fetchAppointments()

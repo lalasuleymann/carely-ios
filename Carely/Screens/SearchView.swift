@@ -151,6 +151,13 @@ struct SearchView: View {
         .background(AppColors.background)
         .navigationTitle(localized("Search"))
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: viewModel.searchText) { oldValue, newValue in
+            if newValue.count < oldValue.count {
+                viewModel.searchResults = []
+                viewModel.state = .idle
+                viewModel.clearSearchResults()
+            }
+        }
         .sheet(isPresented: $showFilters) {
             FilterSheetView(viewModel: viewModel)
                 .presentationDetents([.large])

@@ -16,6 +16,9 @@ struct NearbyView: View {
     @Environment(\.modelContext)
     private var modelContext
     
+    @Environment(\.selectedTab) private var selectedTab
+    @Environment(\.locale) private var locale
+    
     @State private var viewModel: NearbyViewModel
     @State private var selectedLocationID: String?
     @State private var didFitAllLocations = false
@@ -23,8 +26,7 @@ struct NearbyView: View {
     @State private var isDoctorCardVisible = true
     @State private var isClinicCardVisible = true
     @State private var showDirectionsOptions = false
-    @Environment(\.selectedTab) private var selectedTab
-    @Environment(\.locale) private var locale
+    @State private var showNearbyPlacePins = false
     
     init(networkService: any NetworkService = DefaultNetworkService()) {
         _viewModel = State(
@@ -40,57 +42,54 @@ struct NearbyView: View {
     }
     
     // MARK: - Location Groups
-   private var locationGroups: [NearbyLocationGroup] {
-       let doctorsByID = Dictionary(
-           uniqueKeysWithValues: viewModel.doctors.map { doctor in
-               (doctor.id, doctor)
-           }
-       )
+    private var locationGroups: [NearbyLocationGroup] {
+        let doctorsByID = Dictionary(
+            uniqueKeysWithValues: viewModel.doctors.map {
+                ($0.id, $0)
+            }
+        )
 
-       let mappedAppointments = appointmentViewModel.upcomingAppointments.compactMap { appointment -> (
-           key: String,
-           coordinate: CLLocationCoordinate2D,
-           appointment: Appointment
-       )? in
-           guard let doctor = doctorsByID[appointment.doctorID] else {
-               return nil
-           }
+        let mappedAppointments = appointmentViewModel.upcomingAppointments
+            .compactMap { appointment -> (
+                key: String,
+                coordinate: CLLocationCoordinate2D,
+                appointment: Appointment
+            )? in
 
-           let coordinate = CLLocationCoordinate2D(
-               latitude: doctor.latitude,
-               longitude: doctor.longitude
-           )
+                guard let doctor = doctorsByID[appointment.doctorID] else {
+                    return nil
+                }
 
-           let key = "\(doctor.latitude),\(doctor.longitude)"
+                let coordinate = CLLocationCoordinate2D(
+                    latitude: doctor.latitude,
+                    longitude: doctor.longitude
+                )
 
-           return (
-               key: key,
-               coordinate: coordinate,
-               appointment: appointment
-           )
-       }
+                let key = "\(doctor.latitude),\(doctor.longitude)"
 
-       var grouped: [String: [(key: String, coordinate: CLLocationCoordinate2D, appointment: Appointment)]] = [:]
+                return (
+                    key: key,
+                    coordinate: coordinate,
+                    appointment: appointment
+                )
+            }
 
-       for item in mappedAppointments {
-           grouped[item.key, default: []].append(item)
-       }
+        let grouped = Dictionary(
+            grouping: mappedAppointments,
+            by: \.key
+        )
 
-       return grouped.map { key, items in
-           NearbyLocationGroup(
-               id: key,
-               coordinate: items[0].coordinate,
-               appointments: items
-                   .map { $0.appointment }
-                   .sorted { first, second in
-                       first.date < second.date
-                   }
-           )
-       }
-       .sorted { first, second in
-           first.id < second.id
-       }
-   }
+        return grouped.map { key, items in
+            NearbyLocationGroup(
+                id: key,
+                coordinate: items[0].coordinate,
+                appointments: items
+                    .map(\.appointment)
+                    .sorted { $0.date < $1.date }
+            )
+        }
+        .sorted { $0.id < $1.id }
+    }
 
     private func appointments(for place: NearbyPlace) -> [Appointment] {
         appointmentViewModel.upcomingAppointments
@@ -376,6 +375,7 @@ struct NearbyView: View {
         viewModel.selectedCategory = .all
         viewModel.nearbyPlaces = []
         viewModel.placesViewState = .idle
+        showNearbyPlacePins = false
 
         Task {
             await viewModel.searchNearbyPlaces(
@@ -549,59 +549,102 @@ struct NearbyView: View {
         }
     }
 
-    
     // MARK: - Map
-    private var filteredLocationGroups: [NearbyLocationGroup] {
-        guard !isSearching else {
-            return []
-        }
-
-        return locationGroups.filter { group in
-            if viewModel.selectedCategory == .all {
-                return true
-            }
-
-            return group.appointments.contains { appointment in
-                guard let doctor = viewModel.doctors.first(where: {
-                    $0.id == appointment.doctorID
-                }) else {
-                    return false
-                }
-
-                return viewModel.selectedCategory.matches(
-                    doctor.facilityType
-                )
-            }
-        }
-    }
-
     private var map: some View {
         Map(
             position: $viewModel.cameraPosition,
             interactionModes: [.pan, .zoom, .rotate, .pitch]
         ) {
-            ForEach(filteredLocationGroups) { group in
+            if let location = viewModel.location {
                 Annotation(
-                    "Appointments nearby",
-                    coordinate: group.coordinate,
-                    anchor: .bottom
+                    "Your location",
+                    coordinate: location.coordinate,
+                    anchor: .center
                 ) {
-                    Button {
-                        selectedLocationID = group.id
-                        viewModel.selectedDoctor = nil
-                        viewModel.searchText = ""
+                    Image(systemName: "location.circle.fill")
+                        .font(.system(size: 30))
+                        .foregroundStyle(.blue)
+                        .background(.white, in: Circle())
+                }
+            }
+            if !isSearching {
+                ForEach(
+                    locationGroups.filter { group in
+                        viewModel.selectedCategory == .all ||
+                        group.appointments.contains { appointment in
+                            guard let doctor = viewModel.doctors.first(
+                                where: { $0.id == appointment.doctorID }
+                            ) else {
+                                return false
+                            }
 
-                        if let matchingPlace = viewModel.nearbyPlaces.first(where: {
-                            $0.name.localizedCaseInsensitiveCompare(
-                                group.appointments.first?.facilityName ?? ""
-                            ) == .orderedSame
-                        }) {
-                            viewModel.selectedPlace = matchingPlace
-                            isDoctorCardVisible = true
-                            isClinicCardVisible = true
+                            return viewModel.selectedCategory.matches(
+                                doctor.facilityType
+                            )
                         }
-                    } label: {
-                        ZStack(alignment: .topTrailing) {
+                    }
+                ) { group in
+                    Annotation(
+                        "Appointments nearby",
+                        coordinate: group.coordinate,
+                        anchor: .bottom
+                    ) {
+                        Button {
+                            selectedLocationID = group.id
+                            viewModel.selectedDoctor = nil
+                            viewModel.searchText = ""
+
+                            if let matchingPlace = viewModel.nearbyPlaces.first(
+                                where: {
+                                    $0.name.localizedCaseInsensitiveCompare(
+                                        group.appointments.first?.facilityName ?? ""
+                                    ) == .orderedSame
+                                }
+                            ) {
+                                viewModel.selectedPlace = matchingPlace
+                                isDoctorCardVisible = true
+                                isClinicCardVisible = true
+                            }
+                        } label: {
+                            ZStack(alignment: .topTrailing) {
+                                Image(systemName: "mappin.circle.fill")
+                                    .font(.system(size: 30))
+                                    .foregroundStyle(.red)
+                                    .background(.white, in: Circle())
+                                    .shadow(
+                                        color: .black.opacity(0.18),
+                                        radius: 3,
+                                        y: 2
+                                    )
+
+                                if group.appointments.count > 1 {
+                                    Text("\(group.appointments.count)")
+                                        .font(.system(size: 10, weight: .bold))
+                                        .foregroundStyle(.white)
+                                        .frame(width: 17, height: 17)
+                                        .background(.blue, in: Circle())
+                                        .offset(x: 5, y: -5)
+                                }
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+            if showNearbyPlacePins && !isSearching {
+                ForEach(viewModel.nearbyPlaces) { place in
+                    Annotation(
+                        place.name,
+                        coordinate: place.coordinate,
+                        anchor: .bottom
+                    ) {
+                        Button {
+                            viewModel.selectedPlace = place
+                            selectedLocationID = nil
+                            viewModel.selectedDoctor = nil
+                            isClinicCardVisible = true
+                            isDoctorCardVisible = true
+                        } label: {
                             Image(systemName: "mappin.circle.fill")
                                 .font(.system(size: 27))
                                 .foregroundStyle(.red)
@@ -611,18 +654,9 @@ struct NearbyView: View {
                                     radius: 3,
                                     y: 2
                                 )
-
-                            if group.appointments.count > 1 {
-                                Text("\(group.appointments.count)")
-                                    .font(.system(size: 10, weight: .bold))
-                                    .foregroundStyle(.white)
-                                    .frame(width: 17, height: 17)
-                                    .background(.black, in: Circle())
-                                    .offset(x: 7, y: -5)
-                            }
                         }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                 }
             }
         }
@@ -633,7 +667,7 @@ struct NearbyView: View {
         }
         .ignoresSafeArea(edges: .bottom)
     }
-
+    
     // MARK: - Appointment Panel
     @ViewBuilder
     private var appointmentPanel: some View {
@@ -758,6 +792,7 @@ struct NearbyView: View {
                                 viewModel.selectedDoctor = nil
                                 viewModel.searchText = ""
                                 viewModel.selectedCategory = category
+                                showNearbyPlacePins = true
                                 selectedLocationID = nil
 
                                 isDoctorCardVisible = true

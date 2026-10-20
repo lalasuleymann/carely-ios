@@ -52,8 +52,51 @@ struct TopDoctorCard: View {
             y: 4
         )
     }
-
+    
     private var doctorImage: some View {
+        Group {
+            if let url = URL(string: doctor.imageURL),
+               !doctor.imageURL.isEmpty,
+               let scheme = url.scheme,
+               scheme == "https" || scheme == "http" {
+
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 135)
+                            .clipped()
+
+                    case .empty:
+                        doctorImagePlaceholder
+                            .overlay {
+                                ProgressView()
+                                    .tint(AppColors.primary)
+                            }
+
+                    case .failure:
+                        doctorImagePlaceholder
+
+                    @unknown default:
+                        doctorImagePlaceholder
+                    }
+                }
+            } else {
+                doctorImagePlaceholder
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 135)
+        .clipped()
+        .clipShape(
+            RoundedRectangle(cornerRadius: 16)
+        )
+    }
+
+    private var doctorImagePlaceholder : some View {
         Image(systemName: "person.crop.circle.fill")
             .resizable()
             .scaledToFit()

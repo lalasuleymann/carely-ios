@@ -16,7 +16,10 @@ struct NearbyAppointmentRow: View {
         NavigationLink {
             AppointmentDetailView(
                 appointment: appointment,
-                viewModel: appointmentViewModel
+                viewModel: appointmentViewModel,
+                doctor: appointmentViewModel.doctors.first {
+                    $0.id == appointment.doctorID
+                }
             )
         } label: {
             VStack(alignment: .leading, spacing: 8) {

@@ -19,6 +19,8 @@ struct AppointmentsView: View {
     @Environment(\.locale)
     private var locale
     
+    @State private var homeViewModel = HomeViewModel()
+    
     // MARK: - Localization
     private func localize(_ key: String) -> String {
         LocalizationManager.localized(key, locale: locale)
@@ -79,15 +81,21 @@ struct AppointmentsView: View {
     private var appointmentsList: some View {
         LazyVStack(spacing: 16) {
             ForEach(viewModel.filteredAppointments) { appointment in
+                let doctor = homeViewModel.doctors.first {
+                    $0.id == appointment.doctorID
+                }
+
                 NavigationLink {
                     AppointmentDetailView(
                         appointment: appointment,
-                        viewModel: viewModel
+                        viewModel: viewModel,
+                        doctor: doctor
                     )
                 } label: {
                     AppointmentCard(
                         appointment: appointment,
                         viewModel: viewModel,
+                        doctor: doctor,
                         onCancel: {
                             viewModel.cancelAppointment(
                                 id: appointment.id
@@ -185,7 +193,12 @@ struct AppointmentsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task {
             viewModel.configure(context: modelContext)
+
+            async let doctorsTask: Void = homeViewModel.loadDoctors()
+
             viewModel.loadAppointments()
+
+            await doctorsTask
 
             while !Task.isCancelled {
                 do {

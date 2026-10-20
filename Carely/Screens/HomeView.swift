@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct HomeView: View {
 
     @State private var viewModel = HomeViewModel()
+    @State private var localProfileImage: UIImage?
 
     @Environment(AuthViewModel.self)
     private var authViewModel
@@ -25,6 +27,8 @@ struct HomeView: View {
 
     @State private var selectedAppointment: Appointment?
     @State private var showAppointmentDetail = false
+    
+    @State private var profileViewModel = ProfileViewModel()
 
     // MARK: - Localization
     private func localize(_ key: String) -> String {
@@ -33,14 +37,24 @@ struct HomeView: View {
 
     // MARK: - User Information
     private var userFullName: String {
-        let firstName = authViewModel.currentUser?.firstName
-            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let firstName = (
+            profileViewModel.profile?.firstName
+            ?? authViewModel.currentUser?.firstName
+            ?? ""
+        )
+        .trimmingCharacters(in: .whitespacesAndNewlines)
 
-        let lastName = authViewModel.currentUser?.lastName
-            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let lastName = (
+            profileViewModel.profile?.lastName
+            ?? authViewModel.currentUser?.lastName
+            ?? ""
+        )
+        .trimmingCharacters(in: .whitespacesAndNewlines)
 
-        return "\(firstName) \(lastName)"
+        let fullName = "\(firstName) \(lastName)"
             .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return fullName.isEmpty ? " " : fullName
     }
 
     // MARK: - Profile Placeholder
@@ -55,11 +69,15 @@ struct HomeView: View {
     // MARK: - Profile Image
     private var profileImage: some View {
         Group {
-            if let imageURL = authViewModel.currentUser?.profileImageUrl,
-               !imageURL.isEmpty,
-               let url = URL(string: imageURL),
-               let scheme = url.scheme,
-               scheme == "https" || scheme == "http" {
+            if let localProfileImage {
+                Image(uiImage: localProfileImage)
+                    .resizable()
+                    .scaledToFill()
+            } else if let imageURL = authViewModel.currentUser?.profileImageUrl,
+                      !imageURL.isEmpty,
+                      let url = URL(string: imageURL),
+                      let scheme = url.scheme,
+                      scheme == "https" || scheme == "http" {
 
                 AsyncImage(url: url) { phase in
                     switch phase {
@@ -87,6 +105,28 @@ struct HomeView: View {
         .frame(width: 44, height: 44)
         .clipShape(Circle())
     }
+    
+    private func loadSavedProfilePhoto() {
+        let documentsDirectory = FileManager.default.urls(
+            for: .documentDirectory,
+            in: .userDomainMask
+        )[0]
+
+        let photoURL = documentsDirectory.appendingPathComponent(
+            "carely-profile-photo.jpg"
+        )
+
+        guard
+            let data = try? Data(contentsOf: photoURL),
+            let image = UIImage(data: data)
+        else {
+            localProfileImage = nil
+            return
+        }
+
+        localProfileImage = image
+    }
+
 
     // MARK: - Header
     private var headerSection: some View {
@@ -159,28 +199,34 @@ struct HomeView: View {
                 if let appointment = viewModel.nextAppointment(
                     from: appointmentViewModel.appointments
                 ) {
-                    UpcomingAppointmentCard(
-                        doctorName: appointment.doctorName,
-                        specialty: localize(appointment.specialty),
-                        date: appointment.date.formatted(
-                            .dateTime
-                                .weekday(.abbreviated)
-                                .month(.abbreviated)
-                                .day()
-                                .year()
-                                .locale(locale)
-                        ),
-                        time: appointment.time,
-                        appointmentType: localize("In-Person")
-                    ) {
-                        selectedAppointment = appointment
-                        showAppointmentDetail = true
+                    let doctor = viewModel.doctors.first {
+                        $0.id == appointment.doctorID
                     }
-                    .buttonStyle(.plain)
-                } else {
-                    emptyUpcomingAppointment
-                }
 
+                    if let doctor {
+                        UpcomingAppointmentCard(
+                            doctorName: appointment.doctorName,
+                            doctor: doctor,
+                            specialty: localize(appointment.specialty),
+                            date: appointment.date.formatted(
+                                .dateTime
+                                    .weekday(.abbreviated)
+                                    .month(.abbreviated)
+                                    .day()
+                                    .year()
+                                    .locale(locale)
+                            ),
+                            time: appointment.time,
+                            appointmentType: localize("In-Person")
+                        ) {
+                            selectedAppointment = appointment
+                            showAppointmentDetail = true
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        emptyUpcomingAppointment
+                    }
+                }
             case .error(let message):
                 VStack(alignment: .leading, spacing: 8) {
                     Text(localize("Could not load appointments"))
@@ -272,7 +318,7 @@ struct HomeView: View {
             }
         }
     }
-
+    
     // MARK: - Top Doctors
     private var topDoctorsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -281,7 +327,19 @@ struct HomeView: View {
                 showSeeAll: false
             )
 
-            if viewModel.doctors.isEmpty {
+            let topDoctors = Array(
+                viewModel.doctors
+                    .sorted { first, second in
+                        if first.rating == second.rating {
+                            return first.reviewCount > second.reviewCount
+                        }
+
+                        return first.rating > second.rating
+                    }
+                    .prefix(5)
+            )
+
+            if topDoctors.isEmpty {
                 Text(localize("No doctors available right now."))
                     .font(AppTypography.body)
                     .foregroundStyle(.secondary)
@@ -295,7 +353,7 @@ struct HomeView: View {
                     showsIndicators: false
                 ) {
                     HStack(spacing: 12) {
-                        ForEach(viewModel.doctors) { doctor in
+                        ForEach(topDoctors) { doctor in
                             NavigationLink {
                                 DoctorDetailView(doctor: doctor)
                             } label: {
@@ -308,7 +366,7 @@ struct HomeView: View {
             }
         }
     }
-
+    
     // MARK: - Your Health
     private var healthSection: some View {
         let appointments = appointmentViewModel.appointments
@@ -420,7 +478,10 @@ struct HomeView: View {
             if let appointment = selectedAppointment {
                 AppointmentDetailView(
                     appointment: appointment,
-                    viewModel: appointmentViewModel
+                    viewModel: appointmentViewModel,
+                    doctor: viewModel.doctors.first {
+                        $0.id == appointment.doctorID
+                    }
                 )
             }
         }
@@ -434,11 +495,23 @@ struct HomeView: View {
             async let specialtiesTask: Void =
                 viewModel.loadSpecialties()
 
+            async let profileTask: Void =
+                profileViewModel.loadProfile(locale: locale)
+
             _ = await (
                 appointmentsTask,
                 doctorsTask,
-                specialtiesTask
+                specialtiesTask,
+                profileTask
             )
+        }
+        .onAppear {
+            loadSavedProfilePhoto()
+        }
+        .onChange(of: selectedTab.wrappedValue) { _, newTab in
+            if newTab == 0 {
+                loadSavedProfilePhoto()
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ import SwiftUI
 struct AppointmentDetailView: View {
     let appointment: Appointment
     let viewModel: AppointmentViewModel
+    let doctor: Doctor?
 
     @Environment(\.dismiss) private var dismiss
     var shouldScrollToRating = false
@@ -24,11 +25,25 @@ struct AppointmentDetailView: View {
     // MARK: - Doctor Section
     private var doctorSection: some View {
         VStack(spacing: 12) {
-            Image(systemName: "person.crop.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 100, height: 100)
-                .foregroundStyle(AppColors.primary)
+            Group {
+                if let doctor,
+                   let url = URL(string: doctor.imageURL),
+                   !doctor.imageURL.isEmpty {
+                    AsyncImage(url: url) { phase in
+                        if let image = phase.image {
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } else {
+                            doctorImagePlaceholder
+                        }
+                    }
+                } else {
+                    doctorImagePlaceholder
+                }
+            }
+            .frame(width: 100, height: 100)
+            .clipShape(Circle())
 
             Text(appointment.doctorName)
                 .font(AppTypography.title)
@@ -57,6 +72,14 @@ struct AppointmentDetailView: View {
         .padding(24)
         .background(AppColors.surface)
         .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+    
+    private var doctorImagePlaceholder: some View {
+        Image(systemName: "person.crop.circle.fill")
+            .resizable()
+            .scaledToFit()
+            .foregroundStyle(AppColors.primary)
+            .frame(width: 100, height: 100)
     }
 
     // MARK: - Appointments Info Section
@@ -223,11 +246,25 @@ struct AppointmentDetailView: View {
         consultationFee: 120,
         status: .upcoming
     )
+    let doctor = Doctor(
+        id: 1,
+        name: "Dr. Sarah Mitchell",
+        specialty: "Cardiology",
+        imageURL: "https://example.com/doctor.jpg",
+        rating: 4.8,
+        reviewCount: 120,
+        experience: 10,
+        location: "Baku",
+        latitude: 40.4093,
+        longitude: 49.8671,
+        consultationFee: 120,
+        isAvailable: true
+    )
 
     NavigationStack {
         AppointmentDetailView(
             appointment: appointment,
-            viewModel: viewModel
+            viewModel: viewModel, doctor: doctor
         )
     }
 }

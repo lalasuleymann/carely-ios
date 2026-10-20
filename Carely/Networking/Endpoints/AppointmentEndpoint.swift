@@ -10,6 +10,7 @@ import Foundation
 enum AppointmentEndpoint: Endpoint {
     case getAppointments
     case getAppointment(id: Int)
+    case getCompletedPatientsCount(doctorId: Int)
     case cancelAppointment(id: Int)
     case submitReview(id: Int, rating: Int)
 
@@ -25,6 +26,9 @@ enum AppointmentEndpoint: Endpoint {
         case .getAppointment(let id):
             return "/api/appointments/\(id)"
 
+        case .getCompletedPatientsCount(let doctorId):
+            return "/api/appointments/doctor/\(doctorId)/completed-patients-count"
+
         case .cancelAppointment(let id):
             return "/api/appointments/\(id)/cancel"
 
@@ -35,7 +39,9 @@ enum AppointmentEndpoint: Endpoint {
 
     var method: HttpMethod {
         switch self {
-        case .getAppointments, .getAppointment:
+        case .getAppointments,
+             .getAppointment,
+             .getCompletedPatientsCount:
             return .get
 
         case .cancelAppointment:

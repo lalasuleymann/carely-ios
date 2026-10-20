@@ -1,3 +1,4 @@
+
 //
 //  SearchViewModel.swift
 //  Carely
@@ -11,6 +12,7 @@ import Observation
 @Observable
 @MainActor
 final class SearchViewModel {
+
     var searchText = ""
     var searchResults: [Doctor] = []
     var state: SearchViewState = .idle
@@ -20,27 +22,27 @@ final class SearchViewModel {
     var selectedRating = "Any"
     var minimumPrice = 0.0
     var onlyAvailable = false
-
+    
     private(set) var doctors: [Doctor] = []
+    private(set) var specialtyList: [SpecialtyDTO] = []
 
     private let networkService: NetworkService
+    private let specialtyService: SpecialtyService
+
     private var hasLoadedDoctors = false
     private var isLoading = false
     private var hasAttemptedSearch = false
-
-    private(set) var specialtyList: [SpecialtyDTO] = []
 
     var specialties: [String] {
         ["All"] + specialtyList.map(\.name)
     }
 
-    private let specialtyService: SpecialtyService
-
     let ratings = [
         "Any",
-        "4.0+",
-        "4.5+",
-        "4.8+"
+        "1.0+",
+        "2.0+",
+        "3.0+",
+        "4.0+"
     ]
 
     init(
@@ -49,18 +51,20 @@ final class SearchViewModel {
     ) {
         self.networkService = networkService
         self.specialtyService = specialtyService
-            ?? DefaultSpecialtyService(networkService: networkService)
+            ?? DefaultSpecialtyService(
+                networkService: networkService
+            )
     }
 
-    // MARK: - Load Specialities
+    // MARK: - Load Specialties
     func loadSpecialties() async {
         do {
             specialtyList = try await specialtyService.fetchSpecialties()
         } catch {
-            error.localizedDescription
+            errorMessage = error.localizedDescription
         }
     }
-    
+
     // MARK: - Load Doctors
     func loadDoctors() async {
         guard !hasLoadedDoctors, !isLoading else {
@@ -102,6 +106,7 @@ final class SearchViewModel {
         let query = searchText.trimmingCharacters(
             in: .whitespacesAndNewlines
         )
+
         guard query.count >= 3 || hasActiveFilters else {
             hasAttemptedSearch = false
             searchResults = []
@@ -125,7 +130,7 @@ final class SearchViewModel {
         }
     }
 
-    // MARK: - Filters
+    // MARK: - Apply Filters
     func applyFilters() {
         hasAttemptedSearch = true
 
@@ -141,47 +146,59 @@ final class SearchViewModel {
             }
         }
     }
-
-    private var hasActiveFilters: Bool {
-        selectedSpecialty != "All" ||
-        selectedRating != "Any" ||
-        minimumPrice > 0 ||
-        onlyAvailable
+    // MARK: - Reset Search Results
+    func clearSearchResults() {
+        searchResults = []
+        hasAttemptedSearch = false
+        errorMessage = nil
+        state = .idle
     }
 
-    // MARK: - Filter Results
+    // MARK: - Active Filters
+    private var hasActiveFilters: Bool {
+        selectedSpecialty != "All"
+            || selectedRating != "Any"
+            || minimumPrice > 0
+            || onlyAvailable
+    }
+
+    // MARK: - Update Search Results
     private func updateSearchResults() {
         let query = searchText.trimmingCharacters(
             in: .whitespacesAndNewlines
         )
-
-        guard !query.isEmpty || hasActiveFilters else {
+        guard !query.isEmpty || hasActiveFilters || hasAttemptedSearch else {
             searchResults = []
             state = .idle
             return
         }
-        searchResults = filterDoctors(doctors, query: query)
+
+        searchResults = filterDoctors(
+            doctors,
+            query: query
+        )
 
         state = searchResults.isEmpty ? .empty : .loaded
     }
 
+    // MARK: - Filter Doctors
     private func filterDoctors(_ doctors: [Doctor],query: String) -> [Doctor] {
         doctors.filter { doctor in
 
             let matchesSearch =
-                query.isEmpty ||
-                doctor.name.localizedCaseInsensitiveContains(query) ||
-                doctor.specialty.localizedCaseInsensitiveContains(query)
+                query.isEmpty
+                || doctor.name.localizedCaseInsensitiveContains(query)
+                || doctor.specialty.localizedCaseInsensitiveContains(query)
 
             let matchesSpecialty =
-                selectedSpecialty == "All" ||
-                doctor.specialty.localizedCaseInsensitiveCompare(
+                selectedSpecialty == "All"
+                || doctor.specialty.localizedCaseInsensitiveCompare(
                     selectedSpecialty
                 ) == .orderedSame
 
             let matchesRating =
-                selectedRating == "Any" ||
-                doctor.rating >= ratingValue
+                selectedRating == "Any"
+                || doctor.rating >= ratingValue
 
             let matchesPrice =
                 doctor.consultationFee >= minimumPrice
@@ -189,24 +206,26 @@ final class SearchViewModel {
             let matchesAvailability =
                 !onlyAvailable || doctor.isAvailable
 
-            return matchesSearch &&
-                matchesSpecialty &&
-                matchesRating &&
-                matchesPrice &&
-                matchesAvailability
+            return matchesSearch
+                && matchesSpecialty
+                && matchesRating
+                && matchesPrice
+                && matchesAvailability
         }
     }
 
+    // MARK: - Rating Value
     private var ratingValue: Double {
-        switch selectedRating {
-        case "4.0+":
-            return 4.0
-        case "4.5+":
-            return 4.5
-        case "4.8+":
-            return 4.8
-        default:
+        guard selectedRating != "Any" else {
             return 0
         }
+
+        let value = selectedRating.replacingOccurrences(
+            of: "+",
+            with: ""
+        )
+
+        return Double(value) ?? 0
     }
 }
+

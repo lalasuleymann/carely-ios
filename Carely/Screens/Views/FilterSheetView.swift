@@ -69,16 +69,6 @@ struct FilterSheetView: View {
         }
     }
 
-    // MARK: - Availability
-    private var availabilitySection: some View {
-        Section("Availability") {
-            Toggle(
-                "Available today",
-                isOn: $viewModel.onlyAvailable
-            )
-        }
-    }
-
     // MARK: - Actions
     private func resetFilters() {
         viewModel.selectedSpecialty = LocalizationManager.localized("All", locale: locale)
@@ -100,7 +90,6 @@ struct FilterSheetView: View {
                 specialtySection
                 ratingSection
                 priceSection
-                availabilitySection
             }
             .navigationTitle("Filters")
             .navigationBarTitleDisplayMode(.inline)

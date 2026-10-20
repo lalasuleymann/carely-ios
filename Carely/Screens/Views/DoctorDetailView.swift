@@ -23,6 +23,7 @@ struct DoctorDetailView: View {
     @State private var showBookingConfirmation = false
     @State private var viewModel = DoctorDetailViewModel()
     @State private var showDatePicker = false
+    @State private var completedPatientsCount: Int? = nil
     
     @Environment(\.locale) private var locale
 
@@ -59,24 +60,49 @@ struct DoctorDetailView: View {
                 }
 
                 Spacer(minLength: 0)
+                
+                Group {
+                    if let url = URL(string: doctor.imageURL),
+                       !doctor.imageURL.isEmpty,
+                       let scheme = url.scheme,
+                       scheme == "https" || scheme == "http" {
 
-                Image(systemName: "person.crop.rectangle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundStyle(AppColors.primary.opacity(0.75))
-                    .frame(width: 140, height: 190)
-                    .frame(maxHeight: .infinity, alignment: .bottom)
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+
+                            case .empty:
+                                doctorImagePlaceholder
+
+                            case .failure:
+                                doctorImagePlaceholder
+
+                            @unknown default:
+                                doctorImagePlaceholder
+                            }
+                        }
+                    } else {
+                        doctorImagePlaceholder
+                    }
+                }
+                .frame(width: 140, height: 140)
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+                .frame(maxHeight: .infinity, alignment: .bottom)
+
             }
             .frame(height: 190, alignment: .bottom)
 
             HStack(spacing: 0) {
                 statistic(
-                    value: "\(doctor.experience)y+",
+                    value: "\(doctor.experience)+",
                     title: localize("Experience")
                 )
 
                 statistic(
-                    value: "—",
+                    value: completedPatientsCount.map { String($0) } ?? "—",
                     title: localize("Patients")
                 )
 
@@ -97,6 +123,17 @@ struct DoctorDetailView: View {
             .background(AppColors.primary.opacity(0.10))
             .clipShape(RoundedRectangle(cornerRadius: 22))
         }
+    }
+
+    
+    private var doctorImagePlaceholder: some View {
+        Image(systemName: "person.crop.rectangle.fill")
+            .resizable()
+            .scaledToFit()
+            .foregroundStyle(AppColors.primary.opacity(0.75))
+            .frame(width: 140, height: 190)
+            .background(AppColors.primary.opacity(0.08))
+            .clipShape(RoundedRectangle(cornerRadius: 18))
     }
 
     private func statistic(value: String,title: String) -> some View {
@@ -646,8 +683,22 @@ struct DoctorDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task {
             appointmentViewModel.configure(context: modelContext)
+
+            do {
+                completedPatientsCount =
+                    try await appointmentViewModel.fetchCompletedPatientsCount(
+                        doctorID: doctor.id
+                    )
+            } catch {
+                completedPatientsCount = nil
+                print(
+                    "Failed to load completed patients count:",
+                    error.localizedDescription
+                )
+            }
+
             await viewModel.loadAvailability(for: doctor.id)
-        }     
+        }
         .sheet(isPresented: $showDatePicker) {
             calendarSheet
                 .presentationDetents([.medium, .large])

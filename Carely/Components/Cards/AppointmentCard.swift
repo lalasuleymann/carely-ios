@@ -11,7 +11,9 @@ struct AppointmentCard: View {
 
     let appointment: Appointment
     let viewModel: AppointmentViewModel
+    var doctor: Doctor? = nil
     var onCancel: (() -> Void)? = nil
+
     @State private var showCancelConfirmation = false
 
     @Environment(\.locale)
@@ -25,27 +27,66 @@ struct AppointmentCard: View {
     // MARK: - Doctor Information
     private var doctorSection: some View {
         HStack(spacing: 12) {
-            Image(systemName: "person.crop.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 56, height: 56)
-                .foregroundStyle(AppColors.primary)
-
+            doctorImage
+            
             VStack(alignment: .leading, spacing: 5) {
                 Text(appointment.doctorName)
                     .font(AppTypography.bodyMedium)
                     .foregroundStyle(AppColors.primaryText)
-
+                
                 Text(appointment.specialty)
                     .font(AppTypography.caption)
                     .foregroundStyle(AppColors.secondaryText)
             }
-
+            
             Spacer(minLength: 8)
-
+            
             statusBadge
         }
     }
+
+    private var doctorImage: some View {
+        Group {
+            if let doctor,
+               let url = URL(string: doctor.imageURL),
+               !doctor.imageURL.isEmpty,
+               let scheme = url.scheme,
+               scheme == "https" || scheme == "http" {
+
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+
+                    case .empty:
+                        doctorImagePlaceholder
+
+                    case .failure:
+                        doctorImagePlaceholder
+
+                    @unknown default:
+                        doctorImagePlaceholder
+                    }
+                }
+            } else {
+                doctorImagePlaceholder
+            }
+        }
+        .frame(width: 56, height: 56)
+        .clipShape(Circle())
+    }
+
+    private var doctorImagePlaceholder: some View {
+        Image(systemName: "person.crop.circle.fill")
+            .resizable()
+            .scaledToFit()
+            .foregroundStyle(AppColors.primary)
+            .frame(width: 56, height: 56)
+    }
+
+
 
     // MARK: - Status Badge
     private var statusBadge: some View {
@@ -109,6 +150,7 @@ struct AppointmentCard: View {
                     AppointmentDetailView(
                         appointment: appointment,
                         viewModel: viewModel,
+                        doctor: doctor,
                         shouldScrollToRating: true
                     )
                 } label: {
@@ -213,9 +255,25 @@ struct AppointmentCard: View {
         status: .upcoming
     )
 
+    let doctor = Doctor(
+        id: 1,
+        name: "Dr. Sarah Mitchell",
+        specialty: "Cardiology",
+        imageURL: "https://example.com/doctor.jpg",
+        rating: 4.8,
+        reviewCount: 120,
+        experience: 10,
+        location: "Baku",
+        latitude: 40.4093,
+        longitude: 49.8671,
+        consultationFee: 120,
+        isAvailable: true
+    )
+
     AppointmentCard(
         appointment: appointment,
         viewModel: viewModel,
+        doctor: doctor,
         onCancel: {
             print("Cancel appointment tapped")
         }
