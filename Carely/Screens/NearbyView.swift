@@ -549,98 +549,82 @@ struct NearbyView: View {
         }
     }
 
+    
     // MARK: - Map
+    private var filteredLocationGroups: [NearbyLocationGroup] {
+        guard !isSearching else {
+            return []
+        }
+
+        return locationGroups.filter { group in
+            if viewModel.selectedCategory == .all {
+                return true
+            }
+
+            return group.appointments.contains { appointment in
+                guard let doctor = viewModel.doctors.first(where: {
+                    $0.id == appointment.doctorID
+                }) else {
+                    return false
+                }
+
+                return viewModel.selectedCategory.matches(
+                    doctor.facilityType
+                )
+            }
+        }
+    }
+
     private var map: some View {
         Map(
             position: $viewModel.cameraPosition,
-            interactionModes: [.pan, .zoom, .rotate, .pitch] ) {
-     
-            if let location = viewModel.location {
+            interactionModes: [.pan, .zoom, .rotate, .pitch]
+        ) {
+            ForEach(filteredLocationGroups) { group in
                 Annotation(
-                    localize("Your location"),
-                    coordinate: location.coordinate,
-                    anchor: .center
+                    "Appointments nearby",
+                    coordinate: group.coordinate,
+                    anchor: .bottom
                 ) {
-                    ZStack {
-                        Circle()
-                            .fill(Color.blue.opacity(0.20))
-                            .frame(width: 44, height: 44)
+                    Button {
+                        selectedLocationID = group.id
+                        viewModel.selectedDoctor = nil
+                        viewModel.searchText = ""
 
-                        Circle()
-                            .fill(Color.blue)
-                            .frame(width: 20, height: 20)
-                            .overlay {
-                                Circle()
-                                    .stroke(.white, lineWidth: 3)
+                        if let matchingPlace = viewModel.nearbyPlaces.first(where: {
+                            $0.name.localizedCaseInsensitiveCompare(
+                                group.appointments.first?.facilityName ?? ""
+                            ) == .orderedSame
+                        }) {
+                            viewModel.selectedPlace = matchingPlace
+                            isDoctorCardVisible = true
+                            isClinicCardVisible = true
+                        }
+                    } label: {
+                        ZStack(alignment: .topTrailing) {
+                            Image(systemName: "mappin.circle.fill")
+                                .font(.system(size: 27))
+                                .foregroundStyle(.red)
+                                .background(.white, in: Circle())
+                                .shadow(
+                                    color: .black.opacity(0.18),
+                                    radius: 3,
+                                    y: 2
+                                )
+
+                            if group.appointments.count > 1 {
+                                Text("\(group.appointments.count)")
+                                    .font(.system(size: 10, weight: .bold))
+                                    .foregroundStyle(.white)
+                                    .frame(width: 17, height: 17)
+                                    .background(.black, in: Circle())
+                                    .offset(x: 7, y: -5)
                             }
-                            .shadow(
-                                color: .black.opacity(0.2),
-                                radius: 3
-                            )
+                        }
                     }
+                    .buttonStyle(.plain)
                 }
             }
-
-                if !isSearching {
-                    ForEach(locationGroups.filter { group in
-                        viewModel.selectedCategory == .all ||
-                        group.appointments.contains { appointment in
-                            guard let doctor = viewModel.doctors.first(where: {
-                                $0.id == appointment.doctorID
-                            }) else {
-                                return false
-                            }
-
-                            return viewModel.selectedCategory.matches(
-                                doctor.facilityType
-                            )
-                        }
-                    }) { group in
-                        Annotation(
-                            "Appointments nearby",
-                            coordinate: group.coordinate,
-                            anchor: .bottom
-                        ) {
-                            Button {
-                                selectedLocationID = group.id
-                                viewModel.selectedDoctor = nil
-                                viewModel.searchText = ""
-
-                                if let matchingPlace = viewModel.nearbyPlaces.first(where: {
-                                    $0.name.localizedCaseInsensitiveCompare(
-                                        group.appointments.first?.facilityName ?? ""
-                                    ) == .orderedSame
-                                }) {
-                                    viewModel.selectedPlace = matchingPlace
-                                    isDoctorCardVisible = true
-                                    isClinicCardVisible = true
-                                }
-                            } label: {
-                                ZStack(alignment: .topTrailing) {
-                                    Image(systemName: "mappin.circle.fill")
-                                        .font(.system(size: 27))
-                                        .foregroundStyle(.red)
-                                        .background(.white, in: Circle())
-                                        .shadow(
-                                            color: .black.opacity(0.18),
-                                            radius: 3,
-                                            y: 2
-                                        )
-
-                                    if group.appointments.count > 1 {
-                                        Text("\(group.appointments.count)")
-                                            .font(.system(size: 10, weight: .bold))
-                                            .foregroundStyle(.white)
-                                            .frame(width: 17, height: 17)
-                                            .background(.black, in: Circle())
-                                            .offset(x: 7, y: -5)
-                                    }
-                                }
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                }
         }
         .mapControls {
             MapCompass()
@@ -649,7 +633,7 @@ struct NearbyView: View {
         }
         .ignoresSafeArea(edges: .bottom)
     }
-    
+
     // MARK: - Appointment Panel
     @ViewBuilder
     private var appointmentPanel: some View {
